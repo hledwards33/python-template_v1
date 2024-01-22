@@ -1,0 +1,4 @@
+data:
+  data_folder: ./data
+  input_data: input
+  output_data: output

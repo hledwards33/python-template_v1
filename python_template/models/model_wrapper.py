@@ -1,5 +1,5 @@
 import pandas as pd
-
+import yaml
 
 class ModelWrapper:
 
@@ -31,5 +31,15 @@ class ModelWrapper:
         pass
 
 
-def run_model(model_wrapper: ModelWrapper, sys_config: str, model_config: str):
-    pass
+class DeployWrapper:
+
+    def run_model(self, model_wrapper: ModelWrapper, sys_config: str, model_config: str):
+        sys_config = self.read_config(sys_config)
+        model_config = self.read_config(model_config)
+
+    @staticmethod
+    def read_config(config_path: str) -> dict:
+        with open(config_path, 'r') as file:
+            config_dict = yaml.safe_load(file)
+
+        return config_dict
