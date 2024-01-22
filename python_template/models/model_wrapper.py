@@ -29,3 +29,7 @@ class ModelWrapper:
     @staticmethod
     def write_data(path: str, file_schemas: dict) -> dict:
         pass
+
+
+def run_model(model_wrapper: ModelWrapper, sys_config: str, model_config: str):
+    pass

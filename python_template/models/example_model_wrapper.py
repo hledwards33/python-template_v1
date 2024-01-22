@@ -2,17 +2,23 @@ from model_scripts.example_model.example_model import ExampleModel as Model
 from model_wrapper import ModelWrapper
 
 
-class ExampleWrapper:
+class ExampleWrapper(ModelWrapper):
 
-    @staticmethod
-    def run():
-        input_data = ModelWrapper.read_data()
+    def __init__(self):
+        super(ModelWrapper, self).__init__()
 
-        parameters = ModelWrapper.set_parameters_from_dataframe()
+    def run(self):
+        input_data = self.read_data()
+
+        parameters = self.set_parameters_from_dataframe()
 
         model_result = Model(input_data, parameters).run()
 
         return model_result
 
+
 if __name__ == "__main__":
-    ExampleWrapper.run()
+    from model_wrapper import run_model
+
+    run_model(model_wrapper=ExampleWrapper, sys_config='config/system_config.yml',
+              model_config='config/model_config/example_model_config.yml')
