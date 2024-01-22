@@ -7,6 +7,10 @@ class ModelWrapper:
         pass
 
     @staticmethod
+    def read_config():
+        pass
+
+    @staticmethod
     def set_parameters_from_dataframe(data: pd.DataFrame) -> pd.DataFrame:
         pass
 
