@@ -1,0 +1,14 @@
+parameters:
+
+  model_parameters:
+    model_id: "example-model"
+
+model_data:
+
+  inputs:
+    pd_data: ""
+    lgd_data : ""
+    ead_data: ""
+
+  outputs:
+    ecl_data: ""
