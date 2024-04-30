@@ -24,9 +24,23 @@ def read_yaml(path: str) -> dict:
 def convert_schema_pandas(schema: dict) -> dict:
     for key, val in schema.items():
         if val.lower() == 'integer':
-            schema[key] = pd.Int64Dtype
+            schema[key] = 'Int64'
         elif val.lower() == 'float':
-            schema[key] = pd.Float64Dtype
+            schema[key] = 'Float64'
+        elif val.lower() == 'date':
+            schema[key] = 'datetime64[s]'
+        elif val.lower() == 'string':
+            schema[key] = 'object'
+
+    return schema
+
+
+def convert_schema_output_pandas(schema: dict) -> dict:
+    for key, val in schema.items():
+        if val.lower() == 'integer':
+            schema[key] = 'Int64'
+        elif val.lower() == 'float':
+            schema[key] = 'Float64'
         elif val.lower() == 'date':
             schema[key] = 'datetime64[s]'
         elif val.lower() == 'string':
@@ -53,7 +67,6 @@ def schema_conformance_pandas(data: pd.DataFrame, schema: dict, dataframe_name: 
     if len(missing_cols) > 0:
         errors['missing_columns'] = [f"Dataframe {dataframe_name} is missing the following columns {missing_cols}."]
 
-    schema = convert_schema_pandas(schema)
     for col in data.columns:
         if data[col].dtype == schema[col]:
             # TODO: log that datat is correct
@@ -73,7 +86,6 @@ def read_csv_to_pandas(path: str, schema: dict) -> pd.DataFrame:
         'dtype': schema,
         'usecols': schema.keys(),
         'cache_dates': True,
-        'infer_datetime_format': False,
         'engine': 'pyarrow',
         'parse_dates': [key for key, val in schema.items() if val == "date"],
         'date_format': "%Y-%m-%d"

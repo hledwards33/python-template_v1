@@ -59,7 +59,7 @@ class ModelWrapper(ABC):
 
         for key, val in model_config['inputs']:
 
-            schema = read_write_data.convert_schema_pandas(file_schemas[key])
+            schema = file_schemas[key]
             file_type = val.split(".")[-1]
 
             if file_type in ["csv"]:
@@ -128,8 +128,8 @@ class DeployWrapper:
 
         conformance_errors = self.run_schema_conformance(data_dict=data_dict, schema_dict=output_schemas)
 
-        error_count = sum([len(error) for dataset_errors in conformance_errors.items() for error in
-                           dataset_errors.items()])
+        error_count = sum([len(error) for dataset_errors in conformance_errors.values() for error in
+                           dataset_errors.values()])
 
         if error_count > 0:
             # TODO: Log all errors
@@ -171,7 +171,7 @@ class DeployWrapper:
 
             if self.model_config['parameters']['model_parameters']['type'] == "pandas":
 
-                schema = read_write_data.convert_schema_pandas(schema_dict[key])
+                schema = read_write_data.convert_schema_output_pandas(schema_dict[key])
 
                 data_errors[key] = read_write_data.schema_conformance_pandas(data=val, schema=schema,
                                                                              dataframe_name=key)
