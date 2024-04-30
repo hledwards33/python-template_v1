@@ -24,6 +24,18 @@ class InputData:
         return result
 
     @staticmethod
+    def convert_schema_pandas(schema: dict) -> dict:
+
+        for key, val in schema.items():
+            if val.lower() == 'integer':
+                schema[key] = pd.Int64Dtype
+            elif val.lower() == 'float':
+                schema[key] = pd.Float64Dtype
+            elif val.lower() == 'date':
+                schema[key] = 
+
+
+    @staticmethod
     def read_csv_to_pandas(path: str, schema: dict) -> pd.DataFrame:
         # TODO: Log dataset x is being read in, only columns defined in schemas are read
         # TODO: Check if this works with zip files and add if_zip to the read data func
@@ -58,4 +70,11 @@ class InputData:
     @staticmethod
     def write_parquet_from_pandas(data: pd.DataFrame, path: str, schema: dict):
         # TODO: Fill in this method
+        pass
+
+    @staticmethod
+    def schema_conformance_pandas(data: pd.DataFrame, schema: dict):
+
+    @staticmethod
+    def schema_conformance_spark():
         pass

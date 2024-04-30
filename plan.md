@@ -24,3 +24,11 @@
 1. Create a Django interface for running models
 2. Output the logs to the interface 
 3. Show which model is running and status in the interface
+
+## Phase 5
+1. Develop a way to package the repo
+2. Test framework on GCP
+3. Make changes to allow for running & chaining of models on GCP
+
+## Phase 6
+1. Write documentation for this library
