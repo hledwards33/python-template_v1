@@ -1,5 +1,5 @@
-from model_scripts.example_model.example_model import ExampleModel as Model
-from model_wrapper import ModelWrapper
+from models.model_scripts.example_model.example_model import ExampleModel as Model
+from framework.model_wrapper import ModelWrapper
 
 
 class ExampleWrapper(ModelWrapper):

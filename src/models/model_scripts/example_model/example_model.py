@@ -1,4 +1,4 @@
-from models.model_scripts.model import BaseModel
+from framework.model import BaseModel
 
 
 
