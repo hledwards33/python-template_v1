@@ -1,7 +1,10 @@
+import logging
 import os
 from abc import ABC, abstractmethod
 
-from framework.data_scripts import read_write_data
+from framework.setup import read_write_data
+
+logger = logging.getLogger()
 
 
 class ModelWrapper(ABC):
@@ -35,6 +38,8 @@ class ModelWrapper(ABC):
 
         for key, val in model_config['inputs'].items():
 
+            logger.info(f"Reading dataset {key}.")
+
             schema = read_write_data.convert_schema_pandas(file_schemas[key])
             file_type = val.split(".")[-1]
             val = os.path.join(base_path, val)
@@ -47,6 +52,8 @@ class ModelWrapper(ABC):
 
                 data_dict[key] = read_write_data.read_parquet_to_pandas(path=val, schema=schema)
 
+            logger.info(f"Dataset {key} is loaded with dimensions: {len(data_dict[key].columns)}x{len(data_dict[key])}")
+
         return data_dict
 
     @staticmethod
@@ -55,20 +62,23 @@ class ModelWrapper(ABC):
         pass
 
     @staticmethod
-    def write_data_from_pandas(model_config: dict, file_schemas: dict):
+    def write_data_from_pandas(data_dict: dict, model_config: dict, file_schemas: dict, base_path: str):
 
         for key, val in model_config['inputs']:
 
+            logger.info(f"Writing dataset {key} with dimensions")
+
             schema = file_schemas[key]
             file_type = val.split(".")[-1]
+            val = os.path.join(base_path, val)
 
             if file_type in ["csv"]:
 
-                read_write_data.write_csv_from_pandas(path=val, schema=schema)
+                read_write_data.write_csv_from_pandas(data=data_dict[key], path=val, schema=schema)
 
             elif file_type in ["pqt", "parquet"]:
 
-                read_write_data.write_parquet_from_pandas(path=val, schema=schema)
+                read_write_data.write_parquet_from_pandas(data=data_dict[key], path=val, schema=schema)
 
             elif file_type in ['zip']:
 
@@ -132,16 +142,22 @@ class DeployWrapper:
                            dataset_errors.values()])
 
         if error_count > 0:
+            for dataset, dataset_errors in conformance_errors.items():
+                for error_type, error in dataset_errors:
+                    logger.info(f"Dataset {dataset}")
+
             # TODO: Log all errors
             raise TypeError(f"Incorrect DataTypes and/or DataColumns see above logs.")
 
         if self.model_config['parameters']['model_parameters']['type'] == "pandas":
 
-            self.model_wrapper.write_data_from_pandas(model_config=self.model_config, file_schemas=output_schemas)
+            self.model_wrapper.write_data_from_pandas(data_dict=data_dict, model_config=self.model_config,
+                                                      file_schemas=output_schemas, base_path=self.get_data_dir())
 
         elif self.model_config['parameters']['model_parameters']['type'] == "pyspark":
 
-            self.model_wrapper.write_data_from_spark(model_config=self.model_config, file_schemas=output_schemas)
+            self.model_wrapper.write_data_from_spark(data_dict=data_dict, model_config=self.model_config,
+                                                     file_schemas=output_schemas, base_path=self.get_data_dir())
 
     def get_inputs(self) -> dict:
         input_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())

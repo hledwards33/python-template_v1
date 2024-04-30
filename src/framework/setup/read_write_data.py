@@ -4,6 +4,10 @@ import os
 import pandas as pd
 import yaml
 
+import logging
+
+logger = logging.getLogger()
+
 
 def read_json(path: str) -> dict:
     path = os.path.join(os.path.dirname(path[0].__file__), path[1])
@@ -69,8 +73,8 @@ def schema_conformance_pandas(data: pd.DataFrame, schema: dict, dataframe_name: 
 
     for col in data.columns:
         if data[col].dtype == schema[col]:
-            # TODO: log that datat is correct
-            pass
+            logger.info(f"Dataset {dataframe_name} has {col} with correct type: {data[col].dtype}.")
+
         else:
             errors['incorrect_type'] += [f"Dataframe {dataframe_name} has incorrect datatype in {col} "
                                          f"expected {schema[col]} got {data[col].dtype}."]
