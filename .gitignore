@@ -164,3 +164,5 @@ cython_debug/
 
 # Exclude all data from the git repo as github is not a secure or effecient space to store data
 /data
+
+/resources
