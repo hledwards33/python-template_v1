@@ -32,3 +32,6 @@
 
 ## Phase 6
 1. Write documentation for this library
+
+## Phase 7
+1. Add bespoke errors and error types

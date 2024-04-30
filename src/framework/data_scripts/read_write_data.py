@@ -4,7 +4,7 @@ import pandas as pd
 import yaml
 
 
-class InputData:
+class InputOutputData:
 
     def __init__(self):
         pass
@@ -43,18 +43,18 @@ class InputData:
         pass
 
     @staticmethod
-    def schema_conformance_spark():
+    def schema_conformance_spark(self, data: pd.DataFrame, schema: dict, dataframe_name: str = "") -> dict:
         pass
 
-    def schema_conformance_pandas(self, data: pd.DataFrame, schema: dict, dataframe_name: str = ""):
-        # TODO: improve this function so all errors are raised at once
+    def schema_conformance_pandas(self, data: pd.DataFrame, schema: dict, dataframe_name: str = "") -> dict:
+        errors = {'incorrect_type': []}
 
         extra_cols = set(data.columns).difference(schema.keys())
-        # Log: extra columns... have been dropped
+        # TODO: Log: extra columns... have been dropped
 
         missing_cols = set(schema.keys()).difference(data.columns)
         if len(missing_cols) > 0:
-            raise KeyError(f"Dataframe {dataframe_name} is missing the following columns {missing_cols}.")
+            errors['missing_columns'] = [f"Dataframe {dataframe_name} is missing the following columns {missing_cols}."]
 
         schema = self.convert_schema_pandas(schema)
         for col in data.columns:
@@ -62,8 +62,10 @@ class InputData:
                 # TODO: log that datat is correct
                 pass
             else:
-                raise TypeError(f"Dataframe {dataframe_name} has incorrect datatype in {col} expected {schema[col]} "
-                                f"got {data[col].dtype}.")
+                errors['incorrect_type'] += [f"Dataframe {dataframe_name} has incorrect datatype in {col} "
+                                             f"expected {schema[col]} got {data[col].dtype}."]
+
+        return errors
 
     def read_csv_to_pandas(self, path: str, schema: dict) -> pd.DataFrame:
         # TODO: Log dataset x is being read in, only columns defined in schemas are read
@@ -100,8 +102,10 @@ class InputData:
 
     @staticmethod
     def write_csv_from_pandas(data: pd.DataFrame, path: str, schema: dict, dataframe_name: str = ""):
-        # TODO: Fill in this method
-        pass
+
+        kwargs = {'path': path, 'na_rep': "", 'columns': schema.keys(), 'index': False}
+
+        data.to_csv(**kwargs)
 
     @staticmethod
     def write_parquet_from_pandas(data: pd.DataFrame, path: str, schema: dict):
