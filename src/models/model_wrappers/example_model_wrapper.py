@@ -1,6 +1,6 @@
 from framework.model_wrapper import ModelWrapper, DeployWrapper
-from models.model_schemas import example_model as model_schemas
 from models import model_schemas as parameter_schemas
+from models.model_schemas import example_model as model_schemas
 from models.model_scripts.example_model.example_model import ExampleModel as Model
 
 
@@ -11,7 +11,6 @@ class ExampleWrapper(ModelWrapper):
 
     def define_parameter_schemas(self) -> tuple:
         return (parameter_schemas, "parameters_schema.json")
-
 
     def define_input_schemas(self) -> dict:
         return {
@@ -26,7 +25,6 @@ class ExampleWrapper(ModelWrapper):
         }
 
     def run_model(self) -> dict:
-
         model_result = Model(input_data=self.data_dict, parameters=self.parameters).run()
 
         return model_result

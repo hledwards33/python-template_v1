@@ -6,6 +6,7 @@ import pandas as pd
 
 from framework.setup import read_write_data
 from framework.setup.log_format import headers
+import time
 
 logger = logging.getLogger()
 
@@ -138,23 +139,28 @@ class DeployWrapper:
         return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
 
     def run_model(self):
-        headers.info(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' is Running..")
+        start = time.perf_counter()
 
-        headers.info("Reading Input Data.")
+        headers(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' is Running..")
+
+        headers("Reading Input Data.")
         input_data = self.get_inputs()
         parameters = self.get_parameters()
 
         self.model_wrapper.data_dict = input_data
         self.model_wrapper.parameters = parameters
 
-        headers.info("Executing Model.")
+        headers("Executing Model.")
         output_data = self.model_wrapper.run_model()
 
-        headers.info("Writing Output Data.")
+        headers("Writing Output Data.")
         self.post_outputs(data_dict=output_data)
 
-        headers.info("Output Data Saved Successfully.")
-        headers.info(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' Ran Successfully.")
+        logger.info("Output Data Saved Successfully.")
+        headers(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' Ran Successfully.")
+
+        end = time.perf_counter()
+        logger.info(f"Model executed in {end - start:0.4f} seconds.")
 
     def get_parameters(self):
         parameters_schema = read_write_data.read_json(path=self.model_wrapper.define_parameter_schemas())
@@ -186,6 +192,9 @@ class DeployWrapper:
         return parameters
 
     def post_outputs(self, data_dict: dict):
+
+        self.memory_usage(data_dict, 'output')
+
         output_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_output_schemas())
 
         conformance_errors = self.run_schema_conformance(data_dict=data_dict, schema_dict=output_schemas)
@@ -194,7 +203,7 @@ class DeployWrapper:
                            dataset_errors.values()])
 
         if error_count > 0:
-            headers.info("Data Conformance Errors.")
+            headers("Data Conformance Errors.")
             for dataset, dataset_errors in conformance_errors.items():
                 for error_type, error in dataset_errors.items():
                     logger.info(f"Dataset {dataset} has {error_type}: {error}.")
@@ -230,7 +239,14 @@ class DeployWrapper:
             raise ImportError('Parameter "Type" is defined incorrectly. Type can take values ["pandas", "pyspark"] and '
                               f'is currently set to {self.sys_config["model_parameters"]["type"]}.')
 
+        self.memory_usage(input_data, 'input')
+
         return input_data
+
+    @staticmethod
+    def memory_usage(data_dict: dict, data_type: str):
+        memory_usage = sum([df.memory_usage(index=True).sum() for df in data_dict.values()])
+        logger.info(f"Total memory usage of the {data_type} data is {memory_usage}.")
 
     def run_schema_conformance(self, data_dict: dict, schema_dict: dict) -> dict:
         data_errors = {}

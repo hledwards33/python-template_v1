@@ -1,6 +1,10 @@
 import logging
 import sys
 
+import numpy as np
+import math
+
+
 class CustomFormatter(logging.Formatter):
     """Logging colored formatter, adapted from https://stackoverflow.com/a/56944256/3638629"""
 
@@ -27,23 +31,22 @@ class CustomFormatter(logging.Formatter):
         formatter = logging.Formatter(log_fmt)
         return formatter.format(record)
 
-headers = logging.getLogger("Headers")
-headers.handlers.clear()
-headers.setLevel(logging.INFO)
+
+def headers(message: str):
+    line_num = 75
+    line_num_start = line_num - math.ceil(len(message) / 2)
+    line_num_end = line_num_start if line_num_start % 2 == 0 else line_num_start + 1
+    lines_start = ''.join(['-' for _ in range(line_num_start)])
+    lines_end = ''.join(['-' for _ in range(line_num_end)])
+    print(lines_start + ' ' + message + ' ' + lines_end)
+    logging.info(message)
+
+
+logging.getLogger().setLevel(logging.DEBUG)
 
 sys_handler = logging.StreamHandler(sys.stdout)
-sys_handler.setFormatter(CustomFormatter('Model Checkpoint: %(message)s'))
+cn_format = logging.Formatter("[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s")
+sys_handler.setFormatter(cn_format)
+sys_handler.setLevel(logging.DEBUG)
 
-headers.addHandler(sys_handler)
-
-# create logger with 'spam_application'
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s",
-    datefmt="%d-%b-%Y %H:%M:%S",
-    stream=sys.stdout)
-
-
+logging.getLogger().addHandler(sys_handler)

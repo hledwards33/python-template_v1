@@ -1,8 +1,8 @@
+import logging
+
 import pandas as pd
 
 from framework.model import BaseModel
-
-import logging
 
 logger = logging.getLogger()
 
@@ -26,7 +26,6 @@ class ExampleModel(BaseModel):
         super().__init__(input_data, parameters)
 
     def run(self):
-
         logger.info("Joining PD and LGD Datasets.")
         ecl_data = pd.merge(self.model_data['pd_data'], self.model_data['lgd_data'],
                             on=['customer_id', 'year', 'period_date'], how='left')
