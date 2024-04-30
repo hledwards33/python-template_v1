@@ -58,8 +58,6 @@ class ModelWrapper(ABC):
 
                 InputData.write_parquet(path=val, schema=file_schemas[key])
 
-        return data_dict
-
     @staticmethod
     def write_data_from_spark(path: str, file_schemas: dict):
         # TODO: Fill in this method
@@ -104,6 +102,8 @@ class DeployWrapper:
         if self.sys_config['model_parameters']['type'] == "pandas":
             output_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())
 
+
+
         elif self.sys_config['model_parameters']['type'] == "pyspark":
             input_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())
 
@@ -111,17 +111,22 @@ class DeployWrapper:
         if self.sys_config['model_parameters']['type'] == "pandas":
             input_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())
 
+            input_schemas = InputData.convert_schema_pandas(schema=input_schemas)
+
             input_data = self.model_wrapper.read_data_to_pandas(model_config=self.model_config,
                                                                 file_schemas=input_schemas)
 
         elif self.sys_config['model_parameters']['type'] == "pyspark":
             input_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())
 
-            input_data = self.model_wrapper.read_data_to_pandas(model_config=self.model_config,
-                                                                file_schemas=input_schemas)
+            input_schemas = InputData.convert_schema_spark(schema=input_schemas)
+
+            input_data = self.model_wrapper.read_data_to_spark(model_config=self.model_config,
+                                                               file_schemas=input_schemas)
 
         else:
-            raise ImportError('Parameter "Type" is defined incorrectly. Type can take values ["pandas", "pyspark"].')
+            raise ImportError('Parameter "Type" is defined incorrectly. Type can take values ["pandas", "pyspark"] and '
+                              f'is currently set to {self.sys_config["model_parameters"]["type"]}.')
 
         return input_data
 
