@@ -246,7 +246,7 @@ class DeployWrapper:
     @staticmethod
     def memory_usage(data_dict: dict, data_type: str):
         memory_usage = sum([df.memory_usage(index=True).sum() for df in data_dict.values()])
-        logger.info(f"Total memory usage of the {data_type} data is {memory_usage}.")
+        logger.info(f"Total memory usage of the {data_type} data is {memory_usage * 0.0000000001}GB.")
 
     def run_schema_conformance(self, data_dict: dict, schema_dict: dict) -> dict:
         data_errors = {}
