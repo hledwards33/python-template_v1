@@ -1,6 +1,7 @@
 import pandas as pd
 import yaml
 
+
 class ModelWrapper:
 
     def __init__(self):
