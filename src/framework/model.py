@@ -20,8 +20,8 @@ class BaseModel(ABC):
     def set_parameters(self, parameters: dict):
         for key, val in parameters.items():
             setattr(self, str(key), val)
-            logger.info(f"Parameter {key} has been initiate as an intance variable with value {val} and"
-                        f" type {type(val)}.")
+            logger.info(f"Parameter '{key}' has been initiated as an instance variable with value {val} and"
+                        f" type '{type(val)}'.")
 
     @staticmethod
     def long_to_wide(df: pd.DataFrame):

@@ -4,14 +4,18 @@ parameters:
     model_id: "example-model"
     model_type: "ifrs9"
     type: "pandas"
+    parameters_file: "parameters.csv"
+
+    optional:
+      ecl_upper_limit: 500
+      ecl_lower_limit: 200
 
 model_data:
 
   inputs:
     pd_data: "example_model/inputs/pd_data.csv"
-    lgd_data : "example_model/inputs/lgd_data.csv"
+    lgd_data: "example_model/inputs/lgd_data.csv"
     ead_data: "example_model/inputs/ead_data.csv"
-    parameters: "parameters.csv"
 
   outputs:
     ecl_data: "example_model/outputs/ecl_data.csv"

@@ -2,6 +2,8 @@ import logging
 import os
 from abc import ABC, abstractmethod
 
+import pandas as pd
+
 from framework.setup import read_write_data
 from framework.setup.log_format import headers
 
@@ -12,6 +14,15 @@ class ModelWrapper(ABC):
 
     def __init__(self):
         self.data_dict = {}
+        self.parameters = {}
+
+    @property
+    def parameters(self):
+        return self._parameters
+
+    @parameters.setter
+    def parameters(self, value: dict):
+        self._parameters = value
 
     @property
     def data_dict(self):
@@ -20,10 +31,6 @@ class ModelWrapper(ABC):
     @data_dict.setter
     def data_dict(self, value: dict):
         self._data_dict = value
-
-    @staticmethod
-    def set_parameters():
-        pass
 
     @staticmethod
     def read_schemas(schema_dict: dict) -> dict:
@@ -39,7 +46,7 @@ class ModelWrapper(ABC):
 
         for key, val in model_config['inputs'].items():
 
-            logger.info(f"Reading dataset {key}.")
+            logger.info(f"Reading dataset '{key}'.")
 
             schema = read_write_data.convert_schema_pandas(file_schemas[key])
             file_type = val.split(".")[-1]
@@ -54,7 +61,7 @@ class ModelWrapper(ABC):
                 data_dict[key] = read_write_data.read_parquet_to_pandas(path=val, schema=schema)
 
             logger.info(
-                f"Dataset {key} is loaded with dimensions: {len(data_dict[key].columns)} x {len(data_dict[key])}")
+                f"Dataset '{key}' is loaded with dimensions: {len(data_dict[key].columns)} x {len(data_dict[key])}.")
 
         return data_dict
 
@@ -67,7 +74,8 @@ class ModelWrapper(ABC):
 
         for key, val in model_config['outputs'].items():
 
-            logger.info(f"Writing dataset {key} with dimensions {len(data_dict[key].columns)} x {len(data_dict[key])}.")
+            logger.info(f"Writing dataset '{key}' with dimensions {len(data_dict[key].columns)} x "
+                        f"{len(data_dict[key])}.")
 
             schema = file_schemas[key]
             file_type = val.split(".")[-1]
@@ -85,7 +93,7 @@ class ModelWrapper(ABC):
 
                 read_write_data.write_zip_from_pandas(path=val, schema=schema)
 
-            logger.info(f"Dataset {key} has been saved.")
+            logger.info(f"Dataset '{key}' has been saved.")
 
     @staticmethod
     def write_data_from_spark(model_config: dict, file_schemas: dict):
@@ -108,6 +116,10 @@ class ModelWrapper(ABC):
         pass
 
     @abstractmethod
+    def define_parameter_schemas(self) -> tuple:
+        pass
+
+    @abstractmethod
     def run_model(self) -> dict:
         pass
 
@@ -126,17 +138,52 @@ class DeployWrapper:
         return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
 
     def run_model(self):
+        headers.info(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' is Running..")
 
         headers.info("Reading Input Data.")
         input_data = self.get_inputs()
+        parameters = self.get_parameters()
 
         self.model_wrapper.data_dict = input_data
+        self.model_wrapper.parameters = parameters
 
         headers.info("Executing Model.")
         output_data = self.model_wrapper.run_model()
 
         headers.info("Writing Output Data.")
         self.post_outputs(data_dict=output_data)
+
+        headers.info("Output Data Saved Successfully.")
+        headers.info(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' Ran Successfully.")
+
+    def get_parameters(self):
+        parameters_schema = read_write_data.read_json(path=self.model_wrapper.define_parameter_schemas())
+
+        parameters_path = self.model_config['parameters']['model_parameters']['parameters_file']
+
+        optional_parameters = self.model_config['parameters']['model_parameters']['optional']
+
+        if parameters_path != "":
+
+            parameters_path = os.path.join(self.get_data_dir(), parameters_path)
+            parameters_schema = read_write_data.convert_schema_pandas(parameters_schema)
+            parameters = read_write_data.read_csv_to_pandas(path=parameters_path, schema=parameters_schema)
+
+            # Add optional parameters from the config file
+            if len(optional_parameters) > 0:
+                optional_parameters = {
+                    'parameter': [key for key in optional_parameters.keys()],
+                    'value': [val for val in optional_parameters.values()]
+                }
+
+                optional_parameters = pd.DataFrame.from_dict(optional_parameters)
+
+                parameters = pd.concat([parameters, optional_parameters], axis=0, ignore_index=True)
+
+        else:
+            parameters = pd.DataFrame
+
+        return parameters
 
     def post_outputs(self, data_dict: dict):
         output_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_output_schemas())
@@ -150,7 +197,7 @@ class DeployWrapper:
             headers.info("Data Conformance Errors.")
             for dataset, dataset_errors in conformance_errors.items():
                 for error_type, error in dataset_errors.items():
-                    logger.info(f"Dataset {dataset} has {error_type}: {error}")
+                    logger.info(f"Dataset {dataset} has {error_type}: {error}.")
 
             raise TypeError(f"Incorrect DataTypes and/or DataColumns see above logs.")
 
