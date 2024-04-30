@@ -1,25 +1,25 @@
 # Project Plan
 
 ## Phase 1
-1. Create an input/output layer
-2. Create a model wrapper 
+1. Done: Create an input/output layer
+2. Done: Create a model wrapper 
 3. Create a model wrapper template
-4. Create an example model
-5. Write descriptive errors for common mistakes
-6. Create method of saving parameters to instance variables
+4. Done: Create an example model
+5. Write descriptive errors for common mistakes 
+6. Done: Create method of saving parameters to instance variables
 
 ## Phase 2
-1. Create automated logs
+1. Done: Create automated logs
 2. Create the ability to read in parquet and zip files
-3. Create memory logging
-4. Create a script that can run models on different data with only a change to the config
+3. Done: Create memory logging
+4. Done: Create a script that can run models on different data with only a change to the config
 5. Create a model meta-data file (.yaml)
 
 ## Phase 3
 1. Create a master script that can chain models
 2. Define chaining of models within the repo
 3. Look into using airflow to schedule model dependencies
-4. Look into adding a pyspark model
+4. Add a pyspark model
 
 ## Phase 4 
 1. Create a Django interface for running models
@@ -29,7 +29,7 @@
 
 ## Phase 5
 1. Develop a way to package the repo
-2. Test framework on GCP
+2. Test framework on Cloud
 3. Make changes to allow for running & chaining of models on GCP
 
 ## Phase 6
@@ -37,3 +37,6 @@
 
 ## Phase 7
 1. Add bespoke errors and error types
+
+# Feedback
+

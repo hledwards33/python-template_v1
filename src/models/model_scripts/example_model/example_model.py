@@ -7,19 +7,6 @@ from framework.model import BaseModel
 logger = logging.getLogger()
 
 
-class Model:
-
-    def __init__(self, data_dict: dict, parameters: pd.DataFrame = pd.DataFrame()):
-        self.model = ExampleModel(input_data=data_dict, parameters=parameters)
-
-        self.execute = self.execute()
-
-    def execute(self):
-        result = self.model.run()
-
-        return result
-
-
 class ExampleModel(BaseModel):
 
     def __init__(self, input_data: dict, parameters: pd.DataFrame = pd.DataFrame()):
