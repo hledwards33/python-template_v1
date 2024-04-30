@@ -1,0 +1,7 @@
+{
+  "customer_id": "string",
+  "period_date": "date",
+  "pit_ead": "float",
+  "avg_ead": "float",
+  "year": "integer"
+}

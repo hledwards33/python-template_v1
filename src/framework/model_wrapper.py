@@ -1,18 +1,23 @@
-import pandas as pd
+from abc import ABC, abstractmethod
+
 import yaml
 
+from framework.data_scripts.read_inputs import InputData
 
-class ModelWrapper:
+
+class ModelWrapper(ABC):
 
     def __init__(self):
         pass
 
     @staticmethod
-    def read_config():
-        pass
+    def read_config(path: str) -> dict:
+        config_dict = InputData.read_yaml(path=path)
+
+        return config_dict
 
     @staticmethod
-    def set_parameters_from_dataframe(data: pd.DataFrame) -> pd.DataFrame:
+    def set_parameters():
         pass
 
     @staticmethod
@@ -23,12 +28,42 @@ class ModelWrapper:
     def data_post_processing(data: dict) -> dict:
         pass
 
+    def read_schemas(self):
+        schema_dict = self.define_input_schemas()
+
+        schema_dict = {key: InputData.read_json(path=val) for key, val in schema_dict.items()}
+
+        return schema_dict
+
     @staticmethod
-    def read_data(path: str, file_schemas: dict) -> dict:
-        pass
+    def read_data(model_config: dict, file_schemas: dict) -> dict:
+
+        data_dict = {}
+
+        for key, val in model_config['inputs']:
+
+            file_type = val.split(".")[-1]
+
+            if file_type in ["csv", "zip"]:
+
+                data_dict[key] = InputData.read_csv(path=val, schema=file_schemas[key])
+
+            elif file_type in ["pqt", "parquet"]:
+
+                data_dict[key] = InputData.read_parquet(path=val, schema=file_schemas[key])
+
+        return data_dict
 
     @staticmethod
     def write_data(path: str, file_schemas: dict) -> dict:
+        pass
+
+    @abstractmethod
+    def define_input_schemas(self):
+        pass
+
+    @abstractmethod
+    def define_output_schemas(self):
         pass
 
 
