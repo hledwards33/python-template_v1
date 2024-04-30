@@ -3,6 +3,7 @@ import os
 from abc import ABC, abstractmethod
 
 from framework.setup import read_write_data
+from framework.setup.log_format import headers
 
 logger = logging.getLogger()
 
@@ -52,13 +53,13 @@ class ModelWrapper(ABC):
 
                 data_dict[key] = read_write_data.read_parquet_to_pandas(path=val, schema=schema)
 
-            logger.info(f"Dataset {key} is loaded with dimensions: {len(data_dict[key].columns)}x{len(data_dict[key])}")
+            logger.info(
+                f"Dataset {key} is loaded with dimensions: {len(data_dict[key].columns)} x {len(data_dict[key])}")
 
         return data_dict
 
     @staticmethod
     def read_data_to_spark(model_config: dict, file_schemas: dict) -> dict:
-        # TODO: fill in the method
         pass
 
     @staticmethod
@@ -66,7 +67,7 @@ class ModelWrapper(ABC):
 
         for key, val in model_config['inputs']:
 
-            logger.info(f"Writing dataset {key} with dimensions")
+            logger.info(f"Writing dataset {key} with dimensions {len(data_dict[key].columns)} x {len(data_dict[key])}.")
 
             schema = file_schemas[key]
             file_type = val.split(".")[-1]
@@ -84,9 +85,10 @@ class ModelWrapper(ABC):
 
                 read_write_data.write_zip_from_pandas(path=val, schema=schema)
 
+            logger.info(f"Dataset {key} has been saved.")
+
     @staticmethod
     def write_data_from_spark(model_config: dict, file_schemas: dict):
-        # TODO: Fill in this method
         pass
 
     @staticmethod
@@ -125,12 +127,16 @@ class DeployWrapper:
         return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
 
     def run_model(self):
+
+        headers.info("Reading Input Data.")
         input_data = self.get_inputs()
 
         self.model_wrapper.data_dict = input_data
 
+        headers.info("Executing Model.")
         output_data = self.model_wrapper.run_model()
 
+        headers.info("Writing Output Data.")
         self.post_outputs(data_dict=output_data)
 
     def post_outputs(self, data_dict: dict):
@@ -142,11 +148,11 @@ class DeployWrapper:
                            dataset_errors.values()])
 
         if error_count > 0:
+            headers.info("Data Conformance Errors.")
             for dataset, dataset_errors in conformance_errors.items():
-                for error_type, error in dataset_errors:
-                    logger.info(f"Dataset {dataset}")
+                for error_type, error in dataset_errors.items():
+                    logger.info(f"Dataset {dataset} has {error_type}: {error}")
 
-            # TODO: Log all errors
             raise TypeError(f"Incorrect DataTypes and/or DataColumns see above logs.")
 
         if self.model_config['parameters']['model_parameters']['type'] == "pandas":
