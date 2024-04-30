@@ -11,6 +11,7 @@ model_data:
     pd_data: "example_model/inputs/pd_data.csv"
     lgd_data : "example_model/inputs/lgd_data.csv"
     ead_data: "example_model/inputs/ead_data.csv"
+    parameters: "parameters.csv"
 
   outputs:
     ecl_data: "example_model/outputs/ecl_data.csv"

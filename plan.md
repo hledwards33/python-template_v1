@@ -6,6 +6,7 @@
 3. Create a model wrapper template
 4. Create an example model
 5. Write descriptive errors for common mistakes
+6. Create method of saving parameters to instance variables
 
 ## Phase 2
 1. Create automated logs
@@ -24,6 +25,7 @@
 1. Create a Django interface for running models
 2. Output the logs to the interface 
 3. Show which model is running and status in the interface
+4. Put this into a MRM context with git versions and saved logs
 
 ## Phase 5
 1. Develop a way to package the repo

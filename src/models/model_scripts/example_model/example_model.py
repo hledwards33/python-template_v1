@@ -5,8 +5,8 @@ from framework.model import BaseModel
 
 class Model:
 
-    def __int__(self, data_dict: dict):
-        self.model = ExampleModel(input_data=data_dict, parameters={})
+    def __init__(self, data_dict: dict, parameters: pd.DataFrame = pd.DataFrame()):
+        self.model = ExampleModel(input_data=data_dict, parameters=parameters)
 
         self.execute = self.execute()
 
@@ -18,7 +18,7 @@ class Model:
 
 class ExampleModel(BaseModel):
 
-    def __init__(self, input_data: dict, parameters: dict = {}):
+    def __init__(self, input_data: dict, parameters: pd.DataFrame = pd.DataFrame()):
         super().__init__(input_data, parameters)
 
     def run(self):

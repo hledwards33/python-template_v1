@@ -13,6 +13,7 @@ class ExampleWrapper(ModelWrapper):
             'pd_data': (model_schemas, "pd_data_schema.json"),
             'lgd_data': (model_schemas, "lgd_data_schema.json"),
             'ead_data': (model_schemas, "ead_data_schema.json"),
+            'parameters': (model_schemas, "parameters_schema.json")
         }
 
     def define_output_schemas(self) -> dict:
