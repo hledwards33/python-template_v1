@@ -100,15 +100,30 @@ class InputData:
 
     @staticmethod
     def write_csv_from_pandas(data: pd.DataFrame, path: str, schema: dict, dataframe_name: str = ""):
-
-        extra_cols = set(data.columns).difference(schema.keys())
-        # Log: extra columns... have been dropped
-
-        missing_cols = set(schema.keys()).difference(data.columns)
-        if len(missing_cols) > 0:
-            raise KeyError(f"Dataframe {dataframe_name} is missing the following columns {missing_cols}.")
+        # TODO: Fill in this method
+        pass
 
     @staticmethod
     def write_parquet_from_pandas(data: pd.DataFrame, path: str, schema: dict):
+        # TODO: Fill in this method
+        pass
+
+    @staticmethod
+    def write_zip_from_pandas(data: pd.DataFrame, path: str, schema: dict):
+        # TODO: Fill in this method
+        pass
+
+    @staticmethod
+    def write_csv_from_spark(data: pd.DataFrame, path: str, schema: dict, dataframe_name: str = ""):
+        # TODO: Fill in this method
+        pass
+
+    @staticmethod
+    def write_parquet_from_spark(data: pd.DataFrame, path: str, schema: dict):
+        # TODO: Fill in this method
+        pass
+
+    @staticmethod
+    def write_zip_from_spark(ata: pd.DataFrame, path: str, schema: dict):
         # TODO: Fill in this method
         pass

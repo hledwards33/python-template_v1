@@ -26,15 +26,16 @@ class ModelWrapper(ABC):
 
         for key, val in model_config['inputs']:
 
+            schema = InputData.convert_schema_pandas(file_schemas[key])
             file_type = val.split(".")[-1]
 
             if file_type in ["csv", "zip"]:
 
-                data_dict[key] = InputData.read_csv_to_pandas(path=val, schema=file_schemas[key])
+                data_dict[key] = InputData.read_csv_to_pandas(path=val, schema=schema)
 
             elif file_type in ["pqt", "parquet"]:
 
-                data_dict[key] = InputData.read_parquet_to_pandas(path=val, schema=file_schemas[key])
+                data_dict[key] = InputData.read_parquet_to_pandas(path=val, schema=schema)
 
         return data_dict
 
@@ -48,18 +49,23 @@ class ModelWrapper(ABC):
 
         for key, val in model_config['inputs']:
 
+            schema = InputData.convert_schema_pandas(file_schemas[key])
             file_type = val.split(".")[-1]
 
-            if file_type in ["csv", "zip"]:
+            if file_type in ["csv"]:
 
-                InputData.write_csv(path=val, schema=file_schemas[key])
+                InputData.write_csv_from_pandas(path=val, schema=schema)
 
             elif file_type in ["pqt", "parquet"]:
 
-                InputData.write_parquet(path=val, schema=file_schemas[key])
+                InputData.write_parquet_from_pandas(path=val, schema=schema)
+
+            elif file_type in ['zip']:
+
+                InputData.write_zip_from_pandas(path=val, schema=schema)
 
     @staticmethod
-    def write_data_from_spark(path: str, file_schemas: dict):
+    def write_data_from_spark(model_config: dict, file_schemas: dict):
         # TODO: Fill in this method
         pass
 
@@ -99,17 +105,24 @@ class DeployWrapper:
         self.post_outputs(data=output_data)
 
     def post_outputs(self, data: dict):
+        output_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_output_schemas())
+
         if self.sys_config['model_parameters']['type'] == "pandas":
-            output_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())
 
+            output_schemas = InputData.convert_schema_pandas(output_schemas)
 
+            self.model_wrapper.write_data_from_pandas(model_config=self.model_config, file_schemas=output_schemas)
 
         elif self.sys_config['model_parameters']['type'] == "pyspark":
-            input_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())
+
+            output_schemas = InputData.convert_schema_spark(output_schemas)
+
+            self.model_wrapper.write_data_from_spark(model_config=self.model_config, file_schemas=output_schemas)
 
     def get_inputs(self) -> dict:
+        input_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())
+
         if self.sys_config['model_parameters']['type'] == "pandas":
-            input_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())
 
             input_schemas = InputData.convert_schema_pandas(schema=input_schemas)
 
@@ -117,7 +130,6 @@ class DeployWrapper:
                                                                 file_schemas=input_schemas)
 
         elif self.sys_config['model_parameters']['type'] == "pyspark":
-            input_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())
 
             input_schemas = InputData.convert_schema_spark(schema=input_schemas)
 
