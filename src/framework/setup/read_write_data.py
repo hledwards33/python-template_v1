@@ -116,7 +116,7 @@ def read_parquet_to_spark(path: str, schema: dict) -> pd.DataFrame:
 
 
 def write_csv_from_pandas(data: pd.DataFrame, path: str, schema: dict, dataframe_name: str = ""):
-    kwargs = {'path': path, 'na_rep': "", 'columns': schema.keys(), 'index': False}
+    kwargs = {'path_or_buf': path, 'na_rep': "", 'columns': schema.keys(), 'index': False}
 
     data.to_csv(**kwargs)
 

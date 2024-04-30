@@ -65,7 +65,7 @@ class ModelWrapper(ABC):
     @staticmethod
     def write_data_from_pandas(data_dict: dict, model_config: dict, file_schemas: dict, base_path: str):
 
-        for key, val in model_config['model_data']['outputs']:
+        for key, val in model_config['outputs'].items():
 
             logger.info(f"Writing dataset {key} with dimensions {len(data_dict[key].columns)} x {len(data_dict[key])}.")
 
@@ -156,12 +156,12 @@ class DeployWrapper:
 
         if self.model_config['parameters']['model_parameters']['type'] == "pandas":
 
-            self.model_wrapper.write_data_from_pandas(data_dict=data_dict, model_config=self.model_config,
+            self.model_wrapper.write_data_from_pandas(data_dict=data_dict, model_config=self.model_config['model_data'],
                                                       file_schemas=output_schemas, base_path=self.get_data_dir())
 
         elif self.model_config['parameters']['model_parameters']['type'] == "pyspark":
 
-            self.model_wrapper.write_data_from_spark(data_dict=data_dict, model_config=self.model_config,
+            self.model_wrapper.write_data_from_spark(data_dict=data_dict, model_config=self.model_config['model_data'],
                                                      file_schemas=output_schemas, base_path=self.get_data_dir())
 
     def get_inputs(self) -> dict:

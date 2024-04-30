@@ -13,4 +13,4 @@ model_data:
     ead_data: "example_model/inputs/ead_data.csv"
 
   outputs:
-    ecl_data: "./data/example_model/outputs/ecl_data.csv"
+    ecl_data: "example_model/outputs/ecl_data.csv"
