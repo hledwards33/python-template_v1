@@ -65,7 +65,7 @@ class ModelWrapper(ABC):
     @staticmethod
     def write_data_from_pandas(data_dict: dict, model_config: dict, file_schemas: dict, base_path: str):
 
-        for key, val in model_config['inputs']:
+        for key, val in model_config['model_data']['outputs']:
 
             logger.info(f"Writing dataset {key} with dimensions {len(data_dict[key].columns)} x {len(data_dict[key])}.")
 
@@ -117,13 +117,12 @@ class DeployWrapper:
     PY_ROOT_DIR = os.path.abspath(os.path.join(PY_FILE_DIR, ".."))
     PY_REPO_DIR = os.path.dirname(PY_ROOT_DIR)
 
-    def __init__(self, ModelWrapper: ModelWrapper, sys_config: str, model_config: str):
-        self.model_wrapper = ModelWrapper()
+    def __init__(self, model_wrapper: ModelWrapper, sys_config: str, model_config: str):
+        self.model_wrapper = model_wrapper()
         self.sys_config = self.read_config(sys_config)
         self.model_config = self.read_config(model_config)
 
     def get_data_dir(self):
-        return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
         return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
 
     def run_model(self):
@@ -205,9 +204,6 @@ class DeployWrapper:
                 data_errors[key] = read_write_data.schema_conformance_spark(data=val, schema=schema, dataframe_name=key)
 
         return data_errors
-
-    def create_data_dict(self):
-        pass
 
     def read_config(self, path: str) -> dict:
         path = os.path.join(self.__class__.PY_REPO_DIR, path)
