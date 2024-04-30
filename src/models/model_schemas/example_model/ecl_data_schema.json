@@ -1,0 +1,13 @@
+{
+  "customer_id": "string",
+  "period_date": "date",
+  "pit_ead": "float",
+  "avg_ead": "float",
+  "pit_pd": "float",
+  "avg_pd": "float",
+  "pit_lgd": "float",
+  "avg_lgd": "float",
+  "pit_ecl": "float",
+  "avg_ecl": "float",
+  "year": "integer"
+}

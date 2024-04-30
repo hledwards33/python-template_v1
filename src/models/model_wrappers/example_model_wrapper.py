@@ -1,22 +1,34 @@
 from framework.model_wrapper import ModelWrapper, DeployWrapper
+from models.model_schemas import example_model as model_schemas
 from models.model_scripts.example_model.example_model import ExampleModel as Model
 
 
 class ExampleWrapper(ModelWrapper):
 
     def __init__(self):
-        super(ModelWrapper, self).__init__()
+        super().__init__()
 
-    def run(self):
-        input_data = self.read_data()
+    def define_input_schemas(self) -> dict:
+        return {
+            'pd_data': (model_schemas, "pd_data_schema.json"),
+            'lgd_data': (model_schemas, "lgd_data_schema.json"),
+            'ead_data': (model_schemas, "ead_data_schema.json"),
+        }
 
-        parameters = self.set_parameters_from_dataframe()
+    def define_output_schemas(self) -> dict:
+        return {
+            'ecl_data': (model_schemas, "ecl_data_schema.json")
+        }
 
-        model_result = Model(input_data, parameters).run()
+    def run_model(self) -> dict:
+
+        model_result = Model(input_data=self.data_dict).run()
 
         return model_result
 
 
 if __name__ == "__main__":
-    DeployWrapper.run_model(model_wrapper=ExampleWrapper, sys_config='config/system_config.yml',
-                            model_config='config/model_config/example_model_config.yml')
+    wrapper = DeployWrapper(ModelWrapper=ExampleWrapper, sys_config='config/system_config.yml',
+                            model_config='config/model_config/example_model/example_model_config.yml')
+
+    wrapper.run_model()

@@ -1,12 +1,21 @@
+import os
 from abc import ABC, abstractmethod
 
-from framework.data_scripts.read_inputs import InputOutputData
+from framework.data_scripts import read_write_data
 
 
 class ModelWrapper(ABC):
 
     def __init__(self):
-        pass
+        self.data_dict = {}
+
+    @property
+    def data_dict(self):
+        return self._data_dict
+
+    @data_dict.setter
+    def data_dict(self, value: dict):
+        self._data_dict = value
 
     @staticmethod
     def set_parameters():
@@ -15,27 +24,28 @@ class ModelWrapper(ABC):
     @staticmethod
     def read_schemas(schema_dict: dict) -> dict:
 
-        schema_dict = {key: InputOutputData.read_json(path=val) for key, val in schema_dict.items()}
+        schema_dict = {key: read_write_data.read_json(path=val) for key, val in schema_dict.items()}
 
         return schema_dict
 
     @staticmethod
-    def read_data_to_pandas(model_config: dict, file_schemas: dict) -> dict:
+    def read_data_to_pandas(model_config: dict, file_schemas: dict, base_path: str) -> dict:
 
         data_dict = {}
 
-        for key, val in model_config['inputs']:
+        for key, val in model_config['inputs'].items():
 
-            schema = InputOutputData.convert_schema_pandas(file_schemas[key])
+            schema = read_write_data.convert_schema_pandas(file_schemas[key])
             file_type = val.split(".")[-1]
+            val = os.path.join(base_path, val)
 
             if file_type in ["csv", "zip"]:
 
-                data_dict[key] = InputOutputData.read_csv_to_pandas(path=val, schema=schema)
+                data_dict[key] = read_write_data.read_csv_to_pandas(path=val, schema=schema)
 
             elif file_type in ["pqt", "parquet"]:
 
-                data_dict[key] = InputOutputData.read_parquet_to_pandas(path=val, schema=schema)
+                data_dict[key] = read_write_data.read_parquet_to_pandas(path=val, schema=schema)
 
         return data_dict
 
@@ -49,20 +59,20 @@ class ModelWrapper(ABC):
 
         for key, val in model_config['inputs']:
 
-            schema = InputOutputData.convert_schema_pandas(file_schemas[key])
+            schema = read_write_data.convert_schema_pandas(file_schemas[key])
             file_type = val.split(".")[-1]
 
             if file_type in ["csv"]:
 
-                InputOutputData.write_csv_from_pandas(path=val, schema=schema)
+                read_write_data.write_csv_from_pandas(path=val, schema=schema)
 
             elif file_type in ["pqt", "parquet"]:
 
-                InputOutputData.write_parquet_from_pandas(path=val, schema=schema)
+                read_write_data.write_parquet_from_pandas(path=val, schema=schema)
 
             elif file_type in ['zip']:
 
-                InputOutputData.write_zip_from_pandas(path=val, schema=schema)
+                read_write_data.write_zip_from_pandas(path=val, schema=schema)
 
     @staticmethod
     def write_data_from_spark(model_config: dict, file_schemas: dict):
@@ -91,18 +101,27 @@ class ModelWrapper(ABC):
 
 
 class DeployWrapper:
+    PY_FILE_DIR = os.path.abspath(os.path.dirname(__file__))
+    PY_ROOT_DIR = os.path.abspath(os.path.join(PY_FILE_DIR, ".."))
+    PY_REPO_DIR = os.path.dirname(PY_ROOT_DIR)
 
-    def __init__(self, model_wrapper: ModelWrapper, sys_config: str, model_config: str):
-        self.model_wrapper = model_wrapper
+    def __init__(self, ModelWrapper: ModelWrapper, sys_config: str, model_config: str):
+        self.model_wrapper = ModelWrapper()
         self.sys_config = self.read_config(sys_config)
         self.model_config = self.read_config(model_config)
+
+    def get_data_dir(self):
+        return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
+        return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
 
     def run_model(self):
         input_data = self.get_inputs()
 
-        output_data = self.run_model(input_data)
+        self.model_wrapper.data_dict = input_data
 
-        self.post_outputs(data=output_data)
+        output_data = self.model_wrapper.run_model()
+
+        self.post_outputs(data_dict=output_data)
 
     def post_outputs(self, data_dict: dict):
         output_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_output_schemas())
@@ -116,26 +135,28 @@ class DeployWrapper:
             # TODO: Log all errors
             raise TypeError(f"Incorrect DataTypes and/or DataColumns see above logs.")
 
-        if self.sys_config['model_parameters']['type'] == "pandas":
+        if self.model_config['parameters']['model_parameters']['type'] == "pandas":
 
             self.model_wrapper.write_data_from_pandas(model_config=self.model_config, file_schemas=output_schemas)
 
-        elif self.sys_config['model_parameters']['type'] == "pyspark":
+        elif self.model_config['parameters']['model_parameters']['type'] == "pyspark":
 
             self.model_wrapper.write_data_from_spark(model_config=self.model_config, file_schemas=output_schemas)
 
     def get_inputs(self) -> dict:
         input_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())
 
-        if self.sys_config['model_parameters']['type'] == "pandas":
+        if self.model_config['parameters']['model_parameters']['type'] == "pandas":
 
-            input_data = self.model_wrapper.read_data_to_pandas(model_config=self.model_config,
-                                                                file_schemas=input_schemas)
+            input_data = self.model_wrapper.read_data_to_pandas(model_config=self.model_config['model_data'],
+                                                                file_schemas=input_schemas,
+                                                                base_path=self.get_data_dir())
 
-        elif self.sys_config['model_parameters']['type'] == "pyspark":
+        elif self.model_config['parameters']['model_parameters']['type'] == "pyspark":
 
-            input_data = self.model_wrapper.read_data_to_spark(model_config=self.model_config,
-                                                               file_schemas=input_schemas)
+            input_data = self.model_wrapper.read_data_to_spark(model_config=self.model_config['model_data'],
+                                                               file_schemas=input_schemas,
+                                                               base_path=self.get_data_dir())
 
         else:
             raise ImportError('Parameter "Type" is defined incorrectly. Type can take values ["pandas", "pyspark"] and '
@@ -148,25 +169,26 @@ class DeployWrapper:
 
         for key, val in data_dict.items():
 
-            if self.sys_config['model_parameters']['type'] == "pandas":
+            if self.model_config['parameters']['model_parameters']['type'] == "pandas":
 
-                schema = InputOutputData.convert_schema_pandas(schema_dict[key])
+                schema = read_write_data.convert_schema_pandas(schema_dict[key])
 
-                data_errors[key] = InputOutputData.schema_conformance_pandas(data=val, schema=schema, dataframe_name=key)
+                data_errors[key] = read_write_data.schema_conformance_pandas(data=val, schema=schema,
+                                                                             dataframe_name=key)
 
-            elif self.sys_config['model_parameters']['type'] == "pandas":
+            elif self.model_config['parameters']['model_parameters']['type'] == "pandas":
 
-                schema = InputOutputData.convert_schema_spark(schema_dict[key])
+                schema = read_write_data.convert_schema_spark(schema_dict[key])
 
-                data_errors[key] = InputOutputData.schema_conformance_spark(data=val, schema=schema, dataframe_name=key)
+                data_errors[key] = read_write_data.schema_conformance_spark(data=val, schema=schema, dataframe_name=key)
 
         return data_errors
 
     def create_data_dict(self):
         pass
 
-    @staticmethod
-    def read_config(path: str) -> dict:
-        config_dict = InputOutputData.read_yaml(path=path)
+    def read_config(self, path: str) -> dict:
+        path = os.path.join(self.__class__.PY_REPO_DIR, path)
+        config_dict = read_write_data.read_yaml(path=path)
 
         return config_dict
