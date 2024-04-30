@@ -1,5 +1,5 @@
+from framework.model_wrapper import ModelWrapper, DeployWrapper
 from models.model_scripts.example_model.example_model import ExampleModel as Model
-from framework.model_wrapper import ModelWrapper
 
 
 class ExampleWrapper(ModelWrapper):
@@ -18,7 +18,5 @@ class ExampleWrapper(ModelWrapper):
 
 
 if __name__ == "__main__":
-    from model_wrapper import run_model
-
-    run_model(model_wrapper=ExampleWrapper, sys_config='config/system_config.yml',
-              model_config='config/model_config/example_model_config.yml')
+    DeployWrapper.run_model(model_wrapper=ExampleWrapper, sys_config='config/system_config.yml',
+                            model_config='config/model_config/example_model_config.yml')

@@ -34,6 +34,9 @@ class ModelWrapper:
 
 class DeployWrapper:
 
+    def __init__(self):
+        pass
+
     def run_model(self, model_wrapper: ModelWrapper, sys_config: str, model_config: str):
         sys_config = self.read_config(sys_config)
         model_config = self.read_config(model_config)
