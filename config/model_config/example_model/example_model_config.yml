@@ -2,6 +2,8 @@ parameters:
 
   model_parameters:
     model_id: "example-model"
+    model_type: "ifrs9"
+    type: "pandas"
 
 model_data:
 
