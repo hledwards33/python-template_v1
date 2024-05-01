@@ -10,7 +10,7 @@ class ExampleWrapper(ModelWrapper):
         super().__init__()
 
     def define_parameter_schemas(self) -> tuple:
-        return (parameter_schemas, "parameters_schema.json")
+        return parameter_schemas, "parameters_schema.json"
 
     def define_input_schemas(self) -> dict:
         return {
