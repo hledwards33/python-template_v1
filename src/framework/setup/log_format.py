@@ -45,7 +45,7 @@ def headers(message: str):
 logging.getLogger().setLevel(logging.DEBUG)
 
 sys_handler = logging.StreamHandler(sys.stdout)
-cn_format = logging.Formatter("[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s")
+cn_format = CustomFormatter("[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s")
 sys_handler.setFormatter(cn_format)
 sys_handler.setLevel(logging.DEBUG)
 
