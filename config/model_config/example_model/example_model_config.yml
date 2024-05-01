@@ -5,6 +5,8 @@ parameters:
     model_type: "ifrs9"
     type: "pandas"
     parameters_file: "parameters.csv"
+    log_location: "model_logs/example_model_logs"
+    log_name: "example_model_log_{date}"
 
     optional:
       ecl_upper_limit: 500

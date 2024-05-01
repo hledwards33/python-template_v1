@@ -1,12 +1,12 @@
 import logging
 import os
+import time
 from abc import ABC, abstractmethod
 
 import pandas as pd
 
 from framework.setup import read_write_data
-from framework.setup.log_format import headers
-import time
+from framework.setup.log_format import headers, create_logging_file
 
 logger = logging.getLogger()
 
@@ -134,6 +134,13 @@ class DeployWrapper:
         self.model_wrapper = model_wrapper()
         self.sys_config = self.read_config(sys_config)
         self.model_config = self.read_config(model_config)
+        self.start_logging()
+
+    def start_logging(self):
+        name = self.model_config['parameters']['model_parameters']['log_name']
+        path = os.path.join(self.__class__.PY_REPO_DIR,
+                            self.model_config['parameters']['model_parameters']['log_location'])
+        create_logging_file(path,name)
 
     def get_data_dir(self):
         return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
@@ -141,26 +148,26 @@ class DeployWrapper:
     def run_model(self):
         start = time.perf_counter()
 
-        headers(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' is Running..")
+        logger.info(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' is Running")
 
-        headers("Reading Input Data.")
+        headers("Reading Input Data")
         input_data = self.get_inputs()
         parameters = self.get_parameters()
 
         self.model_wrapper.data_dict = input_data
         self.model_wrapper.parameters = parameters
 
-        headers("Executing Model.")
+        headers("Executing Model")
         output_data = self.model_wrapper.run_model()
 
-        headers("Writing Output Data.")
+        headers("Writing Output Data")
         self.post_outputs(data_dict=output_data)
 
-        logger.info("Output Data Saved Successfully.")
-        headers(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' Ran Successfully.")
+        logger.info("Output Data Saved Successfully")
+        headers(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' Ran Successfully")
 
         end = time.perf_counter()
-        logger.info(f"Model executed in {end - start:0.4f} seconds.")
+        logger.info(f"Model execution time: {end - start:0.4f} seconds.")
 
     def get_parameters(self):
         parameters_schema = read_write_data.read_json(path=self.model_wrapper.define_parameter_schemas())
@@ -203,7 +210,7 @@ class DeployWrapper:
                            dataset_errors.values()])
 
         if error_count > 0:
-            headers("Data Conformance Errors.")
+            headers("Data Conformance Errors")
             for dataset, dataset_errors in conformance_errors.items():
                 for error_type, error in dataset_errors.items():
                     logger.info(f"Dataset {dataset} has {error_type}: {error}.")

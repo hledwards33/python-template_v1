@@ -4,6 +4,9 @@ import pandas as pd
 
 from src.framework.setup import read_write_data
 from tests.data_reconciliation.framework.reconciliation_data_analysis import data_comparison
+from framework.setup import log_format
+import logging
+logger = logging.getLogger()
 
 PY_FILE_DIR = os.path.abspath(os.path.dirname(__file__))
 PY_ROOT_DIR = os.path.abspath(os.path.join(PY_FILE_DIR, ".."))
@@ -59,6 +62,8 @@ def use_matching_columns(df1: pd.DataFrame, df2: pd.DataFrame, schema: dict) -> 
 def run_full_data_reconciliation(recon_config: dict, sys_config: dict, usecols: bool = False,
                                  matching_columns: bool = False, remove_columns: list = []):
     for data, data_config in recon_config.items():
+        logger.info(f"Reconciliation of '{data.upper()}'")
+
         schema = get_schema(data_config['schema_path'])
 
         main_data = get_data(data_config['main_data_path'], schema, sys_config, usecols=usecols)
@@ -66,9 +71,11 @@ def run_full_data_reconciliation(recon_config: dict, sys_config: dict, usecols: 
         test_data = get_data(data_config['test_data_path'], schema, sys_config, usecols=usecols)
 
         if matching_columns:
+            logger.info("Only common columns between both datasets are being compared.")
             main_data, test_data, schema = use_matching_columns(main_data, test_data, schema)
 
         if remove_columns:
+            logger.info(f"The following columns have been removed from the analysis: {remove_columns}.")
             main_data = main_data.drop(columns=remove_columns, inplace=True)
             test_data = test_data.drop(columns=remove_columns, inplace=True)
 
@@ -76,19 +83,19 @@ def run_full_data_reconciliation(recon_config: dict, sys_config: dict, usecols: 
 
 
 if __name__ == "__main__":
-    recon_config_path = r"models/example_model/example_model_reconciliation.yml"
-    sys_config_path = r"config/system_config.yml"
+    _recon_config_path = r"models/example_model/example_model_reconciliation.yml"
+    _sys_config_path = r"config/system_config.yml"
 
-    sys_config = read_write_data.read_yaml(os.path.join(PY_REPO_DIR, sys_config_path))
-    recon_config = read_write_data.read_yaml(os.path.join(PY_ROOT_DIR, recon_config_path))
+    sys_config = read_write_data.read_yaml(os.path.join(PY_REPO_DIR, _sys_config_path))
+    recon_config = read_write_data.read_yaml(os.path.join(PY_ROOT_DIR, _recon_config_path))
 
-    usecols = False
+    _usecols = False
 
-    matching_columns = False
+    _matching_columns = False
 
-    remove_columns: list = []
+    _remove_columns: list = []
 
-    run_full_data_reconciliation(recon_config, sys_config, usecols,
-                                 matching_columns, remove_columns)
+    run_full_data_reconciliation(recon_config, sys_config, _usecols,
+                                 _matching_columns, _remove_columns)
 
     print("Done!")
