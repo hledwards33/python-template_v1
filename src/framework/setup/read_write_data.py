@@ -8,9 +8,16 @@ import yaml
 logger = logging.getLogger()
 
 
-def read_json(path: str) -> dict:
+def read_json(path: tuple) -> dict:
     path = os.path.join(os.path.dirname(path[0].__file__), path[1])
 
+    with open(path, 'r') as file:
+        result = json.load(file)
+
+    return result
+
+
+def read_json_abs(path: str) -> dict:
     with open(path, 'r') as file:
         result = json.load(file)
 
@@ -27,9 +34,9 @@ def read_yaml(path: str) -> dict:
 def convert_schema_pandas(schema: dict) -> dict:
     for key, val in schema.items():
         if val.lower() == 'integer':
-            schema[key] = 'Int64'
+            schema[key] = pd.Int64Dtype()
         elif val.lower() == 'float':
-            schema[key] = 'Float64'
+            schema[key] = pd.Float64Dtype()
         elif val.lower() == 'date':
             schema[key] = 'datetime64[s]'
         elif val.lower() == 'string':
@@ -46,6 +53,20 @@ def convert_schema_output_pandas(schema: dict) -> dict:
             schema[key] = 'Float64'
         elif val.lower() == 'date':
             schema[key] = 'datetime64[s]'
+        elif val.lower() == 'string':
+            schema[key] = 'object'
+
+    return schema
+
+
+def convert_schema_recon_pandas(schema: dict) -> dict:
+    for key, val in schema.items():
+        if val.lower() == 'integer':
+            schema[key] = pd.Int64Dtype()
+        elif val.lower() == 'float':
+            schema[key] = pd.Float64Dtype()
+        elif val.lower() == 'date':
+            schema[key] = 'object'
         elif val.lower() == 'string':
             schema[key] = 'object'
 

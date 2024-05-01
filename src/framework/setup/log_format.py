@@ -1,8 +1,6 @@
 import logging
-import sys
-
-import numpy as np
 import math
+import sys
 
 
 class CustomFormatter(logging.Formatter):
@@ -40,6 +38,12 @@ def headers(message: str):
     lines_end = ''.join(['-' for _ in range(line_num_end)])
     print(lines_start + ' ' + message + ' ' + lines_end)
     logging.info(message)
+
+
+def lines():
+    output = "".join(["-" for _ in range(75)])
+
+    print(output)
 
 
 logging.getLogger().setLevel(logging.DEBUG)
