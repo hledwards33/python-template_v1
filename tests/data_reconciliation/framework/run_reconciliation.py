@@ -78,7 +78,8 @@ def run_full_data_reconciliation(sys_config_path: str, recon_config_path: str,
 
         start_logging(log_config, data)
 
-        logger.info(f"Reconciliation of '{data.upper()}', date: {datetime.date.today()}.")
+        logger.info(f"Reconciliation of '{data.upper()}', date: {datetime.date.today()} "
+                    f"{datetime.datetime.now().strftime('%H:%M:%S')}.")
 
         schema = get_schema(data_config['schema_path'])
 

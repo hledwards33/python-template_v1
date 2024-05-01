@@ -88,14 +88,15 @@ def create_logging_file_handler_simple(path: str):
 
 
 def create_logging_file(file_handler, path: str, name: str, data_name: str = None):
-    if ('{date}' in name) and ('{data}' in name):
-        name = name.format(date=str(datetime.date.today()), data=data_name)
+    format_dict = {}
+    if '{date}' in name:
+        format_dict['date'] = datetime.date.today()
 
-    elif '{date}' in name:
-        name = name.format(date=datetime.date.today())
+    if '{data}' in name:
+        format_dict['data'] = name.format(data=data_name)
 
-    elif '{data}' in name:
-        name = name.format(data=data_name)
+    if format_dict:
+        name = name.format(**format_dict)
 
     if sum([1 for handler in logging.getLogger().handlers if name in str(handler)]) < 1:
         fil_handler = file_handler(os.path.join(path, name) + ".log")

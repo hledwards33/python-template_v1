@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 import time
@@ -152,6 +153,7 @@ class DeployWrapper:
     def run_model(self):
         start = time.perf_counter()
 
+        logger.info(f"This log was created {datetime.date.today()} {datetime.datetime.now().strftime('%H:%M:%S')}.")
         logger.info(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' is Running")
 
         headers("Reading Input Data")
