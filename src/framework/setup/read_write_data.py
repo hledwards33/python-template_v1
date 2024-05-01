@@ -102,7 +102,7 @@ def schema_conformance_pandas(data: pd.DataFrame, schema: dict, dataframe_name: 
     return errors
 
 
-def read_csv_to_pandas(path: str, schema: dict) -> pd.DataFrame:
+def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.DataFrame:
     # TODO: Log dataset x is being read in, only columns defined in schemas are read
     # TODO: Check if this works with zip files and add if_zip to the read data func
     kwargs = {
@@ -111,9 +111,12 @@ def read_csv_to_pandas(path: str, schema: dict) -> pd.DataFrame:
         'usecols': schema.keys(),
         'cache_dates': True,
         'engine': 'pyarrow',
-        'parse_dates': [key for key, val in schema.items() if val == "date"],
-        'date_format': "%Y-%m-%d"
+        'parse_dates': [key for key, val in schema.items() if val == 'datetime64[s]'],
+        'date_format': "%Y-%m-%d",
     }
+
+    if not usecols:
+        del kwargs['usecols']
 
     data = pd.read_csv(**kwargs)
 

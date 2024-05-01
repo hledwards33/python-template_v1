@@ -7,6 +7,7 @@
 4. Done: Create an example model
 5. Write descriptive errors for common mistakes 
 6. Done: Create method of saving parameters to instance variables
+7. Enforce default nan type values for all dtypes
 
 ## Phase 2
 1. Done: Create automated logs
