@@ -1,20 +1,21 @@
 # Project Plan
 
 ## Phase 1
-1. Done: Create an input/output layer
-2. Done: Create a model wrapper 
+1. **_Done: Create an input/output layer_**
+2. **_Done: Create a model wrapper_** 
 3. Create a model wrapper template
-4. Done: Create an example model
+4. **_Done: Create an example model_**
 5. Write descriptive errors for common mistakes 
-6. Done: Create method of saving parameters to instance variables
+6. **_Done: Create method of saving parameters to instance variables_**
 7. Enforce default nan type values for all dtypes
 
 ## Phase 2
-1. Done: Create automated logs
+1. _**Done: Create automated logs**_
 2. Create the ability to read in parquet and zip files
-3. Done: Create memory logging
-4. Done: Create a script that can run models on different data with only a change to the config
+3. _**Done: Create memory logging**_
+4. _**Done: Create a script that can run models on different data with only a change to the config**_
 5. Create a model meta-data file (.yaml)
+6. Test various use cases
 
 ## Phase 3
 1. Create a master script that can chain models
@@ -26,7 +27,8 @@
 1. Create a Django interface for running models
 2. Output the logs to the interface 
 3. Show which model is running and status in the interface
-4. Put this into a MRM context with git versions and saved logs
+4. Put this into a MRM context with git versions 
+5. _**DONE: Define method to save logs**_
 
 ## Phase 5
 1. Develop a way to package the repo
