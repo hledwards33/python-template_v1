@@ -1,3 +1,7 @@
+outputs:
+  log_location: "model_logs/example_model_logs"
+  log_name: "example_model_reconciliation_{data}_{date}"
+
 ecl_data:
   schema_path: "src/models/model_schemas/example_model/ecl_data_schema.json"
   main_data_path: "example_model/outputs/ecl_data.csv"

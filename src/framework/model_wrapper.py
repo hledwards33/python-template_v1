@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 import pandas as pd
 
 from framework.setup import read_write_data
-from framework.setup.log_format import headers, create_logging_file
+from framework.setup.log_format import headers, create_logging_file, remove_handler, create_logging_file_handler_detailed
 
 logger = logging.getLogger()
 
@@ -140,7 +140,11 @@ class DeployWrapper:
         name = self.model_config['parameters']['model_parameters']['log_name']
         path = os.path.join(self.__class__.PY_REPO_DIR,
                             self.model_config['parameters']['model_parameters']['log_location'])
-        create_logging_file(path,name)
+        create_logging_file(create_logging_file_handler_detailed,path, name)
+
+    def stop_logging(self):
+        name = self.model_config['parameters']['model_parameters']['log_name']
+        remove_handler(name)
 
     def get_data_dir(self):
         return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
@@ -168,6 +172,8 @@ class DeployWrapper:
 
         end = time.perf_counter()
         logger.info(f"Model execution time: {end - start:0.4f} seconds.")
+
+        self.stop_logging()
 
     def get_parameters(self):
         parameters_schema = read_write_data.read_json(path=self.model_wrapper.define_parameter_schemas())

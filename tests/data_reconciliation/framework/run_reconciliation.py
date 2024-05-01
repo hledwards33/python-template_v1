@@ -1,11 +1,13 @@
+import datetime
+import logging
 import os
 
 import pandas as pd
 
+from framework.setup.log_format import create_logging_file, remove_handler, create_logging_file_handler_simple
 from src.framework.setup import read_write_data
 from tests.data_reconciliation.framework.reconciliation_data_analysis import data_comparison
-from framework.setup import log_format
-import logging
+
 logger = logging.getLogger()
 
 PY_FILE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -59,10 +61,24 @@ def use_matching_columns(df1: pd.DataFrame, df2: pd.DataFrame, schema: dict) -> 
     return df1, df2, schema
 
 
-def run_full_data_reconciliation(recon_config: dict, sys_config: dict, usecols: bool = False,
-                                 matching_columns: bool = False, remove_columns: list = []):
+def start_logging(config: dict, data_name: str):
+    name = config['log_name']
+    path = os.path.join(PY_REPO_DIR, config['log_location'])
+    create_logging_file(create_logging_file_handler_simple, path, name, data_name=data_name)
+
+
+def run_full_data_reconciliation(sys_config_path: str, recon_config_path: str,
+                                 usecols: bool = False, matching_columns: bool = False, remove_columns: list = []):
+    sys_config = read_write_data.read_yaml(os.path.join(PY_REPO_DIR, sys_config_path))
+    recon_config = read_write_data.read_yaml(os.path.join(PY_REPO_DIR, recon_config_path))
+    log_config = recon_config['outputs'].copy()
+    del recon_config['outputs']
+
     for data, data_config in recon_config.items():
-        logger.info(f"Reconciliation of '{data.upper()}'")
+
+        start_logging(log_config, data)
+
+        logger.info(f"Reconciliation of '{data.upper()}', date: {datetime.date.today()}.")
 
         schema = get_schema(data_config['schema_path'])
 
@@ -81,21 +97,18 @@ def run_full_data_reconciliation(recon_config: dict, sys_config: dict, usecols: 
 
         data_comparison(schema, main_data, test_data)
 
+        remove_handler(data)
+
 
 if __name__ == "__main__":
-    _recon_config_path = r"models/example_model/example_model_reconciliation.yml"
-    _sys_config_path = r"config/system_config.yml"
+    kwargs = {
+        'sys_config_path': r"config/system_config.yml",
+        'recon_config_path': r"config/model_config/example_model/example_model_reconciliation.yml",
+        'usecols': False,
+        'matching_columns': False,
+        'remove_columns': []
+    }
 
-    sys_config = read_write_data.read_yaml(os.path.join(PY_REPO_DIR, _sys_config_path))
-    recon_config = read_write_data.read_yaml(os.path.join(PY_ROOT_DIR, _recon_config_path))
-
-    _usecols = False
-
-    _matching_columns = False
-
-    _remove_columns: list = []
-
-    run_full_data_reconciliation(recon_config, sys_config, _usecols,
-                                 _matching_columns, _remove_columns)
+    run_full_data_reconciliation(**kwargs)
 
     print("Done!")
