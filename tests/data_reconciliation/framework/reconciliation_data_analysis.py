@@ -3,7 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 
-from framework.setup.log_format import headers
+from src.framework.setup.log_format import headers
 
 logger = logging.getLogger()
 

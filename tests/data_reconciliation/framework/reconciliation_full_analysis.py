@@ -4,9 +4,9 @@ import os
 
 import pandas as pd
 
-from framework.setup.log_format import create_logging_file, remove_handler, create_logging_file_handler_simple, \
-    initiate_logger
 from src.framework.setup import read_write_data
+from src.framework.setup.log_format import (create_logging_file, remove_handler, create_logging_file_handler_simple,
+                                            initiate_logger, headers)
 from tests.data_reconciliation.framework.reconciliation_data_analysis import data_comparison
 from tests.data_reconciliation.framework.reconciliation_field_analysis import field_comparison
 
@@ -70,13 +70,46 @@ def start_logging(config: dict, data_name: str):
     create_logging_file(create_logging_file_handler_simple, path, name, data_name=data_name)
 
 
-def run_full_data_reconciliation(sys_config_path: str, recon_config_path: str,
-                                 usecols: bool = False, matching_columns: bool = False, remove_columns: list = [],
-                                 verbose: bool = True):
+def get_args(log_config: dict, usecols: bool = False, matching_columns: bool = False, remove_columns: list = [],
+             verbose: bool = True):
+    try:
+        usecols = log_config['usecols']
+    except KeyError:
+        pass
+
+    try:
+        matching_columns = log_config['matching_columns']
+    except KeyError:
+        pass
+
+    try:
+        remove_columns = log_config['remove_columns']
+    except KeyError:
+        pass
+
+    try:
+        verbose = log_config['verbose']
+    except KeyError:
+        pass
+
+    headers("Reconciliation File Configuration")
+
+    logging.info(f"Reconciliation Results file pattern: {log_config['log_location']}/{log_config['log_name']}.")
+
+    for key, val in log_config.items():
+        if key not in ['log_location', 'log_name']:
+            logging.info(f"Parameter {key} has been set to {val} for the creation of the below logs.")
+
+    return usecols, matching_columns, remove_columns, verbose
+
+
+def run_full_data_reconciliation(sys_config_path: str, recon_config_path: str):
     sys_config = read_write_data.read_yaml(os.path.join(PY_REPO_DIR, sys_config_path))
     recon_config = read_write_data.read_yaml(os.path.join(PY_REPO_DIR, recon_config_path))
-    log_config = recon_config['outputs'].copy()
-    del recon_config['outputs']
+    log_config = recon_config['config'].copy()
+    del recon_config['config']
+
+    usecols, matching_columns, remove_columns, verbose = get_args(log_config)
 
     for data, data_config in recon_config.items():
 

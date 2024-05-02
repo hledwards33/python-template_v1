@@ -143,7 +143,7 @@ class DeployWrapper:
         name = self.model_config['parameters']['model_parameters']['log_name']
         path = os.path.join(self.__class__.PY_REPO_DIR,
                             self.model_config['parameters']['model_parameters']['log_location'])
-        create_logging_file(create_logging_file_handler_detailed,path, name)
+        create_logging_file(create_logging_file_handler_detailed, path, name)
 
     def stop_logging(self):
         name = self.model_config['parameters']['model_parameters']['log_name']
