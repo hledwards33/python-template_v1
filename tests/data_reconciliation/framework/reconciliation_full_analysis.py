@@ -107,16 +107,3 @@ def run_full_data_reconciliation(sys_config_path: str, recon_config_path: str,
             field_comparison(main_data, test_data, schema)
 
         remove_handler(data)
-
-
-if __name__ == "__main__":
-    kwargs = {
-        'sys_config_path': r"config/system_config.yml",
-        'recon_config_path': r"config/model_config/example_model/example_model_reconciliation.yml",
-        'usecols': False,
-        'matching_columns': False,
-        'remove_columns': [],
-        'verbose': True
-    }
-
-    run_full_data_reconciliation(**kwargs)
