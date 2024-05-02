@@ -8,6 +8,7 @@
 5. Write descriptive errors for common mistakes 
 6. **_Done: Create method of saving parameters to instance variables_**
 7. Enforce default nan type values for all dtypes
+8. **_Done: Create a reconciliation capability_**
 
 ## Phase 2
 1. _**Done: Create automated logs**_
@@ -26,9 +27,8 @@
 ## Phase 4 
 1. Create a Django interface for running models
 2. Output the logs to the interface 
-3. Show which model is running and status in the interface
-4. Put this into a MRM context with git versions 
-5. _**DONE: Define method to save logs**_
+3. Show which model is running and status in the interface 
+4_**DONE: Define method to save logs**_
 
 ## Phase 5
 1. Develop a way to package the repo
