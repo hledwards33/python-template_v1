@@ -9,7 +9,7 @@ logger = logging.getLogger()
 
 
 def data_comparison(schema, main_data: pd.DataFrame, test_data: pd.DataFrame, verbose: bool = True):
-    headers("Reconciliation Results")
+    headers("Data Reconciliation Results")
 
     numeric_fields = [key for key, val in schema.items() if
                       (isinstance(val, pd.Float64Dtype) | isinstance(val, pd.Int64Dtype))]

@@ -49,6 +49,13 @@ def headers(message: str):
     detailed_file_format()
 
 
+def no_format(message: str):
+    simple_file_format()
+    logging.info(message, extra={'block': ['console']})
+    print(message)
+    detailed_file_format()
+
+
 def detailed_file_format():
     for handler in logging.getLogger().handlers:
         if isinstance(handler, logging.FileHandler):

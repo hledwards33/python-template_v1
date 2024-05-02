@@ -102,7 +102,7 @@ def run_full_data_reconciliation(sys_config_path: str, recon_config_path: str,
         match, main_data, test_data = data_comparison(schema, main_data, test_data)
 
         if not match:
-            field_comparison(main_data, test_data)
+            field_comparison(main_data, test_data, schema)
 
         remove_handler(data)
 
