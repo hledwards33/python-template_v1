@@ -7,8 +7,10 @@ from abc import ABC, abstractmethod
 import pandas as pd
 
 from framework.setup import read_write_data
-from framework.setup.log_format import headers, create_logging_file, remove_handler, create_logging_file_handler_detailed
+from framework.setup.log_format import (headers, create_logging_file, remove_handler,
+                                        create_logging_file_handler_detailed, initiate_logger)
 
+initiate_logger()
 logger = logging.getLogger()
 
 

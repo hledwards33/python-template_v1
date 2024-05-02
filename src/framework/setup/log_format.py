@@ -93,7 +93,7 @@ def create_logging_file(file_handler, path: str, name: str, data_name: str = Non
         format_dict['date'] = datetime.date.today()
 
     if '{data}' in name:
-        format_dict['data'] = name.format(data=data_name)
+        format_dict['data'] = data_name
 
     if format_dict:
         name = name.format(**format_dict)
@@ -139,6 +139,6 @@ def build_handler_filters(handler: str):
 
     return handler_filter
 
-
-logging.getLogger().setLevel(logging.DEBUG)
-logging.getLogger().addHandler(create_logging_sys_handler_detailed())
+def initiate_logger():
+    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().addHandler(create_logging_sys_handler_detailed())

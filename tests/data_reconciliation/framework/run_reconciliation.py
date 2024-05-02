@@ -4,10 +4,12 @@ import os
 
 import pandas as pd
 
-from framework.setup.log_format import create_logging_file, remove_handler, create_logging_file_handler_simple
+from framework.setup.log_format import create_logging_file, remove_handler, create_logging_file_handler_simple, initiate_logger
 from src.framework.setup import read_write_data
 from tests.data_reconciliation.framework.reconciliation_data_analysis import data_comparison
+from tests.data_reconciliation.framework.reconciliation_field_analysis import field_comparison
 
+initiate_logger()
 logger = logging.getLogger()
 
 PY_FILE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -96,7 +98,10 @@ def run_full_data_reconciliation(sys_config_path: str, recon_config_path: str,
             main_data = main_data.drop(columns=remove_columns, inplace=True)
             test_data = test_data.drop(columns=remove_columns, inplace=True)
 
-        data_comparison(schema, main_data, test_data)
+        match, main_data, test_data = data_comparison(schema, main_data, test_data)
+
+        if not match:
+            field_comparison(main_data, test_data)
 
         remove_handler(data)
 

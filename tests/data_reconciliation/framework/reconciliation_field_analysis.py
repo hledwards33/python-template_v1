@@ -7,3 +7,5 @@ import pandas as pd
 
 logger = logging.getLogger()
 
+def field_comparison(main_data: pd.DataFrame, test_data: pd.DataFrame):
+    pass
