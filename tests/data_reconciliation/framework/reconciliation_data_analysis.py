@@ -81,7 +81,7 @@ def data_comparison(schema, main_data: pd.DataFrame, test_data: pd.DataFrame, ve
         main_freq.index = main_freq.index.astype(str, copy=False)
         main_freq.sort_index(inplace=False)
 
-        test_freq = main_data[field].value_counts(dropna=False)
+        test_freq = test_data[field].value_counts(dropna=False)
         test_freq.index = test_freq.index.astype(str, copy=False)
         test_freq.sort_index(inplace=False)
 

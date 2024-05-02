@@ -44,6 +44,7 @@ def headers(message: str):
     print()
 
     simple_file_format()
+    logging.info("", extra={'block': ['console']})
     logging.info(lines_start + ' ' + message + ' ' + lines_end + "\n", extra={'block': ['console']})
     detailed_file_format()
 
@@ -138,6 +139,7 @@ def build_handler_filters(handler: str):
         return True
 
     return handler_filter
+
 
 def initiate_logger():
     logging.getLogger().setLevel(logging.DEBUG)

@@ -4,7 +4,8 @@ import os
 
 import pandas as pd
 
-from framework.setup.log_format import create_logging_file, remove_handler, create_logging_file_handler_simple, initiate_logger
+from framework.setup.log_format import create_logging_file, remove_handler, create_logging_file_handler_simple, \
+    initiate_logger
 from src.framework.setup import read_write_data
 from tests.data_reconciliation.framework.reconciliation_data_analysis import data_comparison
 from tests.data_reconciliation.framework.reconciliation_field_analysis import field_comparison
@@ -116,5 +117,3 @@ if __name__ == "__main__":
     }
 
     run_full_data_reconciliation(**kwargs)
-
-    print("Done!")
