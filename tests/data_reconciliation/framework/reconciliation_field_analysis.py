@@ -49,4 +49,4 @@ def field_comparison(main_data: pd.DataFrame, test_data: pd.DataFrame, schema: d
         headers(field.upper())
 
         logger.info("The differences between the datasets are:")
-        no_format(difference)
+        no_format(difference.rename(columns={'count': 'main v test'}))
