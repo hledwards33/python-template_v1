@@ -277,7 +277,7 @@ class DeployWrapper:
                 data_errors[key] = read_write_data.schema_conformance_pandas(data=val, schema=schema,
                                                                              dataframe_name=key)
 
-            elif self.model_config['parameters']['model_parameters']['type'] == "pandas":
+            elif self.model_config['parameters']['model_parameters']['type'] == "spark":
 
                 schema = read_write_data.convert_schema_spark(schema_dict[key])
 

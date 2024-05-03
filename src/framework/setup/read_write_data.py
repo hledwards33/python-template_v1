@@ -41,7 +41,7 @@ def convert_schema_pandas(schema: dict) -> dict:
         elif val.lower() == 'date':
             schema[key] = 'datetime64[s]'
         elif val.lower() == 'string':
-            schema[key] = 'object'
+            schema[key] = 'string'
 
     return schema
 
@@ -55,7 +55,7 @@ def convert_schema_output_pandas(schema: dict) -> dict:
         elif val.lower() == 'date':
             schema[key] = 'datetime64[s]'
         elif val.lower() == 'string':
-            schema[key] = 'object'
+            schema[key] = 'string'
 
     return schema
 
@@ -67,9 +67,9 @@ def convert_schema_recon_pandas(schema: dict) -> dict:
         elif val.lower() == 'float':
             schema[key] = pd.Float64Dtype()
         elif val.lower() == 'date':
-            schema[key] = 'object'
+            schema[key] = 'string'
         elif val.lower() == 'string':
-            schema[key] = 'object'
+            schema[key] = 'string'
 
     return schema
 
@@ -99,7 +99,7 @@ def enforce_floats(df: pd.DataFrame) -> pd.DataFrame:
 
 def enforce_strings(df: pd.DataFrame) -> pd.DataFrame:
     for column in df.columns:
-        if df[column].dtype == "object":
+        if df[column].dtype in ["string", "object"]:
             df[column] = df[column].mask(df[column] == "")
             df[column] = df[column].mask(df[column].str.lower() == "nan")
     return df
@@ -119,15 +119,17 @@ def schema_conformance_spark(data: pd.DataFrame, schema: dict, dataframe_name: s
 def schema_conformance_pandas(data: pd.DataFrame, schema: dict, dataframe_name: str = "") -> dict:
     errors = {'incorrect_type': []}
 
-    extra_cols = set(data.columns).difference(schema.keys())
-    # TODO: Log: extra columns... have been dropped
+    extra_cols = list(set(data.columns).difference(schema.keys()))
+    if extra_cols:
+        data.drop(columns=extra_cols, inplace=True)
+        logger.warning(f"The following columns have been dropped from dataset {dataframe_name}: {extra_cols}")
 
     missing_cols = set(schema.keys()).difference(data.columns)
     if len(missing_cols) > 0:
         errors['missing_columns'] = [f"Dataframe {dataframe_name} is missing the following columns {missing_cols}."]
 
     for col in data.columns:
-        if data[col].dtype == schema[col]:
+        if str(data[col].dtype).lower() == schema[col].lower():
             logger.info(f"Dataset {dataframe_name} has {col} with correct type: {data[col].dtype}.")
 
         else:
@@ -138,7 +140,7 @@ def schema_conformance_pandas(data: pd.DataFrame, schema: dict, dataframe_name: 
 
 
 def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.DataFrame:
-    # TODO: Log dataset x is being read in, only columns defined in schemas are read
+    logger.info(f"Loading columns: {schema.keys()}")
     # TODO: Check if this works with zip files and add if_zip to the read data func
     kwargs = {
         'filepath_or_buffer': path,
@@ -155,7 +157,7 @@ def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.Data
 
     data = pd.read_csv(**kwargs)
 
-    # data = enforce_data_types(data)
+    data = enforce_data_types(data)
 
     return data
 
