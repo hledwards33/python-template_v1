@@ -32,6 +32,6 @@ class ExampleWrapper(ModelWrapper):
 
 if __name__ == "__main__":
     wrapper = DeployWrapper(model_wrapper=ExampleWrapper, sys_config='config/system_config.yml',
-                            model_config='config/model_config/example_model/example_model_config.yml')
+                            model_config='config/model_config/example_model/example_model_parquet_files_config.yml')
 
     wrapper.run_model()

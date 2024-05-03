@@ -1,0 +1,23 @@
+parameters:
+
+  model_parameters:
+    model_id: "example-model"
+    model_type: "ifrs9"
+    type: "pandas"
+    parameters_file: "parameters.csv"
+    log_location: "model_logs/example_model_logs"
+    log_name: "example_model_log_{date}"
+
+    optional:
+      ecl_upper_limit: 500
+      ecl_lower_limit: 200
+
+model_data:
+
+  inputs:
+    pd_data: "example_model/inputs/pd_data.zip"
+    lgd_data: "example_model/inputs/lgd_data.zip"
+    ead_data: "example_model/inputs/ead_data.zip"
+
+  outputs:
+    ecl_data: "example_model/outputs/ecl_data.zip"

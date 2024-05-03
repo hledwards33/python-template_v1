@@ -95,7 +95,7 @@ class ModelWrapper(ABC):
 
             elif file_type in ['zip']:
 
-                read_write_data.write_zip_from_pandas(path=val, schema=schema)
+                read_write_data.write_zip_from_pandas(data=data_dict[key], path=val, schema=schema)
 
             logger.info(f"Dataset '{key}' has been saved.")
 

@@ -141,7 +141,7 @@ def schema_conformance_pandas(data: pd.DataFrame, schema: dict, dataframe_name: 
 
 def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.DataFrame:
     logger.info(f"Loading columns: {list(schema.keys())}")
-    # TODO: Check if this works with zip files and add if_zip to the read data func
+
     kwargs = {
         'filepath_or_buffer': path,
         'dtype': schema,
@@ -162,9 +162,29 @@ def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.Data
     return data
 
 
-def read_parquet_to_pandas(path: str, schema: dict) -> pd.DataFrame:
-    # TODO: Fill in this method
-    pass
+def read_parquet_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.DataFrame:
+    logger.info(f"Loading columns: {list(schema.keys())}")
+
+    # Parquet files store dtypes in metadata so schema is not required when reading
+    kwargs = {
+        'path': path,
+        'columns': schema.keys(),
+        'engine': 'pyarrow',
+        'dtype_backend': 'numpy_nullable'
+    }
+
+    if not usecols:
+        del kwargs['columns']
+
+    data = pd.read_parquet(**kwargs)
+
+    # Add datatypes from schema in case parquet file was created incorrectly
+    for column in data.columns:
+        data[column] = data[column].astype(schema[column])
+
+    data = enforce_data_types(data)
+
+    return data
 
 
 def read_csv_to_spark(path: str, schema: dict) -> pd.DataFrame:
@@ -184,13 +204,16 @@ def write_csv_from_pandas(data: pd.DataFrame, path: str, schema: dict, dataframe
 
 
 def write_parquet_from_pandas(data: pd.DataFrame, path: str, schema: dict):
-    # TODO: Fill in this method
-    pass
+    kwargs = {'path': path, 'partition_cols': schema.keys(), 'index': False, 'engine': 'pyarrow', 'compression': 'gzip'}
+
+    data.to_parquet(**kwargs)
 
 
 def write_zip_from_pandas(data: pd.DataFrame, path: str, schema: dict):
-    # TODO: Fill in this method
-    pass
+    kwargs = {'path_or_buf': path, 'na_rep': "", 'columns': schema.keys(), 'index': False,
+              'compression': {'method': 'zip'}}
+
+    data.to_csv(**kwargs)
 
 
 def write_csv_from_spark(data: pd.DataFrame, path: str, schema: dict, dataframe_name: str = ""):
