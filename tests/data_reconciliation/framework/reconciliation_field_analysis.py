@@ -15,7 +15,7 @@ def field_comparison(main_data: pd.DataFrame, test_data: pd.DataFrame, schema: d
                       (isinstance(val, pd.Float64Dtype) | isinstance(val, pd.Int64Dtype))]
     numeric_fields = list(set(numeric_fields).intersection(set(main_data.columns)))
 
-    string_fields = [key for key, val in schema.items() if val == 'object']
+    string_fields = [key for key, val in schema.items() if val in ['string', 'object']]
     string_fields = list(set(string_fields).intersection(set(main_data.columns)))
 
     # Analyse the numeric fields in detail
@@ -34,8 +34,8 @@ def field_comparison(main_data: pd.DataFrame, test_data: pd.DataFrame, schema: d
 
     # Analyse the string fields in detail
     for field in string_fields:
-        main_freq = main_data[field].value_counts(dropna=False).sort_index()
-        test_freq = test_data[field].value_counts(dropna=False).sort_index()
+        main_freq = main_data[field].astype('object').value_counts(dropna=False).sort_index()
+        test_freq = test_data[field].astype('object').value_counts(dropna=False).sort_index()
 
         difference = main_freq - test_freq
         difference = difference.rename_axis('value').reset_index(name='count')

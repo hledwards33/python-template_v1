@@ -13,7 +13,7 @@ def data_comparison(schema, main_data: pd.DataFrame, test_data: pd.DataFrame, ve
 
     numeric_fields = [key for key, val in schema.items() if
                       (isinstance(val, pd.Float64Dtype) | isinstance(val, pd.Int64Dtype))]
-    string_fields = [key for key, val in schema.items() if val == 'object']
+    string_fields = [key for key, val in schema.items() if val in ['string', 'object']]
 
     error_count = 0
     numeric_errors = []
@@ -77,11 +77,11 @@ def data_comparison(schema, main_data: pd.DataFrame, test_data: pd.DataFrame, ve
 
     # Check for differences in frequencies in string fields
     for field in string_fields:
-        main_freq = main_data[field].value_counts(dropna=False)
+        main_freq = main_data[field].astype('object').value_counts(dropna=False)
         main_freq.index = main_freq.index.astype(str, copy=False)
         main_freq.sort_index(inplace=False)
 
-        test_freq = test_data[field].value_counts(dropna=False)
+        test_freq = test_data[field].astype('object').value_counts(dropna=False)
         test_freq.index = test_freq.index.astype(str, copy=False)
         test_freq.sort_index(inplace=False)
 
