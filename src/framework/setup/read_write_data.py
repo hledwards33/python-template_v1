@@ -2,6 +2,7 @@ import json
 import logging
 import os
 
+import numpy as np
 import pandas as pd
 import yaml
 
@@ -77,6 +78,40 @@ def convert_schema_spark(schema: dict) -> dict:
     pass
 
 
+def enforce_integers(df: pd.DataFrame) -> pd.DataFrame:
+    for column in df.columns:
+        if df[column].dtype == "Int64" and df[column].isna().all():
+            df[column] = np.nan
+        elif df[column].dtype == "Int64" and df[column].isna().any():
+            df[column] = df[column].astype(np.float64)
+        elif df[column].dtype == "Int64":
+            df[column] = df[column].astype(np.int64)
+
+    return df
+
+
+def enforce_floats(df: pd.DataFrame) -> pd.DataFrame:
+    for column in df.columns:
+        if df[column].dtype == "Float64":
+            df[column] = df[column].astype(np.float64)
+    return df
+
+
+def enforce_strings(df: pd.DataFrame) -> pd.DataFrame:
+    for column in df.columns:
+        if df[column].dtype == "object":
+            df[column] = df[column].mask(df[column] == "")
+            df[column] = df[column].mask(df[column].str.lower() == "nan")
+    return df
+
+
+def enforce_data_types(df: pd.DataFrame) -> pd.DataFrame:
+    df = enforce_integers(df)
+    df = enforce_floats(df)
+    df = enforce_strings(df)
+    return df
+
+
 def schema_conformance_spark(data: pd.DataFrame, schema: dict, dataframe_name: str = "") -> dict:
     pass
 
@@ -119,6 +154,8 @@ def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.Data
         del kwargs['usecols']
 
     data = pd.read_csv(**kwargs)
+
+    # data = enforce_data_types(data)
 
     return data
 
