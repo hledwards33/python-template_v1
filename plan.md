@@ -15,16 +15,18 @@
 2. **_Create the ability to read in parquet and zip files_**
 3. **_Done: Create memory logging_**
 4. **_Done: Create a script that can run models on different data with only a change to the config_**
-5. Create a model meta-data file (.yaml)
-6. Test various use cases
+5. **_Create a model meta-data file (.yaml) - i.e. a yaml to run multiple models_**
+6. Test various use cases - write pytests for framework
 7. Create a "create schema" script with datatype inference
 8. Add zip and parquet capability to the reconciliation codes
+9. Make file path calls more robust - attempt to use the defined repo root
 
 ## Phase 3
 1. Create a master script that can chain models
 2. Define chaining of models within the repo
 3. Look into using airflow to schedule model dependencies
 4. Add a pyspark model
+5. Create a way to save model chain logs
 
 ## Phase 4 
 1. Create a Django interface for running models

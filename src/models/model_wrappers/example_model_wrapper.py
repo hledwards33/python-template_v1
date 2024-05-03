@@ -4,7 +4,7 @@ from models.model_schemas import example_model as model_schemas
 from models.model_scripts.example_model.example_model import ExampleModel as Model
 
 
-class ExampleWrapper(ModelWrapper):
+class ExampleModelWrapper(ModelWrapper):
 
     def __init__(self):
         super().__init__()
@@ -31,7 +31,7 @@ class ExampleWrapper(ModelWrapper):
 
 
 if __name__ == "__main__":
-    wrapper = DeployWrapper(model_wrapper=ExampleWrapper, sys_config='config/system_config.yml',
+    wrapper = DeployWrapper(model_wrapper=ExampleModelWrapper, sys_config='config/system_config.yml',
                             model_config='config/model_config/example_model/example_model_parquet_files_config.yml')
 
     wrapper.run_model()

@@ -1,0 +1,14 @@
+config:
+  sys_config: "config/system_config.yml"
+
+models:
+  example_model:
+    config: "config/model_config/example_model/example_model_config.yml"
+    model_path: "models.model_wrappers.example_model_wrapper"
+    model: "ExampleModelWrapper"
+
+  example_model_zip:
+    config: "config/model_config/example_model/example_model_zip_files_config.yml"
+    model_path: "models.model_wrappers.example_model_wrapper"
+    model: "ExampleModelWrapper"
+
