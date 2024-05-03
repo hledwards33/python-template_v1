@@ -2,14 +2,13 @@ import importlib
 import os
 
 from framework.model_wrapper import DeployWrapper
-from framework.setup.read_write_data import read_yaml
 from framework.setup.log_format import headers
+from framework.setup.read_write_data import read_yaml
 
 
 class ModelChain:
     PY_FILE_DIR = os.path.abspath(os.path.dirname(__file__))
     PY_ROOT_DIR = os.path.abspath(os.path.join(PY_FILE_DIR, "../"))
-    # TODO amend in final version
     PY_REPO_DIR = os.path.dirname(PY_ROOT_DIR)
 
     def __init__(self, config_path: str):
@@ -35,11 +34,3 @@ class ModelChain:
             model = DeployWrapper(model_class, self.sys_config_path,
                                   model_config['config'])
             model.run_model()
-
-
-if __name__ == "__main__":
-    _config_path = "config/model_config/model_chains/example_model_chain.yml"
-
-    model_chain = ModelChain(_config_path)
-
-    model_chain.run_chain()
