@@ -7,7 +7,7 @@
 4. **_Done: Create an example model_**
 5. Write descriptive errors for common mistakes 
 6. **_Done: Create method of saving parameters to instance variables_**
-7. Enforce default nan type values for all dtypes
+7. **_Enforce default nan type values for all dtypes_**
 8. **_Done: Create a reconciliation capability_**
 
 ## Phase 2
