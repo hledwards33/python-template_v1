@@ -156,7 +156,7 @@ class DeployWrapper:
         start = time.perf_counter()
 
         logger.info(f"This log was created {datetime.date.today()} {datetime.datetime.now().strftime('%H:%M:%S')}.")
-        logger.info(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' is Running")
+        logger.info(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' is Running.")
 
         headers("Reading Input Data")
         input_data = self.get_inputs()
@@ -171,7 +171,7 @@ class DeployWrapper:
         headers("Writing Output Data")
         self.post_outputs(data_dict=output_data)
 
-        logger.info("Output Data Saved Successfully")
+        logger.info("Output Data Saved Successfully.")
         headers(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' Ran Successfully")
 
         end = time.perf_counter()

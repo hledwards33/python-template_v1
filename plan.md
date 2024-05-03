@@ -17,6 +17,7 @@
 4. _**Done: Create a script that can run models on different data with only a change to the config**_
 5. Create a model meta-data file (.yaml)
 6. Test various use cases
+7. Create a "create schema" script with datatype inference
 
 ## Phase 3
 1. Create a master script that can chain models

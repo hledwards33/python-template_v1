@@ -140,7 +140,7 @@ def schema_conformance_pandas(data: pd.DataFrame, schema: dict, dataframe_name: 
 
 
 def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.DataFrame:
-    logger.info(f"Loading columns: {schema.keys()}")
+    logger.info(f"Loading columns: {list(schema.keys())}")
     # TODO: Check if this works with zip files and add if_zip to the read data func
     kwargs = {
         'filepath_or_buffer': path,
