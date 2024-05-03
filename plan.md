@@ -12,12 +12,13 @@
 
 ## Phase 2
 1. _**Done: Create automated logs**_
-2. Create the ability to read in parquet and zip files
+2. **_Create the ability to read in parquet and zip files_**
 3. _**Done: Create memory logging**_
 4. _**Done: Create a script that can run models on different data with only a change to the config**_
 5. Create a model meta-data file (.yaml)
 6. Test various use cases
 7. Create a "create schema" script with datatype inference
+8. Add zip and parquet capability to the reconciliation codes
 
 ## Phase 3
 1. Create a master script that can chain models
