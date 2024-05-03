@@ -11,10 +11,10 @@
 8. **_Done: Create a reconciliation capability_**
 
 ## Phase 2
-1. _**Done: Create automated logs**_
+1. **_Done: Create automated logs_**
 2. **_Create the ability to read in parquet and zip files_**
-3. _**Done: Create memory logging**_
-4. _**Done: Create a script that can run models on different data with only a change to the config**_
+3. **_Done: Create memory logging_**
+4. **_Done: Create a script that can run models on different data with only a change to the config_**
 5. Create a model meta-data file (.yaml)
 6. Test various use cases
 7. Create a "create schema" script with datatype inference
