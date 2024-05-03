@@ -9,7 +9,7 @@ logger = logging.getLogger()
 
 
 def field_comparison(main_data: pd.DataFrame, test_data: pd.DataFrame, schema: dict):
-    headers(" Field Reconciliation Results")
+    # headers(" Field Reconciliation Results")
 
     numeric_fields = [key for key, val in schema.items() if
                       (isinstance(val, pd.Float64Dtype) | isinstance(val, pd.Int64Dtype))]

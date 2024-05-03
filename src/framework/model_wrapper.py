@@ -152,11 +152,20 @@ class DeployWrapper:
     def get_data_dir(self):
         return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
 
+    @staticmethod
+    def config_logs(log_config: dict):
+        headers("Model Configuration")
+
+        logger.info(f"This log was created {datetime.date.today()} {datetime.datetime.now().strftime('%H:%M:%S')}.")
+        logging.info(f"Model Log file pattern: {log_config['log_location']}/{log_config['log_name']}.")
+        logging.info(f"Model Type is {log_config['model_type']}.")
+        logging.info(f"Model is running on {log_config['type']}.")
+        logger.info(f"Model ID '{log_config['model_id']}' is Running.")
+
     def run_model(self):
         start = time.perf_counter()
 
-        logger.info(f"This log was created {datetime.date.today()} {datetime.datetime.now().strftime('%H:%M:%S')}.")
-        logger.info(f"Model '{self.model_config['parameters']['model_parameters']['model_id']}' is Running.")
+        self.config_logs(self.model_config['parameters']['model_parameters'])
 
         headers("Reading Input Data")
         input_data = self.get_inputs()

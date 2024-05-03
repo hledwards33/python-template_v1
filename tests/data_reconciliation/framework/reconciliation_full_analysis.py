@@ -75,32 +75,35 @@ def get_args(log_config: dict, usecols: bool = False, matching_columns: bool = F
     try:
         usecols = log_config['usecols']
     except KeyError:
-        pass
+        log_config['use_cols'] = usecols
 
     try:
         matching_columns = log_config['matching_columns']
     except KeyError:
-        pass
+        log_config['matching_columns'] = usecols
 
     try:
         remove_columns = log_config['remove_columns']
     except KeyError:
-        pass
+        log_config['remove_columns'] = usecols
 
     try:
         verbose = log_config['verbose']
     except KeyError:
-        pass
+        log_config['verbose'] = usecols
 
-    headers("Reconciliation File Configuration")
+    return usecols, matching_columns, remove_columns, verbose
 
+
+def config_logs(log_config: dict):
+    headers("Reconciliation Configuration")
+
+    logger.info(f"This log was created {datetime.date.today()} {datetime.datetime.now().strftime('%H:%M:%S')}.")
     logging.info(f"Reconciliation Results file pattern: {log_config['log_location']}/{log_config['log_name']}.")
 
     for key, val in log_config.items():
         if key not in ['log_location', 'log_name']:
             logging.info(f"Parameter {key} has been set to {val} for the creation of the below logs.")
-
-    return usecols, matching_columns, remove_columns, verbose
 
 
 def run_full_data_reconciliation(sys_config_path: str, recon_config_path: str):
@@ -115,10 +118,13 @@ def run_full_data_reconciliation(sys_config_path: str, recon_config_path: str):
 
         start_logging(log_config, data)
 
-        logger.info(f"Reconciliation of '{data.upper()}', date: {datetime.date.today()} "
-                    f"{datetime.datetime.now().strftime('%H:%M:%S')}.")
+        config_logs(log_config)
+
+        headers(f"{data.upper()} Data Reconciliation")
 
         schema = get_schema(data_config['schema_path'])
+
+        headers("Reading Input Data")
 
         main_data = get_data(data_config['main_data_path'], schema, sys_config, usecols=usecols)
 
