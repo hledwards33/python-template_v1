@@ -1,10 +1,11 @@
 # TODO: To use this template copy and rename this file.
+# TODO: This file cannot contain "\" replace with "/" in file paths.
 # TODO: See model_chains > example_model_chain_config.yml for reference.
 config:
   sys_config: "config/system_config.yml"
 
 models:
-  # TODO: Add each model, in order of execution. See example
+  # TODO: Add each model, in order of execution. See example_model_chain_config.yml for reference.
   model_1:
     # TODO: Add path of model config file starting from repo root directory.
     config: ""

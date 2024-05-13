@@ -27,6 +27,30 @@ _right click: src > mark directory as > sources root_.
 9. Output data is saved to either csv, zip or parquet file format.
 
 ## Contributing to the Repository
+Contributions to this repository are welcomed. If you would like to discuss or
+assistance with your proposed changes please contact any of the 
+[repository contacts](#repository-contacts).
+
+### Large Scale Changes
+To add new functionalities or restructure the framework layout please:
+* Create a fork of this repository.
+* Complete and test all changes in the forked repository.
+* Create a pull request back to the main repository and tag a repository contact as reviewer.
+
+### Small Changes / Fixes
+To fix a bug in the framework or add a small utility please:
+* Contact a repository contact to gain write level access.
+* Create a branch to apply and test changes.
+* Create a pull request back to the main repository branch and tag a repository contact as reviewer.
+
+### Improving Documentation
+To improve the documentation of the repository or to add new documentation, please 
+follow the same steps as [small changes / fixes](#small-changes--fixes)
+
+### Example Use Cases
+If you have used this repository the likelihood is that your work will be useful to others.
+To continue to grow and build this repository please reach out to a repository contact
+to tag your repository as an example use case.
 
 ## Repository Contacts
 Please contact Harry Edwards [harry.edwards@uk.ey.com](mailto:harry.edwards@uk.ey.com) 

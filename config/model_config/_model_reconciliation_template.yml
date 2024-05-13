@@ -1,20 +1,35 @@
 # TODO: To use this template copy and rename this file.
+# TODO: This file cannot contain "\" replace with "/" in file paths.
 # TODO: See example_model > example_model_reconciliation_config.yml for reference.
 config:
+  # TODO: Define the location to save the logs starting from the repo root dir.
   log_location: "model_logs/example_model_logs"
+  # TODO: Define the desired log name below, use key "{date}" and date of run will be added to the log file name.
+  # TODO: Use key "{data}" (recommended for multiple datasets) and the dataset names below will be appended to log name.
   log_name: "example_model_reconciliation_{data}_{date}"
+
+  # TODO: Define the percentage threshold above which numeric fields will be considered not equal.
   numeric_threshold: 0.00001
+
+  # TODO: Define the reconciliation optional parameters, see documentation. Below parameters are recommended
   usecols: False,
   matching_columns: False
   remove_columns: []
   verbose: True
 
+# TODO: Add each dataset, in order of execution. See example_model_reconciliation_config.yml for reference.
 dataset_1:
-  schema_path: "src/models/model_schemas/example_model/ecl_data_schema.json"
-  main_data_path: "example_model/outputs/ecl_data.csv"
-  test_data_path: "example_model/outputs/ecl_data_test.csv"
+  # TODO: Add path to the schema file of the dataset, starting from repository root.
+  schema_path: ""
+  # TODO: Add path to the dataset to which you are testing against. Either full path or starting from data dir.
+  main_data_path: ""
+  # TODO: Add path to the dataset which you are testing. Either full path or starting from data dir.
+  test_data_path: ""
 
 dataset_2:
-  schema_path: "src/models/model_schemas/example_model/ecl_data_schema.json"
-  main_data_path: "example_model/outputs/ecl_data.csv"
-  test_data_path: "example_model/outputs/ecl_data_test.csv"
+  # TODO: Add path to the schema file of the dataset, starting from repository root.
+  schema_path: ""
+  # TODO: Add path to the dataset to which you are testing against. Either full path or starting from data dir.
+  main_data_path: ""
+  # TODO: Add path to the dataset which you are testing. Either full path or starting from data dir.
+  test_data_path: ""
