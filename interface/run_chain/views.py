@@ -8,6 +8,11 @@ PY_ROOT_DIR = os.path.abspath(os.path.join(PY_FILE_DIR, ".."))
 PY_REPO_DIR = os.path.dirname(PY_ROOT_DIR)
 CONFIG_DIR = r"config"
 
+import sys
+
+sys.path.append(os.path.join(PY_REPO_DIR, "src"))
+from framework.model_chain import ModelChain
+
 
 def index(request):
     path = os.path.join(PY_REPO_DIR, CONFIG_DIR)
@@ -20,4 +25,19 @@ def index(request):
 
 
 def run(request, model_id):
+    path = os.path.join(PY_REPO_DIR, CONFIG_DIR)
+    path = [file
+            for p, subdir, files in os.walk(path)
+            for file in glob(os.path.join(p, "*.yml")) if model_id == os.path.split(file)[-1][:-4]][0]
+
+    run_chain(path, request)
+
     return render(request, "run_chain/run.html", context={'model_id': model_id})
+
+
+def run_chain(path, request):
+    _config_path = "config/model_config/model_chains/example_model_chain_config.yml"
+
+    model_chain = ModelChain(path)
+
+    model_chain.run_chain()
