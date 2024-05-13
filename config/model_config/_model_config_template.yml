@@ -3,23 +3,32 @@
 parameters:
 
   model_parameters:
-    model_id: "example-model"
-    model_type: "ifrs9"
+    # TODO: Define the desired model_id and model_type as strings below.
+    model_id: ""
+    model_type: ""
+    # TODO: Define the desired type below, either pandas or pyspark.
     type: "pandas"
+
+    # TODO: Select the appropriate define_parameter_schemas method from the options below and delete the other option.
+    # TODO: Option 1: model uses parameters input file. Define path to file below starting from data dir.
     parameters_file: "parameters.csv"
+    # TODO: Option 2: model does not use parameters input.
+    parameters_file: ""
+
+    # TODO: Define the location to save model log files. files will automatically be saved with .log extension.
     log_location: "model_logs/example_model_logs"
+    # TODO: Define the desired log name below, use key "{date}" and date of run will be added to the log file name.
     log_name: "example_model_log_{date}"
 
     optional:
-      # TODO: Add in any model parameters unique to this model and config.
+      # TODO: Add in any model parameters unique to this model and config. Remember to indent the entries.
 
 
 model_data:
 
   inputs:
-    pd_data: "example_model/inputs/pd_data.csv"
-    lgd_data: "example_model/inputs/lgd_data.csv"
-    ead_data: "example_model/inputs/ead_data.csv"
+    # TODO: Define model input dataset paths starting from the data dir. See example_model_config.yml as a reference.
 
   outputs:
-    ecl_data: "example_model/outputs/ecl_data.csv"
+    # TODO: Define model output dataset paths starting from the data dir. See example_model_config.yml as a reference.
+# TODO: Delete all TODO comments and format file.
