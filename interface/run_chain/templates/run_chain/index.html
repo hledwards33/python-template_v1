@@ -1,7 +1,7 @@
 {% if wrappers %}
     <ul>
     {% for file in wrappers %}
-            <li>{{ file }}</li>
+        <li><a href="{url 'run_chain:run' file|slice:':-3'}">{{ file }}</a></li>
     {% endfor %}
     </ul>
 {% else %}

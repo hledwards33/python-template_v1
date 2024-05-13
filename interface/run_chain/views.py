@@ -12,4 +12,8 @@ def index(request):
     path = os.path.join(PY_REPO_DIR, WRAPPER_DIR)
     wrappers = [file for file in os.listdir(path) if ((file[:1] != "_") & ("chain" in file))]
 
-    return render(request, "run_model/index.html", {'wrappers': wrappers})
+    return render(request, "run_chain/index.html", {'wrappers': wrappers})
+
+
+def run(request, model_id):
+    return render(request, "run_model/run.html", context={'model_id': model_id})
