@@ -32,7 +32,8 @@
 1. Create a Django interface for running models
 2. Output the logs to the Django interface 
 3. Show which model is running and status in the Django interface 
-4 **_Done: Define method to save logs_**
+4. **_Done: Define method to save logs_**
+5. Add LGD Starling model as example
 
 ## Phase 5
 1. Develop a way to package the repo
