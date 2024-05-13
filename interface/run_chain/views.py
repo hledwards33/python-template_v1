@@ -1,4 +1,5 @@
 import os
+import sys
 from glob import glob
 
 from django.shortcuts import render
@@ -7,8 +8,6 @@ PY_FILE_DIR = os.path.abspath(os.path.dirname(__file__))
 PY_ROOT_DIR = os.path.abspath(os.path.join(PY_FILE_DIR, ".."))
 PY_REPO_DIR = os.path.dirname(PY_ROOT_DIR)
 CONFIG_DIR = r"config"
-
-import sys
 
 sys.path.append(os.path.join(PY_REPO_DIR, "src"))
 from framework.model_chain import ModelChain
@@ -36,8 +35,6 @@ def run(request, model_id):
 
 
 def run_chain(path, request):
-    _config_path = "config/model_config/model_chains/example_model_chain_config.yml"
-
     model_chain = ModelChain(path)
 
     model_chain.run_chain()
