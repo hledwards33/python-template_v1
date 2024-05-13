@@ -4,6 +4,10 @@
 * [Repository Usage](#repository-usage)
   * [Overview of Model Framework](#overview-of-model-framework)
 * [Contributing to the repository](#contributing-to-the-repository)
+  * [Large Scale Changes](#large-scale-changes)
+  * [Small Changes / Fixes](#small-changes--fixes)
+  * [Improving Documentation](#improving-documentation)
+  * [Example Use Cases](#example-use-cases)
 * [Repository Contacts](#repository-contacts)
 * [Additional Documentation](#additional-documentation)
 
