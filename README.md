@@ -49,7 +49,7 @@ To fix a bug in the framework or add a small utility please:
 
 ### Improving Documentation
 To improve the documentation of the repository or to add new documentation, please 
-follow the same steps as [small changes / fixes](#small-changes--fixes)
+follow the same steps as small changes / fixes.
 
 ### Example Use Cases
 If you have used this repository the likelihood is that your work will be useful to others.
