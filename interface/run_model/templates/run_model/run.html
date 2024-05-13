@@ -1,1 +1,11 @@
 you are running model {{ model_id }}.py.
+
+<br/>
+Model Logs: <br/>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    {{ message }}<br/>
+    {% endfor %}
+</ul>
+{% endif %}

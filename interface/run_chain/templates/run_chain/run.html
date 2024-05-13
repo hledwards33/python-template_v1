@@ -1,9 +1,11 @@
-you are running model chain config {{ model_id }}.yml.
+you are running model {{ model_id }}.py.
 
+<br/>
+Model Logs: <br/>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
-    <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {{ message }}<br/>
     {% endfor %}
 </ul>
 {% endif %}
