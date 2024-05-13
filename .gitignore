@@ -168,3 +168,5 @@ cython_debug/
 
 documentation/resources
 !documentation/resources/.gitkeep
+
+interface/static
