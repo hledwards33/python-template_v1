@@ -3,19 +3,19 @@
 ## Phase 1
 1. **_Done: Create an input/output layer_**
 2. **_Done: Create a model wrapper_** 
-3. Create a model wrapper template
+3. **_Done: Create a model wrapper and config template_**
 4. **_Done: Create an example model_**
 5. Write descriptive errors for common mistakes 
 6. **_Done: Create method of saving parameters to instance variables_**
-7. **_Enforce default nan type values for all dtypes_**
+7. **_Done: Enforce default nan type values for all dtypes_**
 8. **_Done: Create a reconciliation capability_**
 
 ## Phase 2
 1. **_Done: Create automated logs_**
-2. **_Create the ability to read in parquet and zip files_**
+2. **_Done: Create the ability to read in parquet and zip files_**
 3. **_Done: Create memory logging_**
 4. **_Done: Create a script that can run models on different data with only a change to the config_**
-5. **_Create a model meta-data file (.yaml) - i.e. a yaml to run multiple models_**
+5. **_Done: Create a model meta-data file (.yaml) - i.e. a yaml to run multiple models_**
 6. Test various use cases - write pytests for framework
 7. Create a "create schema" script with datatype inference
 8. Add zip and parquet capability to the reconciliation codes
@@ -33,7 +33,7 @@
 1. Create a Django interface for running models
 2. Output the logs to the interface 
 3. Show which model is running and status in the interface 
-4_**DONE: Define method to save logs**_
+4_**Done: Define method to save logs**_
 
 ## Phase 5
 1. Develop a way to package the repo
@@ -42,7 +42,7 @@
 
 ## Phase 6
 1. Write documentation for this library
-   * Create the read me file
+   * **_Done: Create the read me file_**
    * Add in flow charts of how the model works
 
 ## Phase 7
