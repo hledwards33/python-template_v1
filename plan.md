@@ -27,6 +27,7 @@
 3. Look into using airflow to schedule model dependencies
 4. Add a pyspark model
 5. Create a way to save model chain logs
+6. Add comments to all code
 
 ## Phase 4 
 1. Create a Django interface for running models
@@ -41,6 +42,8 @@
 
 ## Phase 6
 1. Write documentation for this library
+   * Create the read me file
+   * Add in flow charts of how the model works
 
 ## Phase 7
 1. Add bespoke errors and error types
