@@ -1,9 +1,7 @@
-{% if images %}
+{% if wrappers %}
     <ul>
-    {% for file in images %}
-        {% if file|slice:1 != '_' %}
-            <li>{{ file }}</li>
-        {% endif %}
+    {% for file in wrappers %}
+        <li><a href="/run_model/{{file|slice:':-3'}}">{{ file }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
