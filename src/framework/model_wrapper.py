@@ -189,31 +189,44 @@ class DeployWrapper:
         self.stop_logging()
 
     def get_parameters(self):
-        parameters_schema = read_write_data.read_json(path=self.model_wrapper.define_parameter_schemas())
-
+        # Reading in parameters file defined in model config yaml
         parameters_path = self.model_config['parameters']['model_parameters']['parameters_file']
-
-        optional_parameters = self.model_config['parameters']['model_parameters']['optional']
 
         if parameters_path != "":
 
-            parameters_path = os.path.join(self.get_data_dir(), parameters_path)
-            parameters_schema = read_write_data.convert_schema_pandas(parameters_schema)
-            parameters = read_write_data.read_csv_to_pandas(path=parameters_path, schema=parameters_schema)
+            if self.model_wrapper.define_parameter_schemas() is not None:
 
-            # Add optional parameters from the config file
-            if len(optional_parameters) > 0:
-                optional_parameters = {
-                    'parameter': [key for key in optional_parameters.keys()],
-                    'value': [val for val in optional_parameters.values()]
-                }
+                parameters_schema = read_write_data.read_json(path=self.model_wrapper.define_parameter_schemas())
 
-                optional_parameters = pd.DataFrame.from_dict(optional_parameters)
+                parameters_path = os.path.join(self.get_data_dir(), parameters_path)
+                parameters_schema = read_write_data.convert_schema_pandas(parameters_schema)
+                parameters = read_write_data.read_csv_to_pandas(path=parameters_path, schema=parameters_schema)
 
-                parameters = pd.concat([parameters, optional_parameters], axis=0, ignore_index=True)
+            else:
+                logger.error("No parameters schema file has been passed to the model framework. See method "
+                             "define_parameter_schemas in model wrapper.")
 
         else:
+            logger.info("No parameters input file is being used within this model.")
+
             parameters = pd.DataFrame
+
+        # Reading in optional parameters defined in model config yaml
+        optional_parameters = self.model_config['parameters']['model_parameters']['optional']
+
+        # Add optional parameters from the config file
+        if len(optional_parameters) > 0:
+            optional_parameters = {
+                'parameter': [key for key in optional_parameters.keys()],
+                'value': [val for val in optional_parameters.values()]
+            }
+
+            optional_parameters = pd.DataFrame.from_dict(optional_parameters)
+
+            parameters = pd.concat([parameters, optional_parameters], axis=0, ignore_index=True)
+
+        else:
+            logger.info("No optional parameters are being used within this model.")
 
         return parameters
 
