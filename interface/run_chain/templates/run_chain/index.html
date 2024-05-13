@@ -1,7 +1,7 @@
-{% if wrappers %}
+{% if configs %}
     <ul>
-    {% for file in wrappers %}
-        <li><a href="{url 'run_chain:run' file|slice:':-3'}">{{ file }}</a></li>
+    {% for file in configs %}
+        <li><a href="{{file|slice:-4}}">{{ file }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
