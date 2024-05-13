@@ -12,6 +12,9 @@ This repository provides a framework to standardise the scripting on financial
 models in python. Within this framework models can be run in chain, recursively
 or individually.
 
+**IMPORTANT:** src folder must be set as the **_content root_** for this repository.
+_right click: src > mark directory as > sources root_.
+
 ### Overview of Model Framework
 1. Input data is loaded from either csv, zip or parquet file format.
 2. Data types are enforced from data schemas.
@@ -31,4 +34,4 @@ with any queries regarding the use, behaviour or functionality of this repositor
 
 ## Additional Documentation
 For additional information on the framework defined in this repository please see the 
-[documentation folder]().
+[documentation folder](https://github.com/hledwards33/python-template/tree/master/documentation).
