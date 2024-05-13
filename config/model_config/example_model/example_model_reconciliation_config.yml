@@ -7,8 +7,12 @@ config:
   remove_columns: []
   verbose: True
 
-
 ecl_data:
+  schema_path: "src/models/model_schemas/example_model/ecl_data_schema.json"
+  main_data_path: "example_model/outputs/ecl_data.csv"
+  test_data_path: "example_model/outputs/ecl_data_test.csv"
+
+ecl_data_repeated:
   schema_path: "src/models/model_schemas/example_model/ecl_data_schema.json"
   main_data_path: "example_model/outputs/ecl_data.csv"
   test_data_path: "example_model/outputs/ecl_data_test.csv"
