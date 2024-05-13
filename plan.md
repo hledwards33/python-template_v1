@@ -17,27 +17,26 @@
 4. **_Done: Create a script that can run models on different data with only a change to the config_**
 5. **_Done: Create a model meta-data file (.yaml) - i.e. a yaml to run multiple models_**
 6. Test various use cases - write pytests for framework
-7. Create a "create schema" script with datatype inference
+7. **_Done: Create a "create schema" script with datatype inference_**
 8. Add zip and parquet capability to the reconciliation codes
 9. Make file path calls more robust - attempt to use the defined repo root
 
 ## Phase 3
-1. Create a master script that can chain models
-2. Define chaining of models within the repo
-3. Look into using airflow to schedule model dependencies
-4. Add a pyspark model
-5. Create a way to save model chain logs
-6. Add comments to all code
+1. **_Done: Create a master script that can chain models_**
+2. Look into using airflow to schedule model dependencies
+3. Add a pyspark model
+4. Create a way to save model chain logs
+5. Add comments to all code
 
 ## Phase 4 
 1. Create a Django interface for running models
-2. Output the logs to the interface 
-3. Show which model is running and status in the interface 
-4_**Done: Define method to save logs**_
+2. Output the logs to the Django interface 
+3. Show which model is running and status in the Django interface 
+4 **_Done: Define method to save logs_**
 
 ## Phase 5
 1. Develop a way to package the repo
-2. Test framework on Cloud
+2. Test framework on a Cloud environment
 3. Make changes to allow for running & chaining of models on GCP
 
 ## Phase 6
