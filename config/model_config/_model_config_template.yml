@@ -1,0 +1,25 @@
+# TODO: To use this template copy and rename this file.
+# TODO: See example_model > example_model_config.yml for reference.
+parameters:
+
+  model_parameters:
+    model_id: "example-model"
+    model_type: "ifrs9"
+    type: "pandas"
+    parameters_file: "parameters.csv"
+    log_location: "model_logs/example_model_logs"
+    log_name: "example_model_log_{date}"
+
+    optional:
+      # TODO: Add in any model parameters unique to this model and config.
+
+
+model_data:
+
+  inputs:
+    pd_data: "example_model/inputs/pd_data.csv"
+    lgd_data: "example_model/inputs/lgd_data.csv"
+    ead_data: "example_model/inputs/ead_data.csv"
+
+  outputs:
+    ecl_data: "example_model/outputs/ecl_data.csv"

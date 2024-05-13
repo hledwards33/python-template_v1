@@ -215,7 +215,8 @@ class DeployWrapper:
         optional_parameters = self.model_config['parameters']['model_parameters']['optional']
 
         # Add optional parameters from the config file
-        if len(optional_parameters) > 0:
+        if optional_parameters is not None:
+
             optional_parameters = {
                 'parameter': [key for key in optional_parameters.keys()],
                 'value': [val for val in optional_parameters.values()]
@@ -223,7 +224,10 @@ class DeployWrapper:
 
             optional_parameters = pd.DataFrame.from_dict(optional_parameters)
 
-            parameters = pd.concat([parameters, optional_parameters], axis=0, ignore_index=True)
+            if parameters.empty:
+                parameters = optional_parameters
+            else:
+                parameters = pd.concat([parameters, optional_parameters], axis=0, ignore_index=True)
 
         else:
             logger.info("No optional parameters are being used within this model.")
