@@ -17,7 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from run_model import views
+
 urlpatterns = [
+    path('', views.home, name='home'),
     path('run_chain/', include("run_chain.urls")),
     path('run_model/', include("run_model.urls")),
     path('admin/', admin.site.urls),

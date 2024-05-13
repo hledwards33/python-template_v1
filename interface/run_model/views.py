@@ -5,8 +5,8 @@ import sys
 from glob import glob
 
 import yaml
-from django.shortcuts import render
 from django.contrib import messages
+from django.shortcuts import render
 
 PY_FILE_DIR = os.path.abspath(os.path.dirname(__file__))
 PY_ROOT_DIR = os.path.abspath(os.path.join(PY_FILE_DIR, ".."))
@@ -16,6 +16,10 @@ CONFIG_DIR = r"config/model_config/model_metadata"
 sys.path.append(os.path.join(PY_REPO_DIR, "src"))
 sys.path.append(PY_REPO_DIR)
 from framework.model_wrapper import DeployWrapper
+
+
+def home(request):
+    return render(request, "run_model/home.html")
 
 
 def index(request):
