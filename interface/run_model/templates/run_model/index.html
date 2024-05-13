@@ -1,0 +1,11 @@
+{% if images %}
+    <ul>
+    {% for file in images %}
+        {% if file|slice:1 != '_' %}
+            <li>{{ file }}</li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No files are available.</p>
+{% endif %}
