@@ -21,6 +21,9 @@ from framework.model_wrapper import DeployWrapper
 def home(request):
     return render(request, "run_model/home.html")
 
+def repo(request):
+    return render(request, "run_model/repo.html")
+
 
 def index(request):
     path = os.path.join(PY_REPO_DIR, CONFIG_DIR)
