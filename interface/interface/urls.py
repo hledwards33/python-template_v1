@@ -24,4 +24,5 @@ urlpatterns = [
     path('run_chain/', include("run_chain.urls")),
     path('run_model/', include("run_model.urls")),
     path('admin/', admin.site.urls),
+    path("repo_info/", views.repo, name="repo")
 ]
