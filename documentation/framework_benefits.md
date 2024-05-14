@@ -23,6 +23,8 @@ switch to other projects using this framework without the need for onboarding.
 framework follows well-defined patterns enhancements can be brought back from client work and re-used.
 * **Utilities**: Each time a repetitive task (i.e. schema creation) is required a utilities method is defined, these methods
 are collated within the utilities directory and available to all users of the repository.
+* **Documentation**: The documentation for this repository has already been created, you only need to write the documentation for you 
+model codes.
 
 ## Prebuilt Capabilities
 This framework has a number of in-built capabilities designed to save the modeller time and effort.
