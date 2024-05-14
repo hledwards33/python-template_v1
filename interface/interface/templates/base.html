@@ -52,6 +52,7 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
+            <img src="{% static 'EY_logo.png' %}" width="30" height="30">
             <a class="navbar-brand" href="{% url 'home' %}">Model Hub</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -80,10 +81,24 @@
 </div>
 
 <footer class="text-muted py-5">
-    <div class="container text-center">
-        <p>© Harry Edwards {% now "Y" %}</p>
+<div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <div class="col-md-4 d-flex align-items-center">
+      <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+        <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+      </a>
+      <span class="mb-3 mb-md-0 text-body-secondary">© EY</span>
     </div>
+
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+      <li class="ms-3"><a class="text-body-secondary" href="https://github.com/hledwards33/python-template"><svg class="bi" width="24" height="24">
+          <img src="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" width="40" height="40"></svg></a></li>
+    </ul>
+  </footer>
+</div>
 </footer>
+
+
 
 
 <script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
