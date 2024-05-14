@@ -1,9 +1,42 @@
-{% if wrappers %}
-    <ul>
-    {% for file in wrappers %}
-        <li><a href="{{file|slice:':-4'}}">{{ file }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No files are available.</p>
-{% endif %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<main>
+
+    <div class="py-5 text-center">
+
+        <h2>Model Configurations</h2>
+        <p class="lead">The below list contains all the possible model configurations available to run.</p>
+    </div>
+
+    <table class="table caption-top">
+        <caption></caption>
+        <thead>
+        <tr>
+            <th scope="col">Index</th>
+            <th scope="col">Config File</th>
+            <th scope="col">Model ID</th>
+            <th scope="col">Model Type</th>
+            <th scope="col">Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in configs %}
+        <tr>
+            <th scope="row">{{item.index}}</th>
+            <td>{{item.config_file}}</td>
+            <td>{{item.model_id}}</td>
+            <td>{{item.model_type}}</td>
+            <td>{{item.type}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+</main>
+
+
+{% endblock %}

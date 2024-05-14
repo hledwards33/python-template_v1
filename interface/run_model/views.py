@@ -21,17 +21,29 @@ from framework.model_wrapper import DeployWrapper
 def home(request):
     return render(request, "run_model/home.html")
 
+
 def repo(request):
     return render(request, "run_model/repo.html")
 
 
 def index(request):
     path = os.path.join(PY_REPO_DIR, CONFIG_DIR)
-    configs = [os.path.split(file)[-1]
+    configs = [file
                for p, subdir, files in os.walk(path)
                for file in glob(os.path.join(p, "*.yml"))]
 
-    return render(request, "run_chain/index.html", {'configs': configs})
+    model_info = []
+    for num, item in enumerate(configs):
+        with open(item, "r") as file:
+            params = yaml.safe_load(file)['config']
+
+        model_info += [{'index': num + 1,
+                        'config_file': os.path.split(item)[-1],
+                        'model_id': params['model_id'],
+                        'model_type': params['model_type'],
+                        'type': params['type']}]
+
+    return render(request, "run_model/index.html", {'configs': model_info})
 
 
 def run(request, model_id):
