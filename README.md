@@ -63,4 +63,12 @@ with any queries regarding the use, behaviour or functionality of this repositor
 
 ## Additional Documentation
 For additional information on the framework defined in this repository please see the 
-[documentation folder](https://github.com/hledwards33/python-template/tree/master/documentation).
+[documentation folder](https://github.com/hledwards33/python-template/tree/master/documentation). It is suggested to read the additional documentation in the 
+following order:
+1. model_framework
+2. framework_benefits
+3. model_chaining
+4. model_utils
+5. model_creation
+6. model_reconciliation
+7. model_interface
