@@ -25,18 +25,19 @@
 1. **_Done: Create a master script that can chain models_**
 2. Look into using airflow to schedule model dependencies
 3. Add a pyspark model
-4. Create a way to save model chain logs
+4. **_Create a way to save model chain logs : work around in Django framework_**
 5. Add comments to all code
 
 ## Phase 4 
-1. Create a Django interface for running models
-2. Output the logs to the Django interface 
-3. Show which model is running and status in the Django interface 
+1. **_Create a Django interface for running models_**
+2. **_Output the logs to the Django interface_** 
+3. **_Show which model is running and status in the Django interface_**
 4. **_Done: Define method to save logs_**
 5. Add LGD Starling model as example
 
 ## Phase 5
 1. Develop a way to package the repo
+   * Think about moving the Django app outside the repo so, it can install a packaged version
 2. Test framework on a Cloud environment
 3. Make changes to allow for running & chaining of models on GCP
 
@@ -44,6 +45,7 @@
 1. Write documentation for this library
    * **_Done: Create the read me file_**
    * Add in flow charts of how the model works
+2. Robustly test the Django framework
 
 ## Phase 7
 1. Add bespoke errors and error types

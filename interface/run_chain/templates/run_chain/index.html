@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<main>
+
+    <div class="py-5 text-center">
+
+        <h2>Model Chain Configurations</h2>
+        <p class="lead">The below list contains all the possible model chain configurations available to run.</p>
+    </div>
+
+    <table class="table caption-top" border="1">
+        <caption></caption>
+        <thead>
+        <tr>
+            <th scope="col">Index</th>
+            <th scope="col">Config File</th>
+            <th scope="col">Models in Chain</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in configs %}
+        <tr>
+            <th scope="row">{{item.index}}</th>
+            <td><a href="{% url 'run_chain:run' item.config_file|slice:-4 %}">{{item.config_file}}</td>
+            <td>
+                <table class="table mb-0 table-bordered" border="1">
+                    {% for model in item.models_in_chain %}
+                    <tr>
+                        <th>
+                            {{model}}
+                        </th>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+</main>
+
+
+{% endblock %}

@@ -1,13 +1,12 @@
 # TODO: To use this template copy and rename this file.
 # TODO: See example_model.py for reference.
-from framework.model_wrapper import ModelWrapper, DeployWrapper
+from models.model_scripts.YOUR_MODEL_DIR.YOUR_MODEL_SCRIPT import YOUR_MODEL_CLASS as Model
 
+from framework.model_wrapper import ModelWrapper, DeployWrapper
 # TODO: Delete below import statement if a parameter input file is not defined in the model config yaml.
 from models import model_schemas as parameter_schemas
-
 # TODO: Amend the below import statements (see capitalised parts) to desired models references.
 from models.model_schemas import YOUR_MODEL_SCHEMAS as model_schemas
-from models.model_scripts.YOUR_MODEL_DIR.YOUR_MODEL_SCRIPT import YOUR_MODEL_CLASS as Model
 
 
 # TODO: Rename the "TemplateWrapper" to: model name + "Wrapper", using CamelCase.
@@ -44,9 +43,7 @@ class TemplateWrapper(ModelWrapper):
 
 
 if __name__ == "__main__":
-    # TODO: Rename "TemplateWrapper" to match the wrapper class name above.
+    # TODO: Rename "TemplateWrapper" to match the wrapper class name above and fill in paths to model config.
     wrapper = DeployWrapper(model_wrapper=TemplateWrapper, sys_config='config/system_config.yml',
-                            model_config='config/model_config/example_model/example_model_parquet_files_config.yml')
-
-    wrapper.run_model()
+                            model_config='').run_model()
 # TODO: Delete all TODO comments and format file.

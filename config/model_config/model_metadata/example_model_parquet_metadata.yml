@@ -1,0 +1,8 @@
+config:
+  sys_config: "config/system_config.yml"
+  model_config: "config/model_config/example_model/example_model_parquet_files_config.yml"
+  model_path: "src.models.model_wrappers.example_model_wrapper"
+  model: "ExampleModelWrapper"
+  model_id: "example-model"
+  model_type: "ifrs9"
+  type: "pandas"

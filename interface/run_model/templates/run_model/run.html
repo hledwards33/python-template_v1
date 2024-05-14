@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<main>
+    <div class="py-5 text-center">
+
+        <h2>Model Platform</h2>
+        <p class="lead">You are running the following model configuration <b>{{model_id}}</b>.</p>
+    </div>
+
+
+    <div class="py-5 text-left">
+        <h3 align="center">Model Logs</h3>
+        <br>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="lead">{% if messages %}
+                <ul class="messages">
+
+                    <table class="table table-striped table-hover table-bordered" border="2">
+                        <caption></caption>
+                        <thead>
+                        <tr>
+                            <th scope="col">Message</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for message in messages %}
+                        <tr>
+                            <td>{{ message }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+</main>
+
+{% endblock %}

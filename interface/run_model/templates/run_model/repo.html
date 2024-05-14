@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<main>
+    <div class="py-5 text-center">
+
+        <h2>Repository Information</h2>
+        <p class="lead">Below is the README.md file from the python repository supporting your Model Hub.</p>
+    </div>
+
+    <div class="card shadow-sm" align="left">
+        <div class="card-body">
+                {% autoescape off %}
+                {{readme_txt}}
+                {% endautoescape %}
+        </div>
+    </div>
+
+
+</main>
+
+
+{% endblock %}
