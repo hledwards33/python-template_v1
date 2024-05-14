@@ -37,7 +37,7 @@
 
 ## Phase 5
 1. Develop a way to package the repo
-   * Think about moving the Django app outside the repo so it can install a packaged version
+   * Think about moving the Django app outside the repo so, it can install a packaged version
 2. Test framework on a Cloud environment
 3. Make changes to allow for running & chaining of models on GCP
 
