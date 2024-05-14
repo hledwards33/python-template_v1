@@ -1,5 +1,5 @@
 # Python Template
-<br></br>
+
 
 ## Table of Contents
 * [Repository Usage](#repository-usage)
