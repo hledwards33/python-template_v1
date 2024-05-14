@@ -135,4 +135,4 @@ The below diagram shows visually the model framework encapsulates specific steps
 execution process. All models built with these abstract classes will inherit the same desired 
 behaviour. Google "The 5 Principles of OOP" for more information.
 
-![image](images/model_framework.png)
+<img src="images/model_framework.png" alt="drawing" style="width:400px;" class="center"/>
