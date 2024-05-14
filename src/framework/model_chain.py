@@ -31,6 +31,5 @@ class ModelChain:
 
             model_class = self.get_model_class(model_config)
 
-            model = DeployWrapper(model_class, self.sys_config_path,
-                                  model_config['config'])
-            model.run_model()
+            DeployWrapper(model_class, self.sys_config_path,
+                          model_config['config']).run_model()

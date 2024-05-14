@@ -41,3 +41,11 @@ The script _model_chain.py_ only contains 1 class:
 1. ModelChain
 
 ### ModelChain Class
+This class handles the consecutive calling of pre-defined models.
+
+Due to the design of the DeployWrapper class is it is very easy to write 
+re-usable code to call models in sequence.
+
+The ModelChain class reads in a configuration file containing model names as keys and model configs and paths and values.
+The class then iteratively calls DeployWrapper.run_model() within ModelChain.run_chain() method. Each iteration of 
+DeployWrapper is passed the ModelChain configuration file's sequenced keys and values.
