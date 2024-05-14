@@ -13,27 +13,34 @@
 
     <div class="py-5 text-left">
         <h3 align="center">Model Logs</h3>
-        <p class="lead">{% if messages %}
-        <ul class="messages">
+        <br>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% for model, logs in model_logs.items %}
+                <h4>Logs for {{model}}</h4>
+                <br>
+                <ul class="messages">
 
-            <table class="table table-striped table-hover table-bordered" border="2">
-                <caption></caption>
-                <thead>
-                <tr>
-                    <th scope="col">Message</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for message in messages %}
-                <tr>
-                    <td>{{ message }}</td>
-                </tr>
+                    <table class="table table-striped table-hover table-bordered" border="2">
+                        <caption></caption>
+                        <thead>
+                        <tr>
+                            <th scope="col">Message</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for message in logs %}
+                        <tr>
+                            <td>{{ message }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </ul>
                 {% endfor %}
-                </tbody>
-            </table>
+            </div>
+        </div>
 
-        </ul>
-        {% endif %}</p>
     </div>
 
 
