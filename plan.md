@@ -37,14 +37,14 @@
 
 ## Phase 5
 1. Develop a way to package the repo
-   * Think about moving the Django app outside the repo so, it can install a packaged version
+   * Move the Django app outside the repo so, it can install a packaged version
 2. Test framework on a Cloud environment
 3. Make changes to allow for running & chaining of models on GCP
 
 ## Phase 6
 1. Write documentation for this library
    * **_Done: Create the read me file_**
-   * Add in flow charts of how the model works
+   * Complete all 7 documentation files
 2. Robustly test the Django framework
 
 ## Phase 7
