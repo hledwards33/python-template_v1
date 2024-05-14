@@ -2,6 +2,7 @@ import os
 import sys
 from glob import glob
 
+import yaml
 from django.shortcuts import render
 
 PY_FILE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -15,11 +16,20 @@ from framework.model_chain import ModelChain
 
 def index(request):
     path = os.path.join(PY_REPO_DIR, CONFIG_DIR)
-    configs = [os.path.split(file)[-1]
+    configs = [file
                for p, subdir, files in os.walk(path)
                for file in glob(os.path.join(p, "*.yml"))]
 
-    return render(request, "run_chain/index.html", {'configs': configs})
+    model_info = []
+    for num, item in enumerate(configs):
+        with open(item, "r") as file:
+            params = yaml.safe_load(file)
+
+            model_info += [{'index': num + 1,
+                            'config_file': os.path.split(item)[-1],
+                            'models_in_chain': params['models'].keys()}]
+
+    return render(request, "run_chain/index.html", {'configs': model_info})
 
 
 def run(request, model_id):
