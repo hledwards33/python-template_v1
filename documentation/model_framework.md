@@ -7,7 +7,7 @@
    * [DeployWrapper Class](#deploywrapper-class)
 3. [Model Design](#model-design)
    * [BaseModel Class](#basemodel-class)
-5. [Deploy > Wrap > Model](#deploy--wrap--model)
+4. [Deploy > Wrap > Model](#deploy--wrap--model)
    * [Deploy](#deploy)
    * [Wrap](#wrap)
    * [Model](#model)
@@ -129,3 +129,10 @@ model framework as we develop.
 Finally, we can write the model code. As we mentioned earlier this is where the action happens.
 As we write the model code bear in mind future usage of the model, consider how to allow the usage
 of different configurations or input datasets.
+
+# Framework Diagram
+The below diagram shows visually the model framework encapsulates specific steps in the model
+execution process. All models built with these abstract classes will inherit the same desired 
+behaviour. Google "The 5 Principles of OOP" for more information.
+
+![image](images/model_framework.png)
