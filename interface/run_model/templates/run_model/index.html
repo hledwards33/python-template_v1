@@ -26,7 +26,7 @@
         {% for item in configs %}
         <tr>
             <th scope="row">{{item.index}}</th>
-            <td>{{item.config_file}}</td>
+            <td><a href="{% url 'run_model:run' item.config_file|slice:-4 %}">{{item.config_file}}</td>
             <td>{{item.model_id}}</td>
             <td>{{item.model_type}}</td>
             <td>{{item.type}}</td>
