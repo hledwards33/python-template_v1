@@ -14,27 +14,31 @@
     <div class="py-5 text-left">
         <h3 align="center">Model Logs</h3>
         <br>
-        <p class="lead">{% if messages %}
-        <ul class="messages">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="lead">{% if messages %}
+                <ul class="messages">
 
-            <table class="table table-striped table-hover table-bordered" border="2">
-                <caption></caption>
-                <thead>
-                <tr>
-                    <th scope="col">Message</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for message in messages %}
-                <tr>
-                    <td>{{ message }}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    <table class="table table-striped table-hover table-bordered" border="2">
+                        <caption></caption>
+                        <thead>
+                        <tr>
+                            <th scope="col">Message</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for message in messages %}
+                        <tr>
+                            <td>{{ message }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
 
-        </ul>
-        {% endif %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
     </div>
 
 

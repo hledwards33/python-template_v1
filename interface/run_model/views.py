@@ -4,6 +4,7 @@ import os
 import sys
 from glob import glob
 
+import markdown
 import yaml
 from django.contrib import messages
 from django.shortcuts import render
@@ -23,7 +24,11 @@ def home(request):
 
 
 def repo(request):
-    return render(request, "run_model/repo.html")
+    with open(os.path.join(PY_REPO_DIR, "README.md"), 'r') as f:
+        markdown_string = f.read()
+    readme_html = markdown.markdown(markdown_string)
+
+    return render(request, "run_model/repo.html", {'readme_txt': readme_html})
 
 
 def index(request):
