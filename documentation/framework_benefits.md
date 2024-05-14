@@ -20,7 +20,9 @@ resourcing becomes.
 * **Less Training Needed**: Once a resource has worked with the framework once they will be able to 
 switch to other projects using this framework without the need for onboarding.
 * **EY Enhancements**: The README file of this framework prescribes methods for making enhancements as the
-framework follows well-defined patterns enhancements can be brought back from client work and re-used. 
+framework follows well-defined patterns enhancements can be brought back from client work and re-used.
+* **Utilities**: Each time a repetitive task (i.e. schema creation) is required a utilities method is defined, these methods
+are collated within the utilities directory and available to all users of the repository.
 
 ## Prebuilt Capabilities
 This framework has a number of in-built capabilities designed to save the modeller time and effort.
