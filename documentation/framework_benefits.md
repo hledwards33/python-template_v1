@@ -25,6 +25,11 @@ framework follows well-defined patterns enhancements can be brought back from cl
 are collated within the utilities directory and available to all users of the repository.
 * **Documentation**: The documentation for this repository has already been created, you only need to write the documentation for you 
 model codes.
+* **Client Expectations**:
+  * No Existing Framework: We can introduce an out of the box solution and spend more time add value with
+  our expertise.
+  * Existing Framework: We can show that we have the necessary skills required to work within their environment.
+
 
 ## Prebuilt Capabilities
 This framework has a number of in-built capabilities designed to save the modeller time and effort.
