@@ -75,6 +75,7 @@ def convert_schema_recon_pandas(schema: dict) -> dict:
 
 
 def convert_schema_spark(schema: dict) -> dict:
+    # TODO: Fill in this method
     pass
 
 
@@ -113,6 +114,7 @@ def enforce_data_types(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def schema_conformance_spark(data: pd.DataFrame, schema: dict, dataframe_name: str = "") -> dict:
+    # TODO: Fill in this method
     pass
 
 
@@ -197,35 +199,35 @@ def read_parquet_to_spark(path: str, schema: dict) -> pd.DataFrame:
     pass
 
 
-def write_csv_from_pandas(data: pd.DataFrame, path: str, schema: dict, dataframe_name: str = ""):
+def write_csv_from_pandas(data: pd.DataFrame, path: str, schema: dict, dataframe_name: str = "") -> None:
     kwargs = {'path_or_buf': path, 'na_rep': "", 'columns': schema.keys(), 'index': False}
 
     data.to_csv(**kwargs)
 
 
-def write_parquet_from_pandas(data: pd.DataFrame, path: str, schema: dict):
+def write_parquet_from_pandas(data: pd.DataFrame, path: str, schema: dict) -> None:
     kwargs = {'path': path, 'partition_cols': schema.keys(), 'index': False, 'engine': 'pyarrow', 'compression': 'gzip'}
 
     data.to_parquet(**kwargs)
 
 
-def write_zip_from_pandas(data: pd.DataFrame, path: str, schema: dict):
+def write_zip_from_pandas(data: pd.DataFrame, path: str, schema: dict) -> None:
     kwargs = {'path_or_buf': path, 'na_rep': "", 'columns': schema.keys(), 'index': False,
               'compression': {'method': 'zip'}}
 
     data.to_csv(**kwargs)
 
 
-def write_csv_from_spark(data: pd.DataFrame, path: str, schema: dict, dataframe_name: str = ""):
+def write_csv_from_spark(data: pd.DataFrame, path: str, schema: dict, dataframe_name: str = "") -> None:
     # TODO: Fill in this method
     pass
 
 
-def write_parquet_from_spark(data: pd.DataFrame, path: str, schema: dict):
+def write_parquet_from_spark(data: pd.DataFrame, path: str, schema: dict) -> None:
     # TODO: Fill in this method
     pass
 
 
-def write_zip_from_spark(ata: pd.DataFrame, path: str, schema: dict):
+def write_zip_from_spark(ata: pd.DataFrame, path: str, schema: dict) -> None:
     # TODO: Fill in this method
     pass

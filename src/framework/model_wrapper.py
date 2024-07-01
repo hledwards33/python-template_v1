@@ -21,19 +21,19 @@ class ModelWrapper(ABC):
         self.parameters = {}
 
     @property
-    def parameters(self):
+    def parameters(self) -> dict:
         return self._parameters
 
     @parameters.setter
-    def parameters(self, value: dict):
+    def parameters(self, value: dict) -> None:
         self._parameters = value
 
     @property
-    def data_dict(self):
+    def data_dict(self) -> dict:
         return self._data_dict
 
     @data_dict.setter
-    def data_dict(self, value: dict):
+    def data_dict(self, value: dict) -> None:
         self._data_dict = value
 
     @staticmethod
@@ -74,7 +74,7 @@ class ModelWrapper(ABC):
         pass
 
     @staticmethod
-    def write_data_from_pandas(data_dict: dict, model_config: dict, file_schemas: dict, base_path: str):
+    def write_data_from_pandas(data_dict: dict, model_config: dict, file_schemas: dict, base_path: str) -> None:
 
         for key, val in model_config['outputs'].items():
 
@@ -100,7 +100,7 @@ class ModelWrapper(ABC):
             logger.info(f"Dataset '{key}' has been saved.")
 
     @staticmethod
-    def write_data_from_spark(model_config: dict, file_schemas: dict):
+    def write_data_from_spark(model_config: dict, file_schemas: dict) -> None:
         pass
 
     @staticmethod
@@ -139,21 +139,21 @@ class DeployWrapper:
         self.model_config = self.read_config(model_config)
         self.start_logging()
 
-    def start_logging(self):
+    def start_logging(self) -> None:
         name = self.model_config['parameters']['model_parameters']['log_name']
         path = os.path.join(self.__class__.PY_REPO_DIR,
                             self.model_config['parameters']['model_parameters']['log_location'])
         create_logging_file(create_logging_file_handler_detailed, path, name)
 
-    def stop_logging(self):
+    def stop_logging(self) -> None:
         name = self.model_config['parameters']['model_parameters']['log_name']
         remove_handler(name)
 
-    def get_data_dir(self):
+    def get_data_dir(self) -> os.path:
         return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
 
     @staticmethod
-    def config_logs(log_config: dict):
+    def config_logs(log_config: dict) -> None:
         headers("Model Configuration")
 
         logger.info(f"This log was created {datetime.date.today()} {datetime.datetime.now().strftime('%H:%M:%S')}.")
@@ -162,7 +162,7 @@ class DeployWrapper:
         logging.info(f"Model is running on {log_config['type']}.")
         logger.info(f"Model ID '{log_config['model_id']}' is Running.")
 
-    def run_model(self):
+    def run_model(self) -> None:
         start = time.perf_counter()
 
         self.config_logs(self.model_config['parameters']['model_parameters'])
@@ -188,7 +188,7 @@ class DeployWrapper:
 
         self.stop_logging()
 
-    def get_parameters(self):
+    def get_parameters_from_file(self) -> pd.DataFrame:
         # Reading in parameters file defined in model config yaml
         parameters_path = self.model_config['parameters']['model_parameters']['parameters_file']
 
@@ -211,12 +211,14 @@ class DeployWrapper:
 
             parameters = pd.DataFrame
 
+        return parameters
+
+    def get_optional_parameters(self) -> pd.DataFrame:
         # Reading in optional parameters defined in model config yaml
         optional_parameters = self.model_config['parameters']['model_parameters']['optional']
 
         # Add optional parameters from the config file
         if optional_parameters is not None:
-
             optional_parameters = {
                 'parameter': [key for key in optional_parameters.keys()],
                 'value': [val for val in optional_parameters.values()]
@@ -224,21 +226,27 @@ class DeployWrapper:
 
             optional_parameters = pd.DataFrame.from_dict(optional_parameters)
 
-            if parameters.empty:
-                parameters = optional_parameters
-            else:
-                parameters = pd.concat([parameters, optional_parameters], axis=0, ignore_index=True)
-
         else:
             logger.info("No optional parameters are being used within this model.")
 
+            optional_parameters = pd.DataFrame
+
+        return optional_parameters
+
+    def get_parameters(self) -> pd.DataFrame:
+
+        # Get parameters from passed file
+        file_parameters = self.get_parameters_from_file()
+
+        # Reading in optional parameters defined in model config yaml
+        optional_parameters = self.get_optional_parameters()
+
+        # Combine the file parameters and optional parameters
+        parameters = pd.concat([file_parameters, optional_parameters], axis=0, ignore_index=True)
+
         return parameters
 
-    def post_outputs(self, data_dict: dict):
-
-        self.memory_usage(data_dict, 'output')
-
-        output_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_output_schemas())
+    def check_data_conformance(self, data_dict: dict, output_schemas: dict) -> None:
 
         conformance_errors = self.run_schema_conformance(data_dict=data_dict, schema_dict=output_schemas)
 
@@ -253,12 +261,20 @@ class DeployWrapper:
 
             raise TypeError(f"Incorrect DataTypes and/or DataColumns see above logs.")
 
-        if self.model_config['parameters']['model_parameters']['type'] == "pandas":
+    def post_outputs(self, data_dict: dict) -> None:
+
+        output_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_output_schemas())
+
+        self.memory_usage(data_dict, 'output')
+
+        self.check_data_conformance(data_dict, output_schemas)
+
+        if self.model_config['parameters']['model_parameters']['type'].lower() == "pandas":
 
             self.model_wrapper.write_data_from_pandas(data_dict=data_dict, model_config=self.model_config['model_data'],
                                                       file_schemas=output_schemas, base_path=self.get_data_dir())
 
-        elif self.model_config['parameters']['model_parameters']['type'] == "pyspark":
+        elif self.model_config['parameters']['model_parameters']['type'].lower() == "pyspark":
 
             self.model_wrapper.write_data_from_spark(data_dict=data_dict, model_config=self.model_config['model_data'],
                                                      file_schemas=output_schemas, base_path=self.get_data_dir())
@@ -266,13 +282,13 @@ class DeployWrapper:
     def get_inputs(self) -> dict:
         input_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_input_schemas())
 
-        if self.model_config['parameters']['model_parameters']['type'] == "pandas":
+        if self.model_config['parameters']['model_parameters']['type'].lower() == "pandas":
 
             input_data = self.model_wrapper.read_data_to_pandas(model_config=self.model_config['model_data'],
                                                                 file_schemas=input_schemas,
                                                                 base_path=self.get_data_dir())
 
-        elif self.model_config['parameters']['model_parameters']['type'] == "pyspark":
+        elif self.model_config['parameters']['model_parameters']['type'].lower() == "pyspark":
 
             input_data = self.model_wrapper.read_data_to_spark(model_config=self.model_config['model_data'],
                                                                file_schemas=input_schemas,
@@ -287,7 +303,7 @@ class DeployWrapper:
         return input_data
 
     @staticmethod
-    def memory_usage(data_dict: dict, data_type: str):
+    def memory_usage(data_dict: dict, data_type: str) -> None:
         memory_usage = sum([df.memory_usage(index=True).sum() for df in data_dict.values()])
         logger.info(f"Total memory usage of the {data_type} data is {memory_usage * 0.0000000001}GB.")
 
@@ -296,14 +312,14 @@ class DeployWrapper:
 
         for key, val in data_dict.items():
 
-            if self.model_config['parameters']['model_parameters']['type'] == "pandas":
+            if self.model_config['parameters']['model_parameters']['type'].lower() == "pandas":
 
                 schema = read_write_data.convert_schema_output_pandas(schema_dict[key])
 
                 data_errors[key] = read_write_data.schema_conformance_pandas(data=val, schema=schema,
                                                                              dataframe_name=key)
 
-            elif self.model_config['parameters']['model_parameters']['type'] == "spark":
+            elif self.model_config['parameters']['model_parameters']['type'].lower() == "spark":
 
                 schema = read_write_data.convert_schema_spark(schema_dict[key])
 

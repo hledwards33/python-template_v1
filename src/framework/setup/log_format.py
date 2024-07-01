@@ -4,6 +4,9 @@ import math
 import os
 import re
 import sys
+import types
+from logging import LogRecord
+from typing import Callable
 
 
 class CustomFormatter(logging.Formatter):
@@ -25,13 +28,13 @@ class CustomFormatter(logging.Formatter):
             logging.CRITICAL: self.bold_red + self.fmt + self.reset
         }
 
-    def format(self, record):
+    def format(self, record) -> logging.Formatter.format:
         log_fmt = self.FORMATS.get(record.levelno)
         formatter = logging.Formatter(log_fmt)
         return formatter.format(record)
 
 
-def headers(message: str):
+def headers(message: str) -> None:
     line_length = 75
     line_num_start = line_length - math.ceil(len(message) / 2)
     line_num_end = line_num_start if line_num_start % 2 == 0 else line_num_start + 1
@@ -47,14 +50,14 @@ def headers(message: str):
     detailed_file_format()
 
 
-def no_format(message: str):
+def no_format(message: str) -> None:
     simple_file_format()
     logging.info(message, extra={'block': ['console']})
     print(message)
     detailed_file_format()
 
 
-def detailed_file_format():
+def detailed_file_format() -> None:
     for handler in logging.getLogger().handlers:
         if isinstance(handler, logging.FileHandler):
             fl_format = logging.Formatter("[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s:"
@@ -62,19 +65,19 @@ def detailed_file_format():
             handler.setFormatter(fl_format)
 
 
-def simple_file_format():
+def simple_file_format() -> None:
     for handler in logging.getLogger().handlers:
         if isinstance(handler, logging.FileHandler):
             handler.setFormatter(logging.Formatter('%(message)s'))
 
 
-def lines():
+def lines() -> None:
     output = "".join(["-" for _ in range(75)])
 
     print(output)
 
 
-def create_logging_file_handler_detailed(path: str):
+def create_logging_file_handler_detailed(path: str) -> logging.FileHandler:
     fl_handler = logging.FileHandler(path, 'w+')
     fl_format = logging.Formatter("[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s:"
                                   " %(lineno)d] %(message)s")
@@ -84,7 +87,7 @@ def create_logging_file_handler_detailed(path: str):
     return fl_handler
 
 
-def create_logging_file_handler_simple(path: str):
+def create_logging_file_handler_simple(path: str) -> logging.FileHandler:
     fl_handler = logging.FileHandler(path, 'w+')
     fl_format = logging.Formatter("%(message)s")
     fl_handler.setFormatter(fl_format)
@@ -93,7 +96,7 @@ def create_logging_file_handler_simple(path: str):
     return fl_handler
 
 
-def create_logging_file(file_handler, path: str, name: str, data_name: str = None):
+def create_logging_file(file_handler, path: str, name: str, data_name: str = None) -> None:
     format_dict = {}
     if '{date}' in name:
         format_dict['date'] = datetime.date.today()
@@ -109,7 +112,7 @@ def create_logging_file(file_handler, path: str, name: str, data_name: str = Non
         logging.getLogger().addHandler(fil_handler)
 
 
-def create_logging_sys_handler_detailed():
+def create_logging_sys_handler_detailed() -> logging.StreamHandler:
     sys_handler = logging.StreamHandler(sys.stdout)
     cn_format = CustomFormatter(
         "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s")
@@ -119,7 +122,7 @@ def create_logging_sys_handler_detailed():
     return sys_handler
 
 
-def create_logging_sys_handler_simple():
+def create_logging_sys_handler_simple() -> logging.StreamHandler:
     sys_handler = logging.StreamHandler(sys.stdout)
     cn_format = CustomFormatter("%(message)s")
     sys_handler.setFormatter(cn_format)
@@ -128,7 +131,7 @@ def create_logging_sys_handler_simple():
     return sys_handler
 
 
-def remove_handler(name):
+def remove_handler(name) -> None:
     name = re.sub("\{.*?\}", "", name)
 
     for handler in logging.getLogger().handlers:
@@ -136,8 +139,8 @@ def remove_handler(name):
             logging.getLogger().removeHandler(handler)
 
 
-def build_handler_filters(handler: str):
-    def handler_filter(record: logging.LogRecord):
+def build_handler_filters(handler: str) -> Callable[[LogRecord], bool]:
+    def handler_filter(record: logging.LogRecord) -> bool:
         if hasattr(record, 'block'):
             if handler in record.block:
                 return False
@@ -146,6 +149,6 @@ def build_handler_filters(handler: str):
     return handler_filter
 
 
-def initiate_logger():
+def initiate_logger() -> None:
     logging.getLogger().setLevel(logging.DEBUG)
     logging.getLogger().addHandler(create_logging_sys_handler_detailed())
