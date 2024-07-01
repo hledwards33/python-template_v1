@@ -4,7 +4,7 @@ This script infers the datatypes of a given dataset to create a dataset schema.
 import pandas as pd
 
 
-def create_schema(path: str) -> str:
+def create_schema(path: str) -> None:
     df = pd.read_csv(path)
 
     schema = pd.io.json.build_table_schema(df)

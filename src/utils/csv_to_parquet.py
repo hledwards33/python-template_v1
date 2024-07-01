@@ -12,13 +12,13 @@ def get_csvs(path: str) -> list:
     return [os.path.join(path, filename) for filename in filenames if filename.endswith(".csv")]
 
 
-def convert_to_csv(file_paths: list):
+def convert_to_csv(file_paths: list) -> None:
     for path in file_paths:
         df = pd.read_csv(path, dtype=str)
         df.to_parquet(path[:-4] + '.parquet', engine='pyarrow', compression='gzip')
 
 
-def all_files_to_csv(path: str):
+def all_files_to_csv(path: str) -> None:
     target_files = get_csvs(path)
     convert_to_csv(target_files)
 
