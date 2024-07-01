@@ -7,8 +7,6 @@ import sys
 
 
 class CustomFormatter(logging.Formatter):
-    """Logging colored formatter, adapted from https://stackoverflow.com/a/56944256/3638629"""
-
     grey = '\x1b[38;21m'
     blue = '\x1b[38;5;39m'
     yellow = '\x1b[38;5;226m'
@@ -34,8 +32,8 @@ class CustomFormatter(logging.Formatter):
 
 
 def headers(message: str):
-    line_num = 75
-    line_num_start = line_num - math.ceil(len(message) / 2)
+    line_length = 75
+    line_num_start = line_length - math.ceil(len(message) / 2)
     line_num_end = line_num_start if line_num_start % 2 == 0 else line_num_start + 1
     lines_start = ''.join(['-' for _ in range(line_num_start)])
     lines_end = ''.join(['-' for _ in range(line_num_end)])
