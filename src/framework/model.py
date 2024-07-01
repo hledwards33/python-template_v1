@@ -16,14 +16,14 @@ class BaseModel(ABC):
 
             self.set_parameters(parameters)
 
-    def set_parameters(self, parameters: dict):
+    def set_parameters(self, parameters: dict) -> None:
         for key, val in parameters.items():
             setattr(self, str(key), val)
             logger.info(f"Parameter '{key}' has been initiated as an instance variable with value {val} and"
                         f" type '{type(val).__name__}'.")
 
     @staticmethod
-    def long_to_wide(df: pd.DataFrame):
+    def long_to_wide(df: pd.DataFrame) -> dict:
 
         result = df.T
 
@@ -51,5 +51,5 @@ class BaseModel(ABC):
         return result
 
     @abstractmethod
-    def run(self):
+    def run(self) -> None:
         pass

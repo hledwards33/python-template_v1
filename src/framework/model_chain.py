@@ -1,5 +1,6 @@
 import importlib
 import os
+import types
 
 from framework.model_wrapper import DeployWrapper
 from framework.setup.log_format import headers
@@ -21,11 +22,11 @@ class ModelChain:
 
         return config_dict
 
-    def get_model_class(self, model_config: dict):
+    def get_model_class(self, model_config: dict) -> __class__:
         model_class = getattr(importlib.import_module(model_config['model_path']), model_config['model'])
         return model_class
 
-    def run_chain(self):
+    def run_chain(self) -> None:
         for model_name, model_config in self.chain_config.items():
             headers(f"Executing Model '{model_name}'")
 
