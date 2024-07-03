@@ -35,7 +35,7 @@
     * pytests/...
   * venv/...
 
-Throughout this document we will be focusing on the src/utils directory,
+Throughout this document, we will be focusing on the src/utils directory,
 highlighted above in bold text.
 
 ## Utilities Functionalities
