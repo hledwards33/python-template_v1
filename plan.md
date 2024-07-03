@@ -19,14 +19,15 @@
 6. Test various use cases - write pytests for framework
 7. **_Done: Create a "create schema" script with datatype inference_**
 8. Add zip and parquet capability to the reconciliation codes
-9. Make file path calls more robust - attempt to use the defined repo root
+9. **_Done: Make file path calls more robust_** 
 
 ## Phase 3
 1. **_Done: Create a master script that can chain models_**
 2. Look into using airflow to schedule model dependencies
 3. Add a pyspark model
-4. **_Create a way to save model chain logs : work around in Django framework_**
+4. **_Create a way to save model chain logs: work around in Django framework_**
 5. Add comments to all code
+6. **_Done: Add type casting to all code_**
 
 ## Phase 4 
 1. **_Create a Django interface for running models_**

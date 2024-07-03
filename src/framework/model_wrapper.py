@@ -9,6 +9,7 @@ import pandas as pd
 from framework.setup import read_write_data
 from framework.setup.log_format import (headers, create_logging_file, remove_handler,
                                         create_logging_file_handler_detailed, initiate_logger)
+from config import PY_REPO_DIR
 
 initiate_logger()
 logger = logging.getLogger()
@@ -129,9 +130,6 @@ class ModelWrapper(ABC):
 
 
 class DeployWrapper:
-    PY_FILE_DIR = os.path.abspath(os.path.dirname(__file__))
-    PY_ROOT_DIR = os.path.abspath(os.path.join(PY_FILE_DIR, ".."))
-    PY_REPO_DIR = os.path.dirname(PY_ROOT_DIR)
 
     def __init__(self, model_wrapper: ModelWrapper, sys_config: str, model_config: str):
         self.model_wrapper = model_wrapper()
@@ -141,8 +139,7 @@ class DeployWrapper:
 
     def start_logging(self) -> None:
         name = self.model_config['parameters']['model_parameters']['log_name']
-        path = os.path.join(self.__class__.PY_REPO_DIR,
-                            self.model_config['parameters']['model_parameters']['log_location'])
+        path = os.path.join(PY_REPO_DIR, self.model_config['parameters']['model_parameters']['log_location'])
         create_logging_file(create_logging_file_handler_detailed, path, name)
 
     def stop_logging(self) -> None:
@@ -150,7 +147,7 @@ class DeployWrapper:
         remove_handler(name)
 
     def get_data_dir(self) -> os.path:
-        return os.path.join(self.__class__.PY_REPO_DIR, self.sys_config['data']['data_folder'])
+        return os.path.join(PY_REPO_DIR, self.sys_config['data']['data_folder'])
 
     @staticmethod
     def config_logs(log_config: dict) -> None:
@@ -327,8 +324,9 @@ class DeployWrapper:
 
         return data_errors
 
-    def read_config(self, path: str) -> dict:
-        path = os.path.join(self.__class__.PY_REPO_DIR, path)
+    @staticmethod
+    def read_config(path: str) -> dict:
+        path = os.path.join(PY_REPO_DIR, path)
         config_dict = read_write_data.read_yaml(path=path)
 
         return config_dict
