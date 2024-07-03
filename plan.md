@@ -16,7 +16,7 @@
 3. **_Done: Create memory logging_**
 4. **_Done: Create a script that can run models on different data with only a change to the config_**
 5. **_Done: Create a model meta-data file (.yaml) - i.e. a yaml to run multiple models_**
-6. Test various use cases - write pytests for framework
+6. Test various use cases - write pytests for the framework
 7. **_Done: Create a "create schema" script with datatype inference_**
 8. Add zip and parquet capability to the reconciliation codes
 9. **_Done: Make file path calls more robust_** 
