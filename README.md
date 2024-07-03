@@ -13,7 +13,7 @@
 * [Additional Documentation](#additional-documentation)
 
 ## Repository Usage
-This repository provides a framework to standardise the scripting on financial 
+This repository provides a framework to standardise the scripting of financial 
 models in python. Within this framework models can be run in chain, recursively
 or individually.
 
@@ -26,9 +26,9 @@ _right click: src > mark directory as > sources root_.
 3. Input data processing is applied to standardise all datasets.
 4. Input data is passed to the model.
 5. Model is run.
-6. Model passes output data to model framework.
+6. Model passes output data back to the model framework.
 7. Output data processing is applied to standardise all datasets.
-8. Data types are checked against data schemas.
+8. Data types are checked against data schemas and conformance errors are raised.
 9. Output data is saved to either csv, zip or parquet file format.
 
 ## Contributing to the Repository
