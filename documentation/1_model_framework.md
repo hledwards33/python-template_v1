@@ -59,8 +59,8 @@ dataframes back to disk. This class currently supports read/write of .csv, .zip 
 types.
 
 This class works with a model.BaseModel class type. The ModelWrapper class supplies the BaseModel class
-the input data required in a standardised format, then after the BaseModel class has executed
-the ModelWrapper class accepts the model outputs, checks for data type conformance.
+the input data required in a standardised format, then after the BaseModel class has executed, 
+the ModelWrapper class accepts the model outputs and checks for data type conformance.
 
 This class contains 4 python abstract methods:
 1. define_input_schemas
@@ -68,7 +68,7 @@ This class contains 4 python abstract methods:
 3. define_parameter_schemas
 4. run_model
 
-Abstract methods 1-3 are used during read/write of data to enforce data types to 
+Abstract methods 1–3 are used during read/write of data to enforce data types to 
 adhere to the defined schemas. Abstract method 4 is called to execute the model code
 that has been wrapped.
 
@@ -78,7 +78,7 @@ files for a particular model run. The benefit of this class is it allows the sam
 class to be called for different configurations (i.e. different data, different parameters, chaining models) in a 
 reusable and repeatable manner, in accordance to the SOLID principles of object orientated programming.
 
-This class works with a ModelWrapper class type. The DeployWrapper class creates of the ModelWrapper class
+This class works with a ModelWrapper class type. The DeployWrapper class creates an instance of the ModelWrapper class
 by supplying the ModelWrapper class with a run specific configuration.
 
 This class has 3 main functionalities: 
@@ -86,7 +86,7 @@ This class has 3 main functionalities:
 2. Configuring model logs
 3. Passing model parameters
 
-More generally the above 3 functionalities can all be defined under the theme "handling model configuration",
+More generally, the above 3 functionalities can all be defined under the theme "handling model configuration",
 which is why they have been grouped together in the DeployModel class.
 
 ## Model Design
@@ -101,8 +101,8 @@ The subclasses of the BaseModel class carry out the desired action of
 the model and can be considered as the engine of repository's model framework.
 
 The usual action of this class is to receive standardised data, act on the data, and 
-return an augmented dataset(s). The more generalised the code within this class
-the more useful the model.
+return an augmented dataset(s). **The more generalised the code within this class
+the more useful the model.**
 
 This class has 2 main functionalities.
 1. Execute the desired model behaviour
@@ -115,23 +115,24 @@ variables to allow the lightweight access/passing of parameters between classes 
 This defines a way of working within this repository. 
 
 ## Deploy
-First we handle the way in which we want to deploy our model, this is the most 
-granular level of model specification. This about how the model configuration 
+First, we handle the way in which we want to deploy our model; this is the most 
+granular level of model specification. The creation of the model config yaml files
+is the desired outcome of this step. Think about how the model configuration 
 should talk to the model wrapper to allow for re-use of the model wrapper.
 
 ## Wrap
 The next step is creating a model wrapper to deploy. The reason we do this before 
-we have written the model code is because it helps enforce a generalise way of thinking
+we have written the model code is because it helps enforce a more generalised way of thinking
 when writing the model code. It also means we can test the model code within the repository's 
 model framework as we develop.
 
 ## Model
-Finally, we can write the model code. As we mentioned earlier this is where the action happens.
-As we write the model code bear in mind future usage of the model, consider how to allow the usage
+Finally, we can write the model code. As we mentioned earlier, this is where the action happens.
+As we write the model code, bear in mind future usage of the model, consider how to allow the usage
 of different configurations or input datasets.
 
 # Framework Diagram
-The below diagram shows visually the model framework encapsulates specific steps in the model
+The below diagram shows visually how the model framework encapsulates specific steps in the model
 execution process. All models built with these abstract classes will inherit the same desired 
 behaviour. Google "The 5 Principles of OOP" for more information.
 
