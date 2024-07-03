@@ -3,6 +3,7 @@ import os
 import types
 
 from framework.model_wrapper import DeployWrapper
+from framework.model_wrapper import ModelWrapper
 from framework.setup.log_format import headers
 from framework.setup.read_write_data import read_yaml
 
@@ -22,7 +23,7 @@ class ModelChain:
 
         return config_dict
 
-    def get_model_class(self, model_config: dict) -> __class__:
+    def get_model_class(self, model_config: dict) -> ModelWrapper:
         model_class = getattr(importlib.import_module(model_config['model_path']), model_config['model'])
         return model_class
 

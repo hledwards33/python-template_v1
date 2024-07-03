@@ -45,6 +45,8 @@
 1. Write documentation for this library
    * **_Done: Create the read me file_**
    * Complete all 7 documentation files
+     * **_Done: docs 1->4_**
+     * Need to complete docs 5->7
 2. Robustly test the Django framework
 
 ## Phase 7
