@@ -72,3 +72,4 @@ following order:
 5. model_creation
 6. model_reconciliation
 7. model_interface
+8. framework_testing
