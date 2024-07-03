@@ -6,6 +6,7 @@ from framework.model_wrapper import DeployWrapper
 from framework.model_wrapper import ModelWrapper
 from framework.setup.log_format import headers
 from framework.setup.read_write_data import read_yaml
+from config import PY_ROOT_DIR
 
 
 class ModelChain:
@@ -16,7 +17,7 @@ class ModelChain:
 
     @staticmethod
     def read_config(path: str) -> dict:
-        path = os.path.join(PY_REPO_DIR, path)
+        path = os.path.join(PY_ROOT_DIR, path)
         config_dict = read_yaml(path=path)
 
         return config_dict
