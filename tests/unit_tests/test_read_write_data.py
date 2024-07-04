@@ -1,5 +1,6 @@
 import pytest
 
+from framework.setup.log_format import initiate_logger
 from src.framework.setup.read_write_data import *
 
 """
@@ -62,7 +63,7 @@ def dataframe(integer_dataframe, float_dataframe, string_dataframe, date_datafra
 def dataframe_schema():
     # Arrange
     return {
-        "integer_column_1": 'int', "integer_column_2": 'int', "integer_column_3": 'int',
+        "integer_column_1": 'integer', "integer_column_2": 'integer', "integer_column_3": 'integer',
         "float_column_1": 'float', "float_column_2": 'float', "float_column_3": 'float',
         "float_column_4": 'float', "string_column_1": 'string', "string_column_2": 'string',
         "string_column_3": 'string', "date_column_1": 'date', "date_column_2": 'date'
@@ -182,24 +183,48 @@ def test_enforce_data_types_1(dataframe):
     assert result.dtypes.to_dict() == expected
 
 
-def test_schema_conformance_pandas_1(dataframe, dataframe_schema):
+def test_schema_conformance_pandas_1(dataframe, dataframe_schema, caplog):
+    """
+    Testing the ability to identify extra column in the data that are not present in the schema
+    """
     # Act
+    dataframe_schema = convert_schema_output_pandas(dataframe_schema)
     for key in ['float_column_1', 'string_column_1']:
         dataframe_schema.pop(key)
 
-    result_errors, result_data = schema_conformance_pandas(dataframe, dataframe_schema, "test_schema_conformance_1")
+    result = schema_conformance_pandas(dataframe, dataframe_schema, "test_schema_conformance_1")
 
     # Assert
-    expected = {}
-    assert result == expected
+    expected = ("The following columns have been dropped from dataset test_schema_conformance_1: ['float_column_1', "
+                "'string_column_1'].")
+    assert caplog.messages[0] == expected
 
 
 def test_schema_conformance_pandas_2(dataframe, dataframe_schema):
+    """
+    Testing the ability to identify a missing column in the dataset
+    """
     # Act
-    dataframe_schema['integer_column_1'] = "float"
-    dataframe_schema['date_column_1'] = "float"
-    result = schema_conformance_pandas(dataframe)
+    dataframe_schema = convert_schema_output_pandas(dataframe_schema)
+    dataframe.drop(columns=['float_column_1', 'string_column_1'], inplace=True)
+    result = schema_conformance_pandas(dataframe, dataframe_schema)
 
     # Assert
-    expected = {}
-    assert result == expected
+    expected = "'float_column_1', 'string_column_1'"
+    assert expected in result['missing_columns'][0]
+
+
+def test_schema_conformance_pandas_3(dataframe, dataframe_schema):
+    """
+    Testing the ability to identify incorrect datatypes in the dataset
+    """
+    # Act
+    dataframe_schema = convert_schema_output_pandas(dataframe_schema)
+    dataframe_schema['integer_column_1'] = "float"
+    dataframe_schema['date_column_1'] = "float"
+    result = schema_conformance_pandas(dataframe, dataframe_schema)
+
+    # Assert
+    expected = ['Dataframe  has incorrect datatype in integer_column_1 expected float got Int64.',
+                'Dataframe  has incorrect datatype in date_column_1 expected float got datetime64[s].']
+    assert result['incorrect_type'] == expected
