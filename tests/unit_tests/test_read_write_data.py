@@ -38,6 +38,13 @@ def float_dataframe():
 
 
 @pytest.fixture
+def date_dataframe():
+    # Arrange
+    return pd.DataFrame({"date_column_1": ['04-10-1997', '06-10-2000', '12-12-1998'],
+                         "date_column_2": [pd.NaT, '03-07-2024', '01-01-2022']}, dtype='datetime64[s]')
+
+
+@pytest.fixture
 def string_dataframe():
     # Arrange
     return pd.DataFrame({"string_column_1": ["", "", ""],
@@ -46,9 +53,20 @@ def string_dataframe():
 
 
 @pytest.fixture
-def dataframe(integer_dataframe, float_dataframe, string_dataframe):
+def dataframe(integer_dataframe, float_dataframe, string_dataframe, date_dataframe):
     # Arrange
-    return pd.concat([integer_dataframe, float_dataframe, string_dataframe], axis=0)
+    return pd.concat([integer_dataframe, float_dataframe, string_dataframe, date_dataframe], axis=1)
+
+
+@pytest.fixture
+def dataframe_schema():
+    # Arrange
+    return {
+        "integer_column_1": 'int', "integer_column_2": 'int', "integer_column_3": 'int',
+        "float_column_1": 'float', "float_column_2": 'float', "float_column_3": 'float',
+        "float_column_4": 'float', "string_column_1": 'string', "string_column_2": 'string',
+        "string_column_3": 'string', "date_column_1": 'date', "date_column_2": 'date'
+    }
 
 
 """
@@ -153,6 +171,7 @@ def test_enforce_strings_1(string_dataframe):
 
 def test_enforce_data_types_1(dataframe):
     # Act
+    dataframe.drop(columns=['date_column_1', 'date_column_2'], inplace=True)
     result = enforce_data_types(dataframe)
 
     # Assert
@@ -161,3 +180,26 @@ def test_enforce_data_types_1(dataframe):
                 "float_column_4": 'float64', "string_column_1": 'string', "string_column_2": 'string',
                 "string_column_3": 'string'}
     assert result.dtypes.to_dict() == expected
+
+
+def test_schema_conformance_pandas_1(dataframe, dataframe_schema):
+    # Act
+    for key in ['float_column_1', 'string_column_1']:
+        dataframe_schema.pop(key)
+
+    result_errors, result_data = schema_conformance_pandas(dataframe, dataframe_schema, "test_schema_conformance_1")
+
+    # Assert
+    expected = {}
+    assert result == expected
+
+
+def test_schema_conformance_pandas_2(dataframe, dataframe_schema):
+    # Act
+    dataframe_schema['integer_column_1'] = "float"
+    dataframe_schema['date_column_1'] = "float"
+    result = schema_conformance_pandas(dataframe)
+
+    # Assert
+    expected = {}
+    assert result == expected

@@ -214,6 +214,7 @@ def schema_conformance_pandas(data: pd.DataFrame, schema: dict, dataframe_name: 
     # Check for column differences between schema and dataset
     extra_cols = list(set(data.columns).difference(schema.keys()))
     if extra_cols:
+        # The below message is executed again in the "write_csv_from_pandas" method
         data.drop(columns=extra_cols, inplace=True)
         logger.warning(f"The following columns have been dropped from dataset {dataframe_name}: {extra_cols}")
 
