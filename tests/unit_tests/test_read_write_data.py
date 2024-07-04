@@ -103,5 +103,5 @@ def test_enforce_integers_1(integer_dataframe):
     result = enforce_integers(integer_dataframe)
 
     # Assert
-    expected = pd.array([1, 2, np.nan], dtype=pd.Int64Dtype())
-    assert result == expected
+    expected = {"integer_column_1": 'float64', "integer_column_2": 'float64', "integer_column_3": 'int64'}
+    assert result.dtypes.to_dict() == expected

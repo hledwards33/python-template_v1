@@ -135,6 +135,7 @@ def enforce_integers(df: pd.DataFrame) -> pd.DataFrame:
     for column in df.columns:
         if df[column].dtype == "Int64" and df[column].isna().all():
             df[column] = np.nan
+            df[column] = df[column].astype(np.float64)
         elif df[column].dtype == "Int64" and df[column].isna().any():
             df[column] = df[column].astype(np.float64)
         elif df[column].dtype == "Int64":
