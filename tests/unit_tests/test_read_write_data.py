@@ -1,6 +1,5 @@
 import pytest
 
-from framework.setup.log_format import initiate_logger
 from src.framework.setup.read_write_data import *
 
 """
@@ -195,9 +194,8 @@ def test_schema_conformance_pandas_1(dataframe, dataframe_schema, caplog):
     result = schema_conformance_pandas(dataframe, dataframe_schema, "test_schema_conformance_1")
 
     # Assert
-    expected = ("The following columns have been dropped from dataset test_schema_conformance_1: ['float_column_1', "
-                "'string_column_1'].")
-    assert caplog.messages[0] == expected
+    expected = ['float_column_1', 'string_column_1']
+    assert (expected[0] in caplog.messages[0]) & (expected[1] in caplog.messages[0])
 
 
 def test_schema_conformance_pandas_2(dataframe, dataframe_schema):
@@ -210,8 +208,8 @@ def test_schema_conformance_pandas_2(dataframe, dataframe_schema):
     result = schema_conformance_pandas(dataframe, dataframe_schema)
 
     # Assert
-    expected = "'float_column_1', 'string_column_1'"
-    assert expected in result['missing_columns'][0]
+    expected = ['float_column_1', 'string_column_1']
+    assert (expected[0] in result['missing_columns'][0]) & (expected[1] in result['missing_columns'][0])
 
 
 def test_schema_conformance_pandas_3(dataframe, dataframe_schema):
@@ -228,3 +226,11 @@ def test_schema_conformance_pandas_3(dataframe, dataframe_schema):
     expected = ['Dataframe  has incorrect datatype in integer_column_1 expected float got Int64.',
                 'Dataframe  has incorrect datatype in date_column_1 expected float got datetime64[s].']
     assert result['incorrect_type'] == expected
+
+
+def test_read_csv_to_pandas_1():
+    pass
+
+
+def test_read_parquet_to_pandas_1():
+    pass

@@ -240,7 +240,7 @@ def schema_conformance_pandas(data: pd.DataFrame, schema: dict, dataframe_name: 
 
 def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.DataFrame:
     """
-    Loads a csv into a pandas dataframe object
+    Loads a csv or zipped csv into a pandas dataframe object
     :param path: path to csv
     :param schema: dictionary containing column datatypes
     :param usecols: Boolean to choose only loading columns defined in the schema
