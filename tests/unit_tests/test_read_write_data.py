@@ -26,6 +26,31 @@ def integer_dataframe():
     return df
 
 
+@pytest.fixture()
+def float_dataframe():
+    # Arrange
+    return pd.DataFrame({
+        "float_column_1": [2.1, 1.2, 5.0],
+        "float_column_2": [1, 2, 3],
+        "float_column_3": [np.nan, 3.0, 1],
+        "float_column_4": [np.nan, np.nan, np.nan]
+    }, dtype=pd.Float64Dtype)
+
+
+@pytest.fixture
+def string_dataframe():
+    # Arrange
+    return pd.DataFrame({"string_column_1": ["", "", ""],
+                         "string_column_2": ["test", "test", "test"],
+                         "string_column_3": ["", "test", ""]}, dtype='string')
+
+
+@pytest.fixture
+def dataframe(integer_dataframe, float_dataframe, string_dataframe):
+    # Arrange
+    return pd.concat([integer_dataframe, float_dataframe, string_dataframe], axis=0)
+
+
 """
 Unit tests for functions contained within the src.framework.set.read_write_data
 """
@@ -104,4 +129,35 @@ def test_enforce_integers_1(integer_dataframe):
 
     # Assert
     expected = {"integer_column_1": 'float64', "integer_column_2": 'float64', "integer_column_3": 'int64'}
+    assert result.dtypes.to_dict() == expected
+
+
+def test_enforce_floats_1(float_dataframe):
+    # Act
+    result = enforce_floats(float_dataframe)
+
+    # Assert
+    expected = {"float_column_1": 'float64', "float_column_2": 'float64', "float_column_3": 'float64',
+                "float_column_4": 'float64'}
+    assert result.dtypes.to_dict() == expected
+
+
+def test_enforce_strings_1(string_dataframe):
+    # Act
+    result = enforce_strings(string_dataframe)
+
+    # Assert
+    expected = {"string_column_1": 'string', "string_column_2": 'string', "string_column_3": 'string'}
+    assert result.dtypes.to_dict() == expected
+
+
+def test_enforce_data_types_1(dataframe):
+    # Act
+    result = enforce_data_types(dataframe)
+
+    # Assert
+    expected = {"integer_column_1": 'float64', "integer_column_2": 'float64', "integer_column_3": 'int64',
+                "float_column_1": 'float64', "float_column_2": 'float64', "float_column_3": 'float64',
+                "float_column_4": 'float64', "string_column_1": 'string', "string_column_2": 'string',
+                "string_column_3": 'string'}
     assert result.dtypes.to_dict() == expected
