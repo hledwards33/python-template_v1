@@ -1,0 +1,4 @@
+,integer_column_1,integer_column_2,integer_column_3,float_column_1,float_column_2,float_column_3,float_column_4,string_column_1,string_column_2,string_column_3,date_column_1,date_column_2
+0,1,,1,2.1,1.0,,,,test,,1997-10-04,
+1,2,,2,1.2,2.0,3.0,,,test,test,2000-10-06,2024-03-07
+2,,,3,5.0,3.0,1.0,,,test,,1998-12-12,2022-01-01

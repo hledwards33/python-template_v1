@@ -1,6 +1,7 @@
 import pytest
 
 from src.framework.setup.read_write_data import *
+from src.config import PY_ROOT_DIR
 
 """
 Define fixed data to be used across tests
@@ -40,8 +41,8 @@ def float_dataframe():
 @pytest.fixture
 def date_dataframe():
     # Arrange
-    return pd.DataFrame({"date_column_1": ['04-10-1997', '06-10-2000', '12-12-1998'],
-                         "date_column_2": [pd.NaT, '03-07-2024', '01-01-2022']}, dtype='datetime64[s]')
+    return pd.DataFrame({"date_column_1": ['1997-10-04', '2000-10-06', '1998-12-12'],
+                         "date_column_2": [pd.NaT, '2024-03-07-', '2022-01-01']}, dtype='datetime64[s]')
 
 
 @pytest.fixture
@@ -89,7 +90,7 @@ def test_read_json_1():
 
 def test_read_json_abs_1():
     # Arrange
-    test_json_path = r"C:\Users\GV147BE\PycharmProjects\python-template\tests\unit_tests\test_data\test_json.json"
+    test_json_path = PY_ROOT_DIR + r"\tests\unit_tests\test_data\test_json.json"
 
     # Act
     result = read_json_abs(test_json_path)
@@ -101,7 +102,7 @@ def test_read_json_abs_1():
 
 def test_read_yaml_1():
     # Arrange
-    test_yaml_path = r"C:\Users\GV147BE\PycharmProjects\python-template\tests\unit_tests\test_data\test_yaml.yaml"
+    test_yaml_path = PY_ROOT_DIR + r"\tests\unit_tests\test_data\test_yaml.yaml"
 
     # Act
     result = read_yaml(test_yaml_path)
@@ -228,8 +229,15 @@ def test_schema_conformance_pandas_3(dataframe, dataframe_schema):
     assert result['incorrect_type'] == expected
 
 
-def test_read_csv_to_pandas_1():
-    pass
+def test_read_csv_to_pandas_1(dataframe_schema, dataframe):
+    # Arrange
+    csv_path = PY_ROOT_DIR + r"\tests\unit_tests\test_data\test_csv.csv"
+    dataframe_schema = convert_schema_pandas(dataframe_schema)
+
+    # Act
+    result = read_csv_to_pandas(csv_path, dataframe_schema)
+
+    assert (result.shape == (3, 12)) & (result.dtypes.to_dict() == dataframe_schema)
 
 
 def test_read_parquet_to_pandas_1():

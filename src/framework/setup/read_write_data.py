@@ -249,14 +249,17 @@ def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.Data
     logger.info(f"Loading columns: {list(schema.keys())}")
 
     # Define the key word arguments to be supplied to the pandas.read_csv function
+    # Read in date columns as string as kwarg date_parser has been depreciated and null dates raise errors
+    # with kwarg date_format
     kwargs = {
         'filepath_or_buffer': path,
-        'dtype': schema,
+        'dtype': {k: v if v != 'datetime64[s]' else "object" for k, v in schema.items()},
         'usecols': schema.keys(),
         'cache_dates': True,
         'engine': 'pyarrow',
-        'parse_dates': [key for key, val in schema.items() if val == 'datetime64[s]'],
-        'date_format': "%Y-%m-%d",
+        # 'parse_dates': [key for key, val in schema.items() if val == 'datetime64[s]'],
+        # 'date_format': "%Y-%m-%d",
+        # 'date_parser': lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors='coerce')
     }
 
     # Trigger the used column selection
@@ -265,6 +268,10 @@ def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.Data
 
     # Read the csv data into a pandas dataframe object
     data = pd.read_csv(**kwargs)
+
+    # Apply datetime formatting to date columns - coerce nulls to pd.NaT
+    for col in [key for key, val in schema.items() if val == "datetime64[s]"]:
+        data[col] = pd.to_datetime(data[col], format="%Y-%m-%d", errors='coerce')
 
     # Ensure dataframe datatypes match the schema
     data = enforce_data_types(data)
