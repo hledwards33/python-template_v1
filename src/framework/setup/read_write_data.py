@@ -134,12 +134,12 @@ def enforce_integers(df: pd.DataFrame) -> pd.DataFrame:
     # Loop through each column and standardise integer fields
     for column in df.columns:
         if df[column].dtype == "Int64" and df[column].isna().all():
-            df[column] = np.nan
-            df[column] = df[column].astype(np.float64)
+            df[column] = pd.NA
+            df[column] = df[column].astype('Int64')
         elif df[column].dtype == "Int64" and df[column].isna().any():
-            df[column] = df[column].astype(np.float64)
+            df[column] = df[column].astype('Int64')
         elif df[column].dtype == "Int64":
-            df[column] = df[column].astype(np.int64)
+            df[column] = df[column].astype('Int64')
 
     # Return a dataframe with standardised integer fields
     return df

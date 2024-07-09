@@ -147,8 +147,8 @@ def test_enforce_integers_1(integer_dataframe):
     result = enforce_integers(integer_dataframe)
 
     # Assert
-    expected = {"integer_column_1": 'float64', "integer_column_2": 'float64', "integer_column_3": 'int64'}
-    assert result.dtypes.to_dict() == expected
+    expected = {"integer_column_1": 'Int64', "integer_column_2": 'Int64', "integer_column_3": 'Int64'}
+    assert {k: v.name for k, v in result.dtypes.to_dict().items()} == expected
 
 
 def test_enforce_floats_1(float_dataframe):
@@ -176,7 +176,7 @@ def test_enforce_data_types_1(dataframe):
     result = enforce_data_types(dataframe)
 
     # Assert
-    expected = {"integer_column_1": 'float64', "integer_column_2": 'float64', "integer_column_3": 'int64',
+    expected = {"integer_column_1": 'Int64', "integer_column_2": 'Int64', "integer_column_3": 'Int64',
                 "float_column_1": 'float64', "float_column_2": 'float64', "float_column_3": 'float64',
                 "float_column_4": 'float64', "string_column_1": 'string', "string_column_2": 'string',
                 "string_column_3": 'string'}
