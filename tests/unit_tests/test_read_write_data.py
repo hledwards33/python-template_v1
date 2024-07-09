@@ -1,7 +1,7 @@
 import pytest
 
-from src.framework.setup.read_write_data import *
 from src.config import PY_ROOT_DIR
+from src.framework.setup.read_write_data import *
 
 """
 Define fixed data to be used across tests
@@ -233,11 +233,15 @@ def test_read_csv_to_pandas_1(dataframe_schema, dataframe):
     # Arrange
     csv_path = PY_ROOT_DIR + r"\tests\unit_tests\test_data\test_csv.csv"
     dataframe_schema = convert_schema_pandas(dataframe_schema)
+    dataframe_schema = {k: v.name if v not in ["string", "datetime64[s]"] else v for k, v in dataframe_schema.items()}
+    # type Int64 is used to allow nulls, but Float64 is changed to float64 as no functionality is lost and
+    # float64 is more common
+    dataframe_schema = {k: "float64" if v == "Float64" else v for k, v in dataframe_schema.items()}
 
     # Act
     result = read_csv_to_pandas(csv_path, dataframe_schema)
 
-    assert (result.shape == (3, 12)) & (result.dtypes.to_dict() == dataframe_schema)
+    assert (result.shape == (3, 12)) & ({k: v.name for k, v in result.dtypes.to_dict().items()} == dataframe_schema)
 
 
 def test_read_parquet_to_pandas_1():
