@@ -271,7 +271,7 @@ def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.Data
 
     # Apply datetime formatting to date columns - coerce nulls to pd.NaT
     for col in [key for key, val in schema.items() if val == "datetime64[s]"]:
-        data[col] = pd.to_datetime(data[col], format="%Y-%m-%d", errors='coerce')
+        data[col] = pd.to_datetime(data[col], format="%Y-%m-%d", errors='coerce').astype('datetime64[s]')
 
     # Ensure dataframe datatypes match the schema
     data = enforce_data_types(data)
