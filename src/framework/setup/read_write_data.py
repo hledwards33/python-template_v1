@@ -154,7 +154,7 @@ def enforce_floats(df: pd.DataFrame) -> pd.DataFrame:
     # Loop through each column and standardise float fields
     for column in df.columns:
         if df[column].dtype == "Float64":
-            df[column] = df[column].astype(np.float64)
+            df[column] = df[column].astype("Float64")
 
     # Return a dataframe with standardised float fields
     return df
@@ -379,6 +379,6 @@ def write_parquet_from_spark(data: pd.DataFrame, path: str, schema: dict) -> Non
     pass
 
 
-def write_zip_from_spark(ata: pd.DataFrame, path: str, schema: dict) -> None:
+def write_zip_from_spark(data: pd.DataFrame, path: str, schema: dict) -> None:
     # TODO: Fill in this method
     pass

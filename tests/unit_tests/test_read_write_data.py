@@ -156,8 +156,8 @@ def test_enforce_floats_1(float_dataframe):
     result = enforce_floats(float_dataframe)
 
     # Assert
-    expected = {"float_column_1": 'float64', "float_column_2": 'float64', "float_column_3": 'float64',
-                "float_column_4": 'float64'}
+    expected = {"float_column_1": 'Float64', "float_column_2": 'Float64', "float_column_3": 'Float64',
+                "float_column_4": 'Float64'}
     assert result.dtypes.to_dict() == expected
 
 
@@ -177,8 +177,8 @@ def test_enforce_data_types_1(dataframe):
 
     # Assert
     expected = {"integer_column_1": 'Int64', "integer_column_2": 'Int64', "integer_column_3": 'Int64',
-                "float_column_1": 'float64', "float_column_2": 'float64', "float_column_3": 'float64',
-                "float_column_4": 'float64', "string_column_1": 'string', "string_column_2": 'string',
+                "float_column_1": 'Float64', "float_column_2": 'Float64', "float_column_3": 'Float64',
+                "float_column_4": 'Float64', "string_column_1": 'string', "string_column_2": 'string',
                 "string_column_3": 'string'}
     assert result.dtypes.to_dict() == expected
 
@@ -236,13 +236,22 @@ def test_read_csv_to_pandas_1(dataframe_schema, dataframe):
     dataframe_schema = {k: v.name if v not in ["string", "datetime64[s]"] else v for k, v in dataframe_schema.items()}
     # type Int64 is used to allow nulls, but Float64 is changed to float64 as no functionality is lost and
     # float64 is more common
-    dataframe_schema = {k: "float64" if v == "Float64" else v for k, v in dataframe_schema.items()}
+    # dataframe_schema = {k: "float64" if v == "Float64" else v for k, v in dataframe_schema.items()}
 
     # Act
     result = read_csv_to_pandas(csv_path, dataframe_schema)
 
+    # Assert
     assert (result.shape == (3, 12)) & ({k: v.name for k, v in result.dtypes.to_dict().items()} == dataframe_schema)
 
 
-def test_read_parquet_to_pandas_1():
+def test_read_parquet_to_pandas_1(dataframe_schema, dataframe):
+    # Arrange
+    csv_path = PY_ROOT_DIR + r"\tests\unit_tests\test_data\test_parquet.parquet"
+    dataframe_schema = convert_schema_pandas(dataframe_schema)
+
+    # Act
+    result = read_parquet_to_pandas(csv_path, dataframe_schema)
+
+    # Assert
     pass
