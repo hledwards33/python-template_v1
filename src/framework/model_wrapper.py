@@ -6,10 +6,10 @@ from abc import ABC, abstractmethod
 
 import pandas as pd
 
+from config import PY_ROOT_DIR
 from framework.setup import read_write_data
 from framework.setup.log_format import (headers, create_logging_file, remove_handler,
                                         create_logging_file_handler_detailed, initiate_logger)
-from config import PY_REPO_DIR, PY_ROOT_DIR
 
 initiate_logger()
 logger = logging.getLogger()
@@ -206,7 +206,7 @@ class DeployWrapper:
         else:
             logger.info("No parameters input file is being used within this model.")
 
-            parameters = pd.DataFrame
+            parameters = pd.DataFrame()
 
         return parameters
 
@@ -226,7 +226,7 @@ class DeployWrapper:
         else:
             logger.info("No optional parameters are being used within this model.")
 
-            optional_parameters = pd.DataFrame
+            optional_parameters = pd.DataFrame()
 
         return optional_parameters
 
@@ -259,6 +259,10 @@ class DeployWrapper:
             raise TypeError(f"Incorrect DataTypes and/or DataColumns see above logs.")
 
     def post_outputs(self, data_dict: dict) -> None:
+
+        if not isinstance(data_dict, dict):
+            raise TypeError(f"Model output is not returning a dictionary of dataframes and is instead returning a "
+                            f"{type(data_dict).__name__}.")
 
         output_schemas = self.model_wrapper.read_schemas(schema_dict=self.model_wrapper.define_output_schemas())
 
