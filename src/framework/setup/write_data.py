@@ -8,6 +8,7 @@ class IWriteData(ABC):
     def write(self, path: str, data: any):
         pass
 
+
 class IWriteDataFromPandas(IWriteData):
     @abstractmethod
     def write(self, path: str, data: pd.DataFrame, schema: dict = None):
