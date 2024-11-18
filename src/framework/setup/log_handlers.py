@@ -9,7 +9,7 @@ from typing import Callable
 
 class ILogHandler(ABC):
     @abstractmethod
-    def build_logger(self, **kwargs) -> any:
+    def handler(self, **kwargs) -> any:
         pass
 
     @staticmethod
@@ -24,7 +24,7 @@ class ILogHandler(ABC):
 
 
 class IFileHandler(ILogHandler):
-    def build_logger(self, path: str) -> logging.FileHandler:
+    def handler(self, path: str) -> logging.FileHandler:
         pass
 
     @staticmethod
@@ -46,7 +46,7 @@ class IFileHandler(ILogHandler):
 
 class FileHandlerSimple(IFileHandler):
 
-    def build_logger(self, path: str) -> logging.FileHandler:
+    def handler(self, path: str) -> logging.FileHandler:
         fl_handler = logging.FileHandler(path, 'w+')
         fl_format = logging.Formatter("%(message)s")
         fl_handler.setFormatter(fl_format)
@@ -57,7 +57,7 @@ class FileHandlerSimple(IFileHandler):
 
 class FileHandlerDetailed(IFileHandler):
 
-    def build_logger(self, path: str) -> logging.FileHandler:
+    def handler(self, path: str) -> logging.FileHandler:
         fl_handler = logging.FileHandler(path, 'w+')
         fl_format = logging.Formatter("[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s:"
                                       " %(lineno)d] %(message)s")
@@ -68,13 +68,13 @@ class FileHandlerDetailed(IFileHandler):
 
 
 class ISysHandler(ILogHandler):
-    def build_logger(self) -> logging.StreamHandler:
+    def handler(self) -> logging.StreamHandler:
         pass
 
 
 class SysHandlerSimple(ISysHandler):
 
-    def build_logger(self) -> logging.StreamHandler:
+    def handler(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
         cn_format = CustomFormatter("%(message)s")
         sys_handler.setFormatter(cn_format)
@@ -85,7 +85,7 @@ class SysHandlerSimple(ISysHandler):
 
 class SysHandlerDetailed(ISysHandler):
 
-    def build_logger(self) -> logging.StreamHandler:
+    def handler(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
         cn_format = CustomFormatter(
             "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s")
