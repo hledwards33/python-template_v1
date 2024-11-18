@@ -1,47 +1,10 @@
 import logging
 import os
 import sys
-import threading
 from abc import ABC, abstractmethod
 from datetime import datetime
 from logging import LogRecord
 from typing import Callable
-
-
-class CustomFormatter(logging.Formatter):
-    grey = '\x1b[38;21m'
-    blue = '\x1b[38;5;39m'
-    yellow = '\x1b[38;5;226m'
-    red = '\x1b[38;5;196m'
-    bold_red = '\x1b[31;1m'
-    reset = '\x1b[0m'
-
-    def __init__(self, fmt):
-        super().__init__()
-        self.fmt = fmt
-        self.FORMATS = {
-            logging.DEBUG: self.grey + self.fmt + self.reset,
-            logging.INFO: self.blue + self.fmt + self.reset,
-            logging.WARNING: self.yellow + self.fmt + self.reset,
-            logging.ERROR: self.red + self.fmt + self.reset,
-            logging.CRITICAL: self.bold_red + self.fmt + self.reset
-        }
-
-    def format(self, record) -> logging.Formatter.format:
-        log_fmt = self.FORMATS.get(record.levelno)
-        formatter = logging.Formatter(log_fmt)
-        return formatter.format(record)
-
-
-class SingletonMeta(type):
-    _instances: dict = {}
-    _lock: threading.Lock = threading.Lock()
-
-    def __init__(cls):
-        cls._instances[cls] = super().__init__(cls)
-
-    def __new__(cls):
-        return cls._instances[cls]
 
 
 class ILogHandler(ABC):
@@ -104,7 +67,12 @@ class FileHandlerDetailed(IFileHandler):
         return fl_handler
 
 
-class SysHandlerSimple(ILogHandler):
+class ISysHandler(ILogHandler):
+    def build_logger(self) -> logging.StreamHandler:
+        pass
+
+
+class SysHandlerSimple(ISysHandler):
 
     def build_logger(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
@@ -115,7 +83,7 @@ class SysHandlerSimple(ILogHandler):
         return sys_handler
 
 
-class SysHandlerDetailed(ILogHandler):
+class SysHandlerDetailed(ISysHandler):
 
     def build_logger(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
@@ -125,3 +93,28 @@ class SysHandlerDetailed(ILogHandler):
         sys_handler.setLevel(logging.DEBUG)
         sys_handler.addFilter(self.build_handler_filters('console'))
         return sys_handler
+
+
+class CustomFormatter(logging.Formatter):
+    grey = '\x1b[38;21m'
+    blue = '\x1b[38;5;39m'
+    yellow = '\x1b[38;5;226m'
+    red = '\x1b[38;5;196m'
+    bold_red = '\x1b[31;1m'
+    reset = '\x1b[0m'
+
+    def __init__(self, fmt):
+        super().__init__()
+        self.fmt = fmt
+        self.FORMATS = {
+            logging.DEBUG: self.grey + self.fmt + self.reset,
+            logging.INFO: self.blue + self.fmt + self.reset,
+            logging.WARNING: self.yellow + self.fmt + self.reset,
+            logging.ERROR: self.red + self.fmt + self.reset,
+            logging.CRITICAL: self.bold_red + self.fmt + self.reset
+        }
+
+    def format(self, record) -> logging.Formatter.format:
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
