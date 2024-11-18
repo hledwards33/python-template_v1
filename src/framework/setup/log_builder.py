@@ -20,6 +20,7 @@ class SingletonMeta(type):
 
 
 class LogBuilder(metaclass=SingletonMeta):
+    _build_status: bool = False
 
     def __init__(self, SysHandler: ISysHandler = SysHandlerSimple, FileHandler: IFileHandler = None):
         self._sys_handler = SysHandler
@@ -99,3 +100,11 @@ class LogBuilder(metaclass=SingletonMeta):
         if sum([1 for handler in logging.getLogger().handlers if name in str(handler)]) < 1:
             file_handler = self._file_handler.handler(os.path.join(path, name) + ".log")
             logging.getLogger().addHandler(file_handler)
+
+    def update_build_status(self) -> None:
+        self._build_status = True
+
+    def initiate_logging(self, path: str, name: str, data_name: str = None) -> None:
+        if not self._build_status:
+            self.create_logging_file(path, name, data_name)
+            self.update_build_status()
