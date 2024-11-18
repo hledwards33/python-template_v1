@@ -68,7 +68,7 @@ class LogBuilder(metaclass=SingletonMeta):
         self.simple_file_format()
         logging.info("", extra={'block': ['console']})
         logging.info(lines_start + ' ' + message + ' ' + lines_end + "\n", extra={'block': ['console']})
-        self.detailed_file_format()
+        self.expected_file_format()
 
     def lines(self) -> None:
         output = "".join(["-" for _ in range(152)])
@@ -77,13 +77,13 @@ class LogBuilder(metaclass=SingletonMeta):
 
         self.simple_file_format()
         logging.info(output, extra={'block': ['console']})
-        self.detailed_file_format()
+        self.expected_file_format()
 
     def no_format(self, message: str) -> None:
         self.simple_file_format()
         logging.info(message, extra={'block': ['console']})
         print(message)
-        self.detailed_file_format()
+        self.expected_file_format()
 
     def initiate_file_logging(self, path: str, name: str, data_name: str = None) -> None:
 
