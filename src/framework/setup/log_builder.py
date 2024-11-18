@@ -42,7 +42,6 @@ class LogBuilder(metaclass=SingletonMeta):
     def sys_handler(self, sys_handler: ISysHandler):
         self._sys_handler = sys_handler
 
-
     def expected_file_format(self) -> None:
         for handler in logging.getLogger().handlers:
             if isinstance(handler, logging.FileHandler):
@@ -87,7 +86,6 @@ class LogBuilder(metaclass=SingletonMeta):
 
     def initiate_file_logging(self, path: str, name: str, data_name: str = None) -> None:
 
-        ## TODO Move this into a separate function
         format_dict = {}
         if '{date}' in name:
             format_dict['date'] = datetime.date.today()
