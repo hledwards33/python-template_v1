@@ -20,7 +20,7 @@ class SingletonMeta(type):
 
 
 class LogBuilder(metaclass=SingletonMeta):
-    _build_status: bool = False
+    __build_status: bool = False  # Initiating a private class variable
 
     def __init__(self, SysHandler: ISysHandler = SysHandlerSimple, FileHandler: IFileHandler = None):
         self._sys_handler = SysHandler
@@ -86,7 +86,9 @@ class LogBuilder(metaclass=SingletonMeta):
         print(message)
         self.detailed_file_format()
 
-    def create_logging_file(self, path: str, name: str, data_name: str = None) -> None:
+    def initiate_file_logging(self, path: str, name: str, data_name: str = None) -> None:
+
+        ## TODO Move this into a separate function
         format_dict = {}
         if '{date}' in name:
             format_dict['date'] = datetime.date.today()
@@ -101,10 +103,14 @@ class LogBuilder(metaclass=SingletonMeta):
             file_handler = self._file_handler.handler(os.path.join(path, name) + ".log")
             logging.getLogger().addHandler(file_handler)
 
+    def initiate_sys_logging(self) -> None:
+        logging.getLogger().setLevel(logging.DEBUG)
+        logging.getLogger().addHandler(self._sys_handler.handler())
+
     def update_build_status(self) -> None:
-        self._build_status = True
+        self.__build_status = True
 
     def initiate_logging(self, path: str, name: str, data_name: str = None) -> None:
-        if not self._build_status:
+        if not self.__build_status:
             self.create_logging_file(path, name, data_name)
             self.update_build_status()
