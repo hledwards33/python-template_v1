@@ -44,7 +44,7 @@ class SingletonMeta(type):
         return cls._instances[cls]
 
 
-class ILogBuilder(ABC):
+class ILogHandler(ABC):
     @abstractmethod
     def build_logger(self, **kwargs) -> any:
         pass
@@ -59,29 +59,8 @@ class ILogBuilder(ABC):
 
         return handler_filter
 
-    def headers(message: str) -> None:
-        line_length = 75
-        line_num_start = line_length - math.ceil(len(message) / 2)
-        line_num_end = line_num_start if len(message) % 2 == 0 else line_num_start + 1
-        lines_start = ''.join(['-' for _ in range(line_num_start)])
-        lines_end = ''.join(['-' for _ in range(line_num_end)])
-        print()
-        print(lines_start + ' ' + message + ' ' + lines_end)
-        print()
 
-        simple_file_format()
-        logging.info("", extra={'block': ['console']})
-        logging.info(lines_start + ' ' + message + ' ' + lines_end + "\n", extra={'block': ['console']})
-        detailed_file_format()
-
-    def no_format(message: str) -> None:
-        simple_file_format()
-        logging.info(message, extra={'block': ['console']})
-        print(message)
-        detailed_file_format()
-
-
-class IFileLogBuilder(ILogBuilder):
+class IFileHandler(ILogHandler):
     def build_logger(self, path: str) -> logging.FileHandler:
         pass
 
@@ -102,7 +81,7 @@ class IFileLogBuilder(ILogBuilder):
             logging.getLogger().addHandler(fil_handler)
 
 
-class FileLogBuilderSimple(IFileLogBuilder):
+class FileHandlerSimple(IFileHandler):
 
     def build_logger(self, path: str) -> logging.FileHandler:
         fl_handler = logging.FileHandler(path, 'w+')
@@ -113,7 +92,7 @@ class FileLogBuilderSimple(IFileLogBuilder):
         return fl_handler
 
 
-class FileLogBuilderDetailed(IFileLogBuilder):
+class FileHandlerDetailed(IFileHandler):
 
     def build_logger(self, path: str) -> logging.FileHandler:
         fl_handler = logging.FileHandler(path, 'w+')
@@ -125,7 +104,7 @@ class FileLogBuilderDetailed(IFileLogBuilder):
         return fl_handler
 
 
-class SysLogBuilderSimple(ILogBuilder):
+class SysHandlerSimple(ILogHandler):
 
     def build_logger(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
@@ -136,7 +115,7 @@ class SysLogBuilderSimple(ILogBuilder):
         return sys_handler
 
 
-class SysLogBuilderDetailed(ILogBuilder):
+class SysHandlerDetailed(ILogHandler):
 
     def build_logger(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
