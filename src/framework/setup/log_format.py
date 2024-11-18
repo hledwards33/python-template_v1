@@ -4,7 +4,6 @@ import math
 import os
 import re
 import sys
-import types
 from logging import LogRecord
 from typing import Callable
 
@@ -37,7 +36,7 @@ class CustomFormatter(logging.Formatter):
 def headers(message: str) -> None:
     line_length = 75
     line_num_start = line_length - math.ceil(len(message) / 2)
-    line_num_end = line_num_start if line_num_start % 2 == 0 else line_num_start + 1
+    line_num_end = line_num_start if len(message) % 2 == 0 else line_num_start + 1
     lines_start = ''.join(['-' for _ in range(line_num_start)])
     lines_end = ''.join(['-' for _ in range(line_num_end)])
     print()
@@ -47,6 +46,16 @@ def headers(message: str) -> None:
     simple_file_format()
     logging.info("", extra={'block': ['console']})
     logging.info(lines_start + ' ' + message + ' ' + lines_end + "\n", extra={'block': ['console']})
+    detailed_file_format()
+
+
+def lines() -> None:
+    output = "".join(["-" for _ in range(152)])
+
+    print(output)
+
+    simple_file_format()
+    logging.info(output, extra={'block': ['console']})
     detailed_file_format()
 
 
@@ -69,12 +78,6 @@ def simple_file_format() -> None:
     for handler in logging.getLogger().handlers:
         if isinstance(handler, logging.FileHandler):
             handler.setFormatter(logging.Formatter('%(message)s'))
-
-
-def lines() -> None:
-    output = "".join(["-" for _ in range(75)])
-
-    print(output)
 
 
 def create_logging_file_handler_detailed(path: str) -> logging.FileHandler:

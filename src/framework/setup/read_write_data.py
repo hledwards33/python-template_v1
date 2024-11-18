@@ -5,6 +5,8 @@ import os
 import pandas as pd
 import yaml
 
+from framework.setup.log_format import lines
+
 logger = logging.getLogger()
 
 
@@ -274,6 +276,7 @@ def read_csv_to_pandas(path: str, schema: dict, usecols: bool = True) -> pd.Data
 
     # Ensure dataframe datatypes match the schema
     data = enforce_data_types(data)
+    lines()
 
     # Return the pandas dataframe object
     return data
