@@ -11,7 +11,7 @@ logger = logging.getLogger()
 
 class IReadFile(ABC):
     @abstractmethod
-    def read(self, path: str):
+    def read(self, path: str) -> any:
         pass
 
 
