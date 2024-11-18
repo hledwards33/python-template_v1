@@ -8,6 +8,10 @@ from typing import Callable
 
 
 class ILogHandler(ABC):
+
+    def __init__(self):
+        self.format: str = ""
+
     @abstractmethod
     def handler(self, **kwargs) -> any:
         pass
@@ -46,9 +50,12 @@ class IFileHandler(ILogHandler):
 
 class FileHandlerSimple(IFileHandler):
 
+    def __init__(self):
+        self.format = "%(message)s"
+
     def handler(self, path: str) -> logging.FileHandler:
         fl_handler = logging.FileHandler(path, 'w+')
-        fl_format = logging.Formatter("%(message)s")
+        fl_format = logging.Formatter(self.format)
         fl_handler.setFormatter(fl_format)
         fl_handler.setLevel(logging.DEBUG)
         fl_handler.addFilter(self.build_handler_filters('file'))
@@ -57,10 +64,12 @@ class FileHandlerSimple(IFileHandler):
 
 class FileHandlerDetailed(IFileHandler):
 
+    def __init__(self):
+        self.format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
+
     def handler(self, path: str) -> logging.FileHandler:
         fl_handler = logging.FileHandler(path, 'w+')
-        fl_format = logging.Formatter("[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s:"
-                                      " %(lineno)d] %(message)s")
+        fl_format = logging.Formatter(self.format)
         fl_handler.setFormatter(fl_format)
         fl_handler.setLevel(logging.DEBUG)
         fl_handler.addFilter(self.build_handler_filters('file'))
@@ -74,9 +83,12 @@ class ISysHandler(ILogHandler):
 
 class SysHandlerSimple(ISysHandler):
 
+    def __init__(self):
+        self.format = "%(message)s"
+
     def handler(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
-        cn_format = CustomFormatter("%(message)s")
+        cn_format = CustomFormatter(self.format)
         sys_handler.setFormatter(cn_format)
         sys_handler.setLevel(logging.DEBUG)
         sys_handler.addFilter(self.build_handler_filters('console'))
@@ -85,10 +97,12 @@ class SysHandlerSimple(ISysHandler):
 
 class SysHandlerDetailed(ISysHandler):
 
+    def __init__(self):
+        self.format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
+
     def handler(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
-        cn_format = CustomFormatter(
-            "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s")
+        cn_format = CustomFormatter(self.format)
         sys_handler.setFormatter(cn_format)
         sys_handler.setLevel(logging.DEBUG)
         sys_handler.addFilter(self.build_handler_filters('console'))

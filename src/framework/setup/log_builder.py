@@ -42,12 +42,11 @@ class LogBuilder(metaclass=SingletonMeta):
     def sys_handler(self, sys_handler: ISysHandler):
         self._sys_handler = sys_handler
 
-    @staticmethod
-    def detailed_file_format() -> None:
+
+    def expected_file_format(self) -> None:
         for handler in logging.getLogger().handlers:
             if isinstance(handler, logging.FileHandler):
-                fl_format = logging.Formatter("[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s:"
-                                              " %(lineno)d] %(message)s")
+                fl_format = logging.Formatter(self._file_handler.format)
                 handler.setFormatter(fl_format)
 
     @staticmethod
@@ -112,5 +111,6 @@ class LogBuilder(metaclass=SingletonMeta):
 
     def initiate_logging(self, path: str, name: str, data_name: str = None) -> None:
         if not self.__build_status:
-            self.create_logging_file(path, name, data_name)
+            self.initiate_file_logging(path, name, data_name)
+            self.initiate_sys_logging()
             self.update_build_status()
