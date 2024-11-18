@@ -51,6 +51,7 @@ class IFileHandler(ILogHandler):
 class FileHandlerSimple(IFileHandler):
 
     def __init__(self):
+        super().__init__()
         self.format = "%(message)s"
 
     def handler(self, path: str) -> logging.FileHandler:
@@ -65,6 +66,7 @@ class FileHandlerSimple(IFileHandler):
 class FileHandlerDetailed(IFileHandler):
 
     def __init__(self):
+        super().__init__()
         self.format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
 
     def handler(self, path: str) -> logging.FileHandler:
@@ -84,6 +86,7 @@ class ISysHandler(ILogHandler):
 class SysHandlerSimple(ISysHandler):
 
     def __init__(self):
+        super().__init__()
         self.format = "%(message)s"
 
     def handler(self) -> logging.StreamHandler:
@@ -98,6 +101,7 @@ class SysHandlerSimple(ISysHandler):
 class SysHandlerDetailed(ISysHandler):
 
     def __init__(self):
+        super().__init__()
         self.format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
 
     def handler(self) -> logging.StreamHandler:

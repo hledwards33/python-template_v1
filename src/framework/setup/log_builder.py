@@ -22,7 +22,7 @@ class SingletonMeta(type):
 class LogBuilder(metaclass=SingletonMeta):
     __build_status: bool = False  # Initiating a private class variable
 
-    def __init__(self, SysHandler: ISysHandler = SysHandlerSimple, FileHandler: IFileHandler = None):
+    def __init__(self, SysHandler: ISysHandler = SysHandlerSimple, FileHandler: IFileHandler = IFileHandler):
         self._sys_handler = SysHandler
         self._file_handler = FileHandler
 
@@ -112,3 +112,7 @@ class LogBuilder(metaclass=SingletonMeta):
             self.initiate_file_logging(path, name, data_name)
             self.initiate_sys_logging()
             self.update_build_status()
+
+    def stop_logging(self, name) -> None:
+        # TODO: Implement this method that stops the file logging
+        pass
