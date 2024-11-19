@@ -1,6 +1,7 @@
 import logging
 import math
 import os
+import re
 import threading
 from datetime import datetime
 
@@ -105,7 +106,7 @@ class LogBuilder(metaclass=SingletonMeta):
         logging.getLogger().addHandler(self._sys_handler.handler())
 
     def update_build_status(self) -> None:
-        self.__build_status = True
+        self.__build_status = not self.__build_status
 
     def initiate_logging(self, path: str, name: str, data_name: str = None) -> None:
         if not self.__build_status:
@@ -113,6 +114,12 @@ class LogBuilder(metaclass=SingletonMeta):
             self.initiate_sys_logging()
             self.update_build_status()
 
-    def stop_logging(self, name) -> None:
-        # TODO: Implement this method that stops the file logging
-        pass
+    @staticmethod
+    def terminate_logging(self, name) -> None:
+        name = re.sub(r"\{.*?}", "", name)
+
+        for handler in logging.getLogger().handlers:
+            if name in str(handler):
+                logging.getLogger().removeHandler(handler)
+
+        self.update_build_status()
