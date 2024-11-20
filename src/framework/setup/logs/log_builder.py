@@ -18,7 +18,7 @@ class LogType(Enum):
 class ILog(metaclass=ThreadSafeSingletonABC):
     __build_status: bool = False  # Initiating a private class variable
 
-    def __init__(self, SysHandler: ISysHandler = SysHandlerSimple, FileHandler: IFileHandler = IFileHandler):
+    def __init__(self, SysHandler: ISysHandler, FileHandler: IFileHandler):
         self._sys_handler = SysHandler
         self._file_handler = FileHandler
 
