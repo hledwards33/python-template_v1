@@ -4,23 +4,21 @@ import os
 import re
 import threading
 from datetime import datetime
+from enum import Enum, auto
 
 from log_handlers import IFileHandler, ISysHandler, SysHandlerSimple
+from framework.setup.meta_classes.singleton import ThreadSafeSingleton
 
 
-class SingletonMeta(type):
-    """This is a lazy loading implementation of the Singleton Pattern"""
-    _instances: dict = {}
-    _lock: threading.Lock = threading.Lock()
-
-    def __call__(cls, *args, **kwargs):
-        with cls._lock:
-            if cls not in cls._instances:
-                cls._instances[cls] = super(SingletonMeta, cls).__call__(*args, **kwargs)
-            return cls._instances[cls]
+class LogType(Enum):
+    DETAILED = auto()
+    SIMPLE = auto()
 
 
-class LogBuilder(metaclass=SingletonMeta):
+
+
+
+class LogFactory(metaclass=ThreadSafeSingleton):
     __build_status: bool = False  # Initiating a private class variable
 
     def __init__(self, SysHandler: ISysHandler = SysHandlerSimple, FileHandler: IFileHandler = IFileHandler):
