@@ -203,7 +203,7 @@ class LoggingDirector:
         self.builder = builder
 
     # TODO: This needs to be updated so that the file path is handles elsewhere
-    def initiate_logging(self, *args, **kwargs) -> None:
+    def initiate_logging(self, *args, **kwargs) -> ILogBuilder:
         if not self.builder.get_build_status():
 
             self.builder.initiate_file_logging(*args, **kwargs)
@@ -214,6 +214,4 @@ class LoggingDirector:
         else:
             logger.warning("You are trying to re-initiate logging. Logging has already been initiated.")
 
-    # TODO: Ths needs to be updated so that the file path/name is handles elsewhere
-    def terminate_logging(self, name) -> None:
-        self.builder.terminate_logging(name)
+        return self.builder
