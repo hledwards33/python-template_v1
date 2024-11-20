@@ -10,7 +10,6 @@ from config import PY_ROOT_DIR
 from framework.setup import read_write_data
 from framework.setup.log_format import (headers, create_logging_file, remove_handler,
                                         create_logging_file_handler_detailed, initiate_logger)
-from framework.setup.logs.log_builders import LogDirector, ILogBuilder
 
 initiate_logger()
 logger = logging.getLogger()
@@ -18,10 +17,9 @@ logger = logging.getLogger()
 
 class ModelWrapper(ABC):
 
-    def __init__(self, log_builder: ILogBuilder):
+    def __init__(self):
         self.data_dict = {}
         self.parameters = {}
-        self.log_builder = LogDirector(log_builder)
 
     @property
     def parameters(self) -> dict:
