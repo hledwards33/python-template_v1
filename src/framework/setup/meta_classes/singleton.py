@@ -12,7 +12,7 @@ from abc import ABCMeta
 #                 cls._instances[cls] = super(ThreadSafeSingleton, cls).__call__(*args, **kwargs)
 #             return cls._instances[cls]
 
-class ThreadSafeSingleton(type):
+class ThreadSafeSingletonMeta(type):
     _instances = {}  # Dictionary to hold the instance reference for each class.
     _lock = threading.Lock()  # A lock to ensure thread-safe singleton instantiation.
 
@@ -27,7 +27,7 @@ class ThreadSafeSingleton(type):
         return cls._instances[cls]
 
 # This metaclass combines the features of SingletonMeta and ABCMeta.
-class ThreadSafeSingletonABC(ABCMeta, ThreadSafeSingleton):
+class ThreadSafeSingletonABCMeta(ABCMeta, ThreadSafeSingleton):
     def __new__(cls, name, bases, namespace):
         # Create a new class using the combined metaclasses.
         return super().__new__(cls, name, bases, namespace)
