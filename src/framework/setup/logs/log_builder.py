@@ -19,7 +19,7 @@ class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
         self._file_handler: IFileHandler = None
 
     @abstractmethod
-    def initiate_file_logging(self, **kwargs) -> None:
+    def initiate_file_logging(self, *args, **kwargs) -> None:
         pass
 
     @abstractmethod
@@ -194,9 +194,14 @@ class DetailedFileLogBuilder(ISysLogBuilder):
         self._file_handler = FileHandlerDetailed()
 
 
-# TODO: This goes into the director class
-def initiate_logging(self, path: str, name: str, data_name: str = None) -> None:
-    if not self.__build_status:
-        self.initiate_file_logging(path, name, data_name)
-        self.initiate_sys_logging()
-        self.update_build_status()
+class LoggingDirector:
+    def __init__(self, builder: ILogBuilder):
+        self.builder = builder
+
+    def initiate_logging(self, *args, **kwargs) -> None:
+        if not self.builder.__build_status:
+            self.builder.initiate_file_logging(*args, **kwargs)
+            self.builder.initiate_sys_logging()
+            self.builder.update_build_status()
+        else:
+            logging.info("Logging has already been initiated.")
