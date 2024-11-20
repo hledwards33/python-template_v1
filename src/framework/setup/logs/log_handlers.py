@@ -6,11 +6,14 @@ from datetime import datetime
 from logging import LogRecord
 from typing import Callable
 
+from log_formaters import ColourfulSysFormatter
+
 
 class ILogHandler(ABC):
 
-    def __init__(self):
+    def __init__(self, formatter: logging.Formatter = logging.Formatter):
         self.format: str = ""
+        self.formatter: logging.Formatter = formatter
 
     @abstractmethod
     def handler(self, **kwargs) -> any:
@@ -28,6 +31,10 @@ class ILogHandler(ABC):
 
 
 class IFileHandler(ILogHandler):
+
+    def __init__(self, formatter: logging.Formatter = logging.Formatter):
+        super().__init__(formatter)
+
     def handler(self, path: str) -> logging.FileHandler:
         pass
 
@@ -50,13 +57,13 @@ class IFileHandler(ILogHandler):
 
 class FileHandlerSimple(IFileHandler):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, formatter: logging.Formatter = logging.Formatter):
+        super().__init__(formatter)
         self.format = "%(message)s"
 
     def handler(self, path: str) -> logging.FileHandler:
         fl_handler = logging.FileHandler(path, 'w+')
-        fl_format = logging.Formatter(self.format)
+        fl_format = self.formatter(self.format)
         fl_handler.setFormatter(fl_format)
         fl_handler.setLevel(logging.DEBUG)
         fl_handler.addFilter(self.build_handler_filters('file'))
@@ -65,8 +72,8 @@ class FileHandlerSimple(IFileHandler):
 
 class FileHandlerDetailed(IFileHandler):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, formatter: logging.Formatter = logging.Formatter):
+        super().__init__(formatter)
         self.format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
 
     def handler(self, path: str) -> logging.FileHandler:
@@ -79,19 +86,23 @@ class FileHandlerDetailed(IFileHandler):
 
 
 class ISysHandler(ILogHandler):
+
+    def __init__(self, formatter: logging.Formatter = ColourfulSysFormatter):
+        super().__init__(formatter)
+
     def handler(self) -> logging.StreamHandler:
         pass
 
 
 class SysHandlerSimple(ISysHandler):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, formatter: logging.Formatter = ColourfulSysFormatter):
+        super().__init__(formatter)
         self.format = "%(message)s"
 
     def handler(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
-        cn_format = CustomFormatter(self.format)
+        cn_format = self.formatter(self.format)
         sys_handler.setFormatter(cn_format)
         sys_handler.setLevel(logging.DEBUG)
         sys_handler.addFilter(self.build_handler_filters('console'))
@@ -100,39 +111,14 @@ class SysHandlerSimple(ISysHandler):
 
 class SysHandlerDetailed(ISysHandler):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, formatter: logging.Formatter = ColourfulSysFormatter):
+        super().__init__(formatter)
         self.format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
 
     def handler(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
-        cn_format = CustomFormatter(self.format)
+        cn_format = self.formatter(self.format)
         sys_handler.setFormatter(cn_format)
         sys_handler.setLevel(logging.DEBUG)
         sys_handler.addFilter(self.build_handler_filters('console'))
         return sys_handler
-
-
-class CustomFormatter(logging.Formatter):
-    grey = '\x1b[38;21m'
-    blue = '\x1b[38;5;39m'
-    yellow = '\x1b[38;5;226m'
-    red = '\x1b[38;5;196m'
-    bold_red = '\x1b[31;1m'
-    reset = '\x1b[0m'
-
-    def __init__(self, fmt):
-        super().__init__()
-        self.fmt = fmt
-        self.FORMATS = {
-            logging.DEBUG: self.grey + self.fmt + self.reset,
-            logging.INFO: self.blue + self.fmt + self.reset,
-            logging.WARNING: self.yellow + self.fmt + self.reset,
-            logging.ERROR: self.red + self.fmt + self.reset,
-            logging.CRITICAL: self.bold_red + self.fmt + self.reset
-        }
-
-    def format(self, record) -> logging.Formatter.format:
-        log_fmt = self.FORMATS.get(record.levelno)
-        formatter = logging.Formatter(log_fmt)
-        return formatter.format(record)
