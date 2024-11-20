@@ -1,6 +1,7 @@
 import threading
 from abc import ABCMeta
 
+
 # class ThreadSafeSingleton(type):
 #     """This is a lazy loading implementation of the Singleton Pattern"""
 #     _instances: dict = {}
@@ -25,6 +26,7 @@ class ThreadSafeSingletonMeta(type):
                 cls._instances[cls] = super().__call__(*args, **kwargs)
         # Return the instance.
         return cls._instances[cls]
+
 
 # This metaclass combines the features of SingletonMeta and ABCMeta.
 class ThreadSafeSingletonABCMeta(ABCMeta, ThreadSafeSingleton):

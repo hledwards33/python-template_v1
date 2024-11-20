@@ -1,5 +1,6 @@
 import logging
 
+
 class ColourfulSysFormatter(logging.Formatter):
     grey = '\x1b[38;21m'
     blue = '\x1b[38;5;39m'
