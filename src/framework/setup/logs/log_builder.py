@@ -10,6 +10,8 @@ from framework.setup.meta_classes.singleton import ThreadSafeSingletonABCMeta
 from log_handlers import (IFileHandler, ISysHandler, SysHandlerDetailed,
                           FileHandlerDetailed)
 
+logger = logging.getLogger()
+
 
 class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
     __build_status: bool = False  # Initiating a private class variable
@@ -17,6 +19,12 @@ class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
     def __init__(self):
         self._sys_handler: ISysHandler = None
         self._file_handler: IFileHandler = None
+
+    def update_build_status(self) -> None:
+        self.__build_status = not self.__build_status
+
+    def get_build_status(self) -> bool:
+        return self.__build_status
 
     @abstractmethod
     def initiate_file_logging(self, *args, **kwargs) -> None:
@@ -84,10 +92,6 @@ class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
         print(message)
         self.expected_file_format()
 
-    def update_build_status(self) -> None:
-        self.__build_status = not self.__build_status
-
-    @staticmethod
     def terminate_logging(self, name) -> None:
         name = re.sub(r"\{.*?}", "", name)
 
@@ -198,10 +202,18 @@ class LoggingDirector:
     def __init__(self, builder: ILogBuilder):
         self.builder = builder
 
+    # TODO: This needs to be updated so that the file path is handles elsewhere
     def initiate_logging(self, *args, **kwargs) -> None:
-        if not self.builder.__build_status:
+        if not self.builder.get_build_status():
+
             self.builder.initiate_file_logging(*args, **kwargs)
             self.builder.initiate_sys_logging()
+
             self.builder.update_build_status()
+
         else:
-            logging.info("Logging has already been initiated.")
+            logger.warning("You are trying to re-initiate logging. Logging has already been initiated.")
+
+    # TODO: Ths needs to be updated so that the file path/name is handles elsewhere
+    def terminate_logging(self, name) -> None:
+        self.builder.terminate_logging(name)
