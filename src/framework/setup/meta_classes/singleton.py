@@ -29,7 +29,7 @@ class ThreadSafeSingletonMeta(type):
 
 
 # This metaclass combines the features of SingletonMeta and ABCMeta.
-class ThreadSafeSingletonABCMeta(ABCMeta, ThreadSafeSingleton):
+class ThreadSafeSingletonABCMeta(ABCMeta, ThreadSafeSingletonMeta):
     def __new__(cls, name, bases, namespace):
         # Create a new class using the combined metaclasses.
         return super().__new__(cls, name, bases, namespace)

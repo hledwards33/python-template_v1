@@ -7,7 +7,7 @@ from datetime import datetime
 
 from framework.setup.logs.log_handlers import SysHandlerSimple, FileHandlerSimple
 from framework.setup.meta_classes.singleton import ThreadSafeSingletonABCMeta
-from log_handlers import (IFileHandler, ISysHandler, SysHandlerDetailed,
+from framework.setup.logs.log_handlers import (IFileHandler, ISysHandler, SysHandlerDetailed,
                           FileHandlerDetailed)
 
 logger = logging.getLogger()
@@ -199,7 +199,7 @@ class DetailedFileLogBuilder(ISysLogBuilder):
         self._file_handler = FileHandlerDetailed()
 
 
-class LoggingDirector:
+class LogDirector:
     def __init__(self, builder: ILogBuilder):
         self.builder = builder
 

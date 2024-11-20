@@ -6,7 +6,7 @@ from datetime import datetime
 from logging import LogRecord
 from typing import Callable
 
-from log_formaters import ColourfulSysFormatter
+from framework.setup.logs.log_formaters import ColourfulSysFormatter
 
 
 class ILogHandler(ABC):
