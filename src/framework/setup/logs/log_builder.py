@@ -2,12 +2,11 @@ import logging
 import math
 import os
 import re
-import threading
 from datetime import datetime
 from enum import Enum, auto
 
-from log_handlers import IFileHandler, ISysHandler, SysHandlerSimple
 from framework.setup.meta_classes.singleton import ThreadSafeSingleton
+from log_handlers import IFileHandler, ISysHandler, SysHandlerSimple
 
 
 class LogType(Enum):
@@ -15,10 +14,7 @@ class LogType(Enum):
     SIMPLE = auto()
 
 
-
-
-
-class LogFactory(metaclass=ThreadSafeSingleton):
+class Log(metaclass=ThreadSafeSingleton, ABC):
     __build_status: bool = False  # Initiating a private class variable
 
     def __init__(self, SysHandler: ISysHandler = SysHandlerSimple, FileHandler: IFileHandler = IFileHandler):
