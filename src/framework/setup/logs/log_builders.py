@@ -62,7 +62,7 @@ class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
             if isinstance(handler, logging.FileHandler):
                 handler.setFormatter(logging.Formatter('%(message)s'))
 
-    # Consider how this function can be called by the user - add extra function to utils?
+    # Consider how the user can call this function - add extra function to utils?
     def headers(self, message: str) -> None:
         line_length = 75
         line_num_start = line_length - math.ceil(len(message) / 2)
