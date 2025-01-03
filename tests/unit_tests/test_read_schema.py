@@ -4,13 +4,13 @@ from unittest.mock import patch, mock_open
 import pytest
 import yaml
 
-from framework.setup.read_data.schemas.read_schema import (FileExtension, ReadJsonSchema, ReadYamlSchema, SchemaContext,
+from framework.setup.read_data.schemas.read_schema import (SchemaExtension, ReadJsonSchema, ReadYamlSchema, SchemaContext,
                                                            SchemaFactory)
 
 
 def test_file_extension_enum():
-    assert FileExtension.JSON.value == "json"
-    assert FileExtension.YAML.value == "yaml"
+    assert SchemaExtension.JSON.value == "json"
+    assert SchemaExtension.YAML.value == "yaml"
 
 
 def test_read_json_schema():

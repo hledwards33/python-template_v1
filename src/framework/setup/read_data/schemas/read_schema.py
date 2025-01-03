@@ -5,9 +5,10 @@ from enum import Enum
 import yaml
 
 
-class FileExtension(Enum):
+class SchemaExtension(Enum):
     JSON = "json"
     YAML = "yaml"
+    YAML_SHORT = "yml"
 
 
 class IReadSchema(ABC):
@@ -85,9 +86,9 @@ class SchemaFactory:
             ValueError: If the schema file extension is invalid.
         """
         match context.schema_extension:
-            case FileExtension.JSON.value:
+            case SchemaExtension.JSON.value:
                 return ReadJsonSchema(context.schema_path)
-            case FileExtension.YAML.value:
+            case SchemaExtension.YAML.value | SchemaExtension.YAML_SHORT.value:
                 return ReadYamlSchema(context.schema_path)
             case _:
                 raise ValueError(f"Invalid schema file extension: {context.schema_extension}.")
