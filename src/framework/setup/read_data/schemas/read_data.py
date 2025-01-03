@@ -11,15 +11,6 @@ class DataContext:
         self.schema_path = schema_path
         self.data_path = data_path
         self.model_type = model_type
-        self._schema = None
-
-    @property
-    def schema(self):
-        return self._schema
-
-    @schema.setter
-    def schema(self, schema):
-        self._schema = schema
 
 
 class IDataBuilder(ABC):
