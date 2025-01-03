@@ -3,7 +3,7 @@ import os
 from abc import ABC, abstractmethod
 
 import pandas as pd
-from framework.setup.read_data.schemas.type_complexities import FileExtension
+from framework.setup.read_data.type_complexities import FileExtension
 
 logger = logging.getLogger()
 
