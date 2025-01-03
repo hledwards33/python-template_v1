@@ -1,14 +1,9 @@
 import json
 from abc import ABC, abstractmethod
-from enum import Enum
 
 import yaml
 
-
-class SchemaExtension(Enum):
-    JSON = "json"
-    YAML = "yaml"
-    YAML_SHORT = "yml"
+from framework.setup.read_data.schemas.type_complexities import SchemaExtension
 
 
 class IReadSchema(ABC):

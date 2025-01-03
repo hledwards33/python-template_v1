@@ -1,18 +1,11 @@
 import logging
 import os
 from abc import ABC, abstractmethod
-from enum import Enum
 
 import pandas as pd
+from framework.setup.read_data.schemas.type_complexities import FileExtension
 
 logger = logging.getLogger()
-
-
-class FileExtension(Enum):
-    CSV = "csv"
-    ZIP = "zip"
-    PARQUET = "parquet"
-    PQT = "pqt"
 
 
 class ILoadFile(ABC):

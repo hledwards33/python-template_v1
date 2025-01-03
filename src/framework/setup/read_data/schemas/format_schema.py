@@ -1,12 +1,8 @@
 from abc import ABC, abstractmethod
-from enum import Enum
 
 import pandas as pd
 
-
-class ModelType(Enum):
-    PANDAS = "pandas"
-    SPARK = "spark"
+from src.framework.setup.read_data.schemas.type_complexities import ModelType
 
 
 class IFormatSchema(ABC):
