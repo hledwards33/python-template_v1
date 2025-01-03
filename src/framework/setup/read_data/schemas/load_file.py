@@ -16,18 +16,17 @@ class FileExtension(Enum):
 
 
 class ILoadFile(ABC):
-    def __init__(self, data_path: str, schema: dict):
+    def __init__(self, data_path: str):
         self.data_path = data_path
-        self.schema = schema
 
     @abstractmethod
-    def read(self):
+    def load_file(self, schema: dict):
         pass
 
 
 class ILoadFile2Pandas(ILoadFile):
     @abstractmethod
-    def read(self) -> pd.DataFrame:
+    def load_file(self, schema: dict) -> pd.DataFrame:
         pass
 
     @staticmethod
@@ -118,20 +117,20 @@ class ILoadFile2Pandas(ILoadFile):
 
 
 class ReadCSV2Pandas(ILoadFile2Pandas):
-    def read(self) -> pd.DataFrame:
+    def load_file(self, schema: dict) -> pd.DataFrame:
         """
         Loads a csv or zipped csv into a pandas dataframe object
         :return: pandas dataframe object containing the csv data
         """
-        logger.info(f"Loading columns: {list(self.schema.keys())}")
+        logger.info(f"Loading columns: {list(schema.keys())}")
 
         # Define the key word arguments to be supplied to the pandas.read_csv function
         # Read in date columns as string as kwarg date_parser has been depreciated and null dates raise errors
         # with kwarg date_format
         parameters = {
             'filepath_or_buffer': self.data_path,
-            'dtype': {k: v if v != 'datetime64[s]' else "object" for k, v in self.schema.items()},
-            'usecols': self.schema.keys(),
+            'dtype': {k: v if v != 'datetime64[s]' else "object" for k, v in schema.items()},
+            'usecols': schema.keys(),
             'cache_dates': True,
             'engine': 'pyarrow',
         }
@@ -147,13 +146,13 @@ class ReadCSV2Pandas(ILoadFile2Pandas):
 
 
 class ReadParquet2Pandas(ILoadFile2Pandas):
-    def read(self) -> pd.DataFrame:
-        logger.info(f"Loading columns: {list(self.schema.keys())}")
+    def load_file(self, schema: dict) -> pd.DataFrame:
+        logger.info(f"Loading columns: {list(schema.keys())}")
 
         # Define key word arguments - parquet files store dtypes in metadata so schema is not required when reading
         kwargs = {
             'path': self.data_path,
-            'columns': self.schema.keys(),
+            'columns': schema.keys(),
             'engine': 'pyarrow',
             'dtype_backend': 'numpy_nullable'
         }
@@ -163,7 +162,7 @@ class ReadParquet2Pandas(ILoadFile2Pandas):
 
         # Add datatypes from the schema incase the parquet file was created incorrectly
         for column in data.columns:
-            data[column] = data[column].astype(self.schema[column])
+            data[column] = data[column].astype(schema[column])
 
         # Ensure dataframe datatypes match the schema
         data = self.enforce_data_types(data)
@@ -172,20 +171,19 @@ class ReadParquet2Pandas(ILoadFile2Pandas):
         return data
 
 
-class LoadContext:
-    def __init__(self, data_path: str, schema: dict):
+class FileContext:
+    def __init__(self, data_path: str):
         self.data_path = data_path
         self.data_extension = data_path.split(".")[-1].lower()
-        self.schema = schema
 
 
-class LoadDataFactory:
+class LoadFileFactory:
     @staticmethod
-    def create_data_loader(context: LoadContext) -> ILoadFile:
+    def create_file_loader(context: FileContext) -> ILoadFile:
         match context.data_extension:
             case FileExtension.CSV.value | FileExtension.ZIP.value:
-                return ReadCSV2Pandas(context.data_path, context.schema)
+                return ReadCSV2Pandas(context.data_path)
             case FileExtension.PARQUET.value | FileExtension.PQT.value:
-                return ReadParquet2Pandas(context.data_path, context.schema)
+                return ReadParquet2Pandas(context.data_path)
             case _:
                 raise ValueError(f"Unsupported file type: {context.data_extension}.")
