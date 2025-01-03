@@ -1,4 +1,4 @@
-from framework.setup.model.model_wrapper import ModelWrapper
+from framework.setup.create_model.model_wrapper import ModelWrapper
 from framework.setup.read_config.read_config import ModelConfigDirector, WindowsModelConfigBuilder
 
 
