@@ -1,13 +1,9 @@
 import json
 from abc import ABC, abstractmethod
-from enum import Enum
 
 import yaml
 
-
-class FileExtension(Enum):
-    JSON = "json"
-    YAML = "yaml"
+from framework.setup.read_data.schemas.type_complexities import SchemaExtension
 
 
 class IReadSchema(ABC):
@@ -66,7 +62,7 @@ class SchemaContext:
             schema_path (str): Path to the schema file.
         """
         self.schema_path = schema_path
-        self.schema_extension = schema_path.split(".")[-1].lower()
+        self.schema_extension: str = schema_path.split(".")[-1].lower()
 
 
 class SchemaFactory:
@@ -85,9 +81,9 @@ class SchemaFactory:
             ValueError: If the schema file extension is invalid.
         """
         match context.schema_extension:
-            case FileExtension.JSON.value:
+            case SchemaExtension.JSON.value:
                 return ReadJsonSchema(context.schema_path)
-            case FileExtension.YAML.value:
+            case SchemaExtension.YAML.value | SchemaExtension.YAML_SHORT.value:
                 return ReadYamlSchema(context.schema_path)
             case _:
-                raise ValueError("Invalid schema file extension.")
+                raise ValueError(f"Invalid schema file extension: {context.schema_extension}.")
