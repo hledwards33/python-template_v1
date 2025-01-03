@@ -66,7 +66,7 @@ class SchemaContext:
             schema_path (str): Path to the schema file.
         """
         self.schema_path = schema_path
-        self.schema_extension = schema_path.split(".")[-1].lower()
+        self.schema_extension: str = schema_path.split(".")[-1].lower()
 
 
 class SchemaFactory:

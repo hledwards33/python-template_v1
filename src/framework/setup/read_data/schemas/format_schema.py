@@ -60,7 +60,7 @@ class FormatSparkSchema(IFormatSchema):
 
 class SchemaFormatFactory:
     @staticmethod
-    def get_schema_formatter(model_type: ModelType) -> IFormatSchema:
+    def get_schema_formatter(model_type: str) -> IFormatSchema:
         """
         Factory method that returns the appropriate schema formatter based on the model type.
 
