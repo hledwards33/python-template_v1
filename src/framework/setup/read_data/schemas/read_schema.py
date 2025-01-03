@@ -90,4 +90,4 @@ class SchemaFactory:
             case FileExtension.YAML.value:
                 return ReadYamlSchema(context.schema_path)
             case _:
-                raise ValueError("Invalid schema file extension.")
+                raise ValueError(f"Invalid schema file extension: {context.schema_extension}.")

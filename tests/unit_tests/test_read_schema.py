@@ -4,8 +4,8 @@ from unittest.mock import patch, mock_open
 import pytest
 import yaml
 
-from src.framework.setup.read_data.read_schema import (FileExtension, ReadJsonSchema, ReadYamlSchema, SchemaContext,
-                                                       SchemaFactory)
+from framework.setup.read_data.schemas.read_schema import (FileExtension, ReadJsonSchema, ReadYamlSchema, SchemaContext,
+                                                           SchemaFactory)
 
 
 def test_file_extension_enum():
