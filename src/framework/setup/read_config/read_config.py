@@ -1,34 +1,47 @@
 from abc import ABC, abstractmethod
 
-from framework.setup.read_config.load_file import ConfigContext, ConfigFactory
+from framework.setup.read_config.load_file import ConfigContext, ConfigFactory, IReadConfig
 
 
-class IModelConfig(ABC):
-    def __init__(self, config: dict):
-        self.config = config
+class IModelConfigBuilder(ABC):
+    def __init__(self, config_path: str):
+        self.config = self.set_config_reader(config_path).read_config()
+
+    @staticmethod
+    def set_config_reader(config_path: str) -> IReadConfig:
+        config_context = ConfigContext(config_path)
+        return ConfigFactory.create_config_reader(config_context)
 
     @abstractmethod
-    def unpack_config(self):
+    def define_input_data(self):
+        pass
+
+    @abstractmethod
+    def define_output_data(self):
+        pass
+
+    @abstractmethod
+    def define_model_parameters(self):
         pass
 
 
-class WindowsModelConfig(IModelConfig):
-    def __init__(self, config: dict):
-        super().__init__(config)
+class WindowsModelConfigBuilder(IModelConfigBuilder):
+    def __init__(self, context):
+        super().__init__(context)
 
-        self.input_data = set()
-        self.output_data = set()
-        self.model_meta_data = dict()
+    def define_input_data(self):
+        return self.config['input_data']
 
-    def unpack_config(self):
-        self.input_data = self.config['input_data']
+    def define_output_data(self):
+        return self.config['output_data']
+
+    def define_model_parameters(self):
+        return self.config['model_parameters']
 
 
-
-class GCPModelConfig(IModelConfig):
+class GCPModelConfigBuilder(IModelConfigBuilder):
     # TODO: Implement this class and a run time selection design pattern for model config
-    def unpack_config(self):
-        pass
+    pass
 
 
 class ModelConfigDirector:
