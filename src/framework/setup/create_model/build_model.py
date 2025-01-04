@@ -2,11 +2,13 @@ from framework.setup.create_model.model_wrapper import ModelWrapper
 from framework.setup.read_config.read_config import ModelConfigDirector, WindowsModelConfigBuilder
 
 
-class Model:
+class ModelMetaData:
     def __init__(self):
         self._model_inputs = dict()
         self._model_outputs = dict()
         self._model_parameters = dict()
+        self._model_type = str
+        self.model_name = str
 
     @property
     def model_inputs(self):
@@ -32,6 +34,22 @@ class Model:
     def model_parameters(self, value):
         self._model_parameters = value
 
+    @property
+    def model_type(self):
+        return self._model_type
+
+    @model_type.setter
+    def model_type(self, value):
+        self._model_type = value
+
+    @property
+    def model_name(self):
+        return self.model_name
+
+    @model_name.setter
+    def model_name(self, value):
+        self.model_name = value
+
 
 class ModelBuilder:
     def __init__(self, model_wrapper: ModelWrapper, model_config_path: str):
@@ -41,7 +59,7 @@ class ModelBuilder:
         self.model = None
 
     def create_model(self):
-        self.model = Model()
+        self.model = ModelMetaData()
 
     def get_model(self):
         return self.model
@@ -81,6 +99,10 @@ class ModelBuilder:
 
         combined_parameters = {k: (v, wrapper_parameters[k]) for k, v in config_parameters.items()}
         self.model.model_parameters = combined_parameters
+
+    def define_model_attributes(self):
+        self.model.model_type = self.model_config.model_type
+        self.model_name = self.model_config.model_name
 
 
 class ModelDirector:
