@@ -51,6 +51,9 @@ class DeployModelBuilder:
         model_builder = ModelBuilder(model_wrapper, model_config_path)
         return ModelDirector(model_builder).build_model()
 
+    def read_parameters(self):
+        self._model.model_parameters = self._model_metadata.model_parameters
+
     def read_input(self, data_paths):
         data_path, schema_path = data_paths
         input_data_context = DataContext(schema_path, data_path, self._model_metadata.model_type)
@@ -70,7 +73,8 @@ class DeployModelBuilder:
             raise ValueError("Errors occurred when reading input data, see the above logs.")
 
     def run_model(self):
-        pass
+        self._model.model_outputs = self._model_metadata.run_model(self._model.model_inputs,
+                                                                   self._model.model_parameters)
 
     def write_output_data(self):
         pass
@@ -82,14 +86,21 @@ class DeployModelDirector:
 
     def build_model_deployment(self):
         self.builder.create_model()
+        self.builder.read_parameters()
         self.builder.read_input_data()
         self.builder.run_model()
         self.builder.write_output_data()
-        return self.builder.get_model()
 
 
 class DeployModel:
-    pass
+
+    def __init__(self, model_wrapper: ModelWrapper, model_config_path: str):
+        self.model_wrapper = model_wrapper
+        self.model_config_path = model_config_path
+
+    def deploy(self):
+        model_builder = DeployModelBuilder(self.model_wrapper, self.model_config_path)
+        DeployModelDirector(model_builder).build_model_deployment()
 
 
 if __name__ == "__main__":
