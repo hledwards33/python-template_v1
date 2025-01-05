@@ -59,7 +59,8 @@ class DeployModelBuilder:
         self._model_metadata.run_model(self._model.model_inputs, self._model.model_parameters)
 
     def read_parameters(self):
-        self._model.model_parameters = self._model_metadata.model_parameters
+        # TODO: write a method that unpacks the parameters and model types
+        pass
 
     def read_input(self, data_paths):
         data_path, schema_path = data_paths

@@ -1,3 +1,5 @@
+import os
+
 from framework.setup.create_model.model_wrapper import IModelWrapper
 from framework.setup.read_config.read_config import ModelConfigDirector, WindowsModelConfigBuilder
 
@@ -61,6 +63,8 @@ class ModelMetaData:
 
 
 class ModelBuilder:
+    __DATA_PATH = os.path.join(os.getcwd(), "data")
+
     def __init__(self, model_wrapper: IModelWrapper, model_config_path: str):
         self.model_wrapper = model_wrapper
         self.model_config = self.create_model_config(model_config_path)
@@ -86,8 +90,18 @@ class ModelBuilder:
         if set(wrapper_inputs.keys()) != set(config_inputs.keys()):
             raise KeyError("Model inputs do not match config inputs.")
 
-        combined_inputs = {k: (v, wrapper_inputs[k]) for k, v in config_inputs.items()}
+        combined_inputs = {k: (self.combine_config_paths(v), self.combine_wrapper_paths(wrapper_inputs[k])) for k, v in
+                           config_inputs.items()}
         self.model.model_inputs = combined_inputs
+
+    def combine_config_paths(self, path: str):
+        result = os.path.join(self.__DATA_PATH, path)
+        return os.path.normpath(result)
+
+    @staticmethod
+    def combine_wrapper_paths(paths: tuple):
+        result = os.path.join(os.path.split(paths[0].__file__)[0], paths[1])
+        return os.path.normpath(result)
 
     def combine_outputs(self):
         wrapper_outputs = self.model_wrapper.define_outputs()
