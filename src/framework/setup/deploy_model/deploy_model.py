@@ -109,7 +109,6 @@ class DeployModel:
 
 
 if __name__ == "__main__":
-    from framework.model_wrapper import ModelWrapper
     from framework.setup.deploy_model.TEMP_example_model_wrapper import ExampleModelWrapper
 
     DeployModel(model_wrapper=ExampleModelWrapper,

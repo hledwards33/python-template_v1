@@ -4,11 +4,11 @@ from framework.setup.read_config.read_config import ModelConfigDirector, Windows
 
 class ModelMetaData:
     def __init__(self):
-        self._model_inputs = dict()
-        self._model_outputs = dict()
-        self._model_parameters = dict()
-        self._model_type = str
-        self._model_name = str
+        self._model_inputs: dict = dict()
+        self._model_outputs: dict = dict()
+        self._model_parameters: dict = dict()
+        self._model_type: str = ""
+        self._model_name: str = ""
         self._run_model = None
 
     @property

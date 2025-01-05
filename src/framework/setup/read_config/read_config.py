@@ -66,13 +66,13 @@ class IModelConfigBuilder(ABC):
 class WindowsModelConfigBuilder(IModelConfigBuilder):
 
     def define_input_data(self):
-        self.model_config.input_data = self.raw_config['input_data']
+        self.model_config.input_data = self.raw_config['model_data']['inputs']
 
     def define_output_data(self):
-        self.model_config.output_data = self.raw_config['output_data']
+        self.model_config.output_data = self.raw_config['model_data']['outputs']
 
     def define_model_parameters(self):
-        self.model_config.model_parameters = self.raw_config['model_parameters']
+        self.model_config.model_parameters = self.raw_config['parameters']['model_parameters']
 
 
 class GCPModelConfigBuilder(IModelConfigBuilder):
