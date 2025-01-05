@@ -102,7 +102,7 @@ class ModelBuilder:
 
     def define_model_attributes(self):
         self.model.model_type = self.model_config.model_type
-        self.model_name = self.model_config.model_name
+        self.model.model_name = self.model_config.model_name
 
 
 class ModelDirector:

@@ -72,10 +72,25 @@ class DeployModelBuilder:
     def run_model(self):
         pass
 
+    def write_output_data(self):
+        pass
+
 
 class DeployModelDirector:
-    pass
+    def __init__(self, builder: DeployModelBuilder):
+        self.builder = builder
+
+    def build_model_deployment(self):
+        self.builder.create_model()
+        self.builder.read_input_data()
+        self.builder.run_model()
+        self.builder.write_output_data()
+        return self.builder.get_model()
 
 
 class DeployModel:
+    pass
+
+
+if __name__ == "__main__":
     pass
