@@ -8,7 +8,16 @@ class ModelMetaData:
         self._model_outputs = dict()
         self._model_parameters = dict()
         self._model_type = str
-        self.model_name = str
+        self._model_name = str
+        self._run_model = None
+
+    @property
+    def run_model(self):
+        return self._run_model
+
+    @run_model.setter
+    def run_model(self, value):
+        self._run_model = value
 
     @property
     def model_inputs(self):
@@ -43,12 +52,12 @@ class ModelMetaData:
         self._model_type = value
 
     @property
-    def model_name(self):
-        return self.model_name
+    def _model_name(self):
+        return self._model_name
 
-    @model_name.setter
-    def model_name(self, value):
-        self.model_name = value
+    @_model_name.setter
+    def _model_name(self, value):
+        self._model_name = value
 
 
 class ModelBuilder:
@@ -101,8 +110,11 @@ class ModelBuilder:
         self.model.model_parameters = combined_parameters
 
     def define_model_attributes(self):
-        self.model.model_type = self.model_config.model_type
-        self.model.model_name = self.model_config.model_name
+        self.model.model_type = self.model_config.model_parameters['model_type']
+        self.model.model_name = self.model_config.model_parameters['model_name']
+
+    def define_model(self):
+        self.model.run_model = self.model_wrapper.run_model
 
 
 class ModelDirector:
@@ -114,4 +126,5 @@ class ModelDirector:
         self.builder.combine_inputs()
         self.builder.combine_outputs()
         self.builder.combine_parameters()
+        self.builder.define_model()
         return self.builder.get_model()

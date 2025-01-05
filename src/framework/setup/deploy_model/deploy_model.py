@@ -51,6 +51,9 @@ class DeployModelBuilder:
         model_builder = ModelBuilder(model_wrapper, model_config_path)
         return ModelDirector(model_builder).build_model()
 
+    def run_model(self):
+        self._model_metadata.run_model(self._model.model_inputs, self._model.model_parameters)
+
     def read_parameters(self):
         self._model.model_parameters = self._model_metadata.model_parameters
 
@@ -71,10 +74,6 @@ class DeployModelBuilder:
         if errors:
             # TODO: Add logging of errors
             raise ValueError("Errors occurred when reading input data, see the above logs.")
-
-    def run_model(self):
-        self._model.model_outputs = self._model_metadata.run_model(self._model.model_inputs,
-                                                                   self._model.model_parameters)
 
     def write_output_data(self):
         pass
