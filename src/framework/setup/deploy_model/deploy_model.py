@@ -103,4 +103,7 @@ class DeployModel:
 
 
 if __name__ == "__main__":
-    pass
+    from framework.setup.deploy_model.TEMP_example_model_wrapper import ExampleModelWrapper
+
+    DeployModel(model_wrapper=ExampleModelWrapper,
+                model_config_path='config/model_config/example_model/example_model_config.yml').deploy()
