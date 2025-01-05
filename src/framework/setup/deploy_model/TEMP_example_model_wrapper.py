@@ -1,7 +1,7 @@
-from framework.setup.create_model.model_wrapper import ModelWrapper
+from framework.setup.create_model.model_wrapper import IModelWrapper
 
 
-class ExampleModel(ModelWrapper):
+class ExampleModelWrapper(IModelWrapper):
     def define_parameters(self) -> dict:
         return {"example_parameter": "example_value"}
 

@@ -1,5 +1,5 @@
 from framework.setup.create_model.build_model import ModelMetaData, ModelBuilder, ModelDirector
-from framework.setup.create_model.model_wrapper import ModelWrapper
+from framework.setup.create_model.model_wrapper import IModelWrapper
 from framework.setup.read_data.read_data import DataContext, DataBuilder, DataDirector
 
 
@@ -35,10 +35,14 @@ class Model:
 
 
 class DeployModelBuilder:
-    def __init__(self, model_wrapper: ModelWrapper, model_config_path: str):
+    def __init__(self, model_wrapper: IModelWrapper, model_config_path: str):
         self._model_metadata: ModelMetaData = self.create_model_metadata(model_wrapper, model_config_path)
 
         self._model = None
+
+    def initiate_logging(self):
+        pass
+        # TODO: Add in a method to initiate the logging
 
     def create_model(self):
         self._model = Model()
@@ -47,7 +51,7 @@ class DeployModelBuilder:
         return self._model
 
     @staticmethod
-    def create_model_metadata(model_wrapper: ModelWrapper, model_config_path: str) -> ModelMetaData:
+    def create_model_metadata(model_wrapper: IModelWrapper, model_config_path: str) -> ModelMetaData:
         model_builder = ModelBuilder(model_wrapper, model_config_path)
         return ModelDirector(model_builder).build_model()
 
@@ -77,6 +81,7 @@ class DeployModelBuilder:
 
     def write_output_data(self):
         pass
+        # TODO: Add in a method to write the output data
 
 
 class DeployModelDirector:
@@ -84,6 +89,7 @@ class DeployModelDirector:
         self.builder = builder
 
     def build_model_deployment(self):
+        self.builder.initiate_logging()
         self.builder.create_model()
         self.builder.read_parameters()
         self.builder.read_input_data()
@@ -93,7 +99,7 @@ class DeployModelDirector:
 
 class DeployModel:
 
-    def __init__(self, model_wrapper: ModelWrapper, model_config_path: str):
+    def __init__(self, model_wrapper: IModelWrapper, model_config_path: str):
         self.model_wrapper = model_wrapper
         self.model_config_path = model_config_path
 
@@ -103,6 +109,7 @@ class DeployModel:
 
 
 if __name__ == "__main__":
+    from framework.model_wrapper import ModelWrapper
     from framework.setup.deploy_model.TEMP_example_model_wrapper import ExampleModelWrapper
 
     DeployModel(model_wrapper=ExampleModelWrapper,

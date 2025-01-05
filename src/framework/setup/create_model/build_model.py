@@ -1,4 +1,4 @@
-from framework.setup.create_model.model_wrapper import ModelWrapper
+from framework.setup.create_model.model_wrapper import IModelWrapper
 from framework.setup.read_config.read_config import ModelConfigDirector, WindowsModelConfigBuilder
 
 
@@ -61,7 +61,7 @@ class ModelMetaData:
 
 
 class ModelBuilder:
-    def __init__(self, model_wrapper: ModelWrapper, model_config_path: str):
+    def __init__(self, model_wrapper: IModelWrapper, model_config_path: str):
         self.model_wrapper = model_wrapper
         self.model_config = self.create_model_config(model_config_path)
 

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class ModelWrapper(ABC):
+class IModelWrapper(ABC):
     @abstractmethod
     def define_parameters(self) -> dict:
         pass
