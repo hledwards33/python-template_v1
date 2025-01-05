@@ -1,16 +1,13 @@
 parameters:
+  model_id: "example-model"
+  model_type: "pandas"
+  type: "pandas"
+  log_location: "model_logs/example_model_logs"
+  log_name: "example_model_log_{date}"
 
   model_parameters:
-    model_id: "example-model"
-    model_type: "ifrs9"
-    type: "pandas"
-    parameters_file: "parameters.csv"
-    log_location: "model_logs/example_model_logs"
-    log_name: "example_model_log_{date}"
-
-    optional:
-      ecl_upper_limit: 500
-      ecl_lower_limit: 200
+    ecl_upper_limit: 500
+    ecl_lower_limit: 200
 
 model_data:
 

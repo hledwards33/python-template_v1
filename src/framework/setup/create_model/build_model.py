@@ -52,11 +52,11 @@ class ModelMetaData:
         self._model_type = value
 
     @property
-    def _model_name(self):
+    def model_name(self):
         return self._model_name
 
-    @_model_name.setter
-    def _model_name(self, value):
+    @model_name.setter
+    def model_name(self, value):
         self._model_name = value
 
 
@@ -80,7 +80,7 @@ class ModelBuilder:
         return ModelConfigDirector(config_builder).get_config()
 
     def combine_inputs(self):
-        wrapper_inputs = self.model.define_inputs()
+        wrapper_inputs = self.model_wrapper.define_inputs()
         config_inputs = self.model_config.input_data
 
         if set(wrapper_inputs.keys()) != set(config_inputs.keys()):
@@ -90,7 +90,7 @@ class ModelBuilder:
         self.model.model_inputs = combined_inputs
 
     def combine_outputs(self):
-        wrapper_outputs = self.model.define_outputs()
+        wrapper_outputs = self.model_wrapper.define_outputs()
         config_outputs = self.model_config.output_data
 
         if set(wrapper_outputs.keys()) != set(config_outputs.keys()):
@@ -100,8 +100,8 @@ class ModelBuilder:
         self.model.model_outputs = combined_outputs
 
     def combine_parameters(self):
-        wrapper_parameters = self.model.define_parameters()
-        config_parameters = self.model_config.model_parameters
+        wrapper_parameters = self.model_wrapper.define_parameters()
+        config_parameters = self.model_config.model_parameters['model_parameters']
 
         if set(wrapper_parameters.keys()) != set(config_parameters.keys()):
             raise KeyError("Model parameters do not match config parameters.")

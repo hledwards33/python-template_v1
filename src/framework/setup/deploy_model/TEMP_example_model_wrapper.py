@@ -1,17 +1,23 @@
 from framework.setup.create_model.model_wrapper import IModelWrapper
+from models.model_schemas import example_model as model_schemas
 
 
 class ExampleModelWrapper(IModelWrapper):
     def define_parameters(self) -> dict:
-        return {"example_parameter": "example_value"}
+        return {"ecl_lower_limit": self.parameter_types.FLOAT,
+                "ecl_upper_limit": self.parameter_types.INTEGER}
 
     def define_inputs(self) -> dict:
-        return {"example_input": "",
-                "example_input_2": ""}
+        return {
+            'pd_data': (model_schemas, "pd_data_schema.json"),
+            'lgd_data': (model_schemas, "lgd_data_schema.json"),
+            'ead_data': (model_schemas, "ead_data_schema.json"),
+        }
 
     def define_outputs(self) -> dict:
-        return {"example_output": "",
-                "example_output_2": ""}
+        return {
+            'ecl_data': (model_schemas, "ecl_data_schema.json")
+        }
 
     def run_model(self) -> dict:
         return {}
