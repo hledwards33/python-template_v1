@@ -70,13 +70,13 @@ class DeployModelBuilder:
         return input_data, errors
 
     def read_input_data(self):
-        errors = {}
+        all_errors = {}
         for data_name, data_paths in self._model_metadata.model_inputs.items():
             input_data, errors = self.read_input(data_paths)
             self._model.model_inputs[data_name] = input_data
-            errors[data_name] = errors
+            if not errors: all_errors[data_name] = errors
 
-        if errors:
+        if all_errors:
             # TODO: Add logging of errors
             raise ValueError("Errors occurred when reading input data, see the above logs.")
 
