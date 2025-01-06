@@ -63,9 +63,9 @@ class DataCheckFactory:
     @staticmethod
     def get_data_checker(model_type: str) -> IDataCheck:
         match model_type:
-            case ModelType.PANDAS:
+            case ModelType.PANDAS.value:
                 return PandasDataCheck()
-            case ModelType.SPARK:
+            case ModelType.SPARK.value:
                 return SparkDataCheck()
             case _:
                 raise ValueError("Invalid model type")

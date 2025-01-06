@@ -68,9 +68,9 @@ class SchemaFormatFactory:
             IFormatSchema: The schema formatter.
         """
         match model_type:
-            case ModelType.PANDAS:
+            case ModelType.PANDAS.value:
                 return FormatPandasSchema()
-            case ModelType.SPARK:
+            case ModelType.SPARK.value:
                 return FormatSparkSchema()
             case _:
                 raise ValueError(f"Model type {model_type} not supported.")

@@ -125,7 +125,7 @@ class ModelBuilder:
 
     def define_model_attributes(self):
         self.model.model_type = self.model_config.model_parameters['model_type']
-        self.model.model_name = self.model_config.model_parameters['model_name']
+        self.model.model_name = self.model_config.model_parameters['model_id']
 
     def define_model(self):
         self.model.run_model = self.model_wrapper.run_model
@@ -140,5 +140,6 @@ class ModelDirector:
         self.builder.combine_inputs()
         self.builder.combine_outputs()
         self.builder.combine_parameters()
+        self.builder.define_model_attributes()
         self.builder.define_model()
         return self.builder.get_model()
