@@ -1,6 +1,8 @@
 from framework.setup.create_model.model_wrapper import IModelWrapper
 from models.model_schemas import example_model as model_schemas
 
+from models.model_scripts.example_model.example_model import ExampleModel as Model
+
 
 class ExampleModelWrapper(IModelWrapper):
     def define_parameters(self) -> dict:
@@ -19,5 +21,5 @@ class ExampleModelWrapper(IModelWrapper):
             'ecl_data': (model_schemas, "ecl_data_schema.json")
         }
 
-    def run_model(self) -> dict:
-        return {}
+    def define_model(self):
+        return Model
