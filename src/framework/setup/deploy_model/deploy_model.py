@@ -56,8 +56,8 @@ class DeployModelBuilder:
         return ModelDirector(model_builder).build_model()
 
     def run_model(self):
-        self._model.model_outputs = self._model_metadata.run_model(self._model.model_inputs,
-                                                                   self._model.model_parameters)
+        self._model.model_outputs = self._model_metadata.model(self._model.model_inputs,
+                                                               self._model.model_parameters).run()
 
     def read_parameters(self):
         # TODO: write a method that unpacks the parameters and model types

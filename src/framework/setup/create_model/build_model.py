@@ -11,15 +11,15 @@ class ModelMetaData:
         self._model_parameters: dict = dict()
         self._model_type: str = ""
         self._model_name: str = ""
-        self._run_model = None
+        self._model = None
 
     @property
-    def run_model(self):
-        return self._run_model
+    def model(self):
+        return self._model
 
-    @run_model.setter
-    def run_model(self, value):
-        self._run_model = value
+    @model.setter
+    def model(self, value):
+        self._model = value
 
     @property
     def model_inputs(self):
@@ -128,7 +128,7 @@ class ModelBuilder:
         self.model.model_name = self.model_config.model_parameters['model_id']
 
     def define_model(self):
-        self.model.run_model = self.model_wrapper.run_model
+        self.model.model = self.model_wrapper.define_model()
 
 
 class ModelDirector:
