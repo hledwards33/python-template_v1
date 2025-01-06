@@ -3,6 +3,7 @@ import os
 from abc import ABC, abstractmethod
 
 import pandas as pd
+
 from framework.setup.read_data.type_complexities import FileExtension
 
 logger = logging.getLogger()
@@ -74,9 +75,9 @@ class ILoadFile2Pandas(ILoadFile):
         # Return a dataframe with standardised string fields
         return df
 
-    def enforce_dates(self, df: pd.DataFrame) -> pd.DataFrame:
+    def enforce_dates(self, df: pd.DataFrame, schema: dict) -> pd.DataFrame:
         # Apply datetime formatting to date columns - coerce nulls to pd.NaT
-        for col in [key for key, val in self.schema.items() if val == "datetime64[s]"]:
+        for col in [key for key, val in schema.items() if val == "datetime64[s]"]:
             df[col] = pd.to_datetime(df[col], format="%Y-%m-%d", errors='coerce').astype('datetime64[s]')
 
             # Check for date columns that have been unsuccessfully converted to datetime
@@ -87,14 +88,10 @@ class ILoadFile2Pandas(ILoadFile):
         # Return a dataframe with standardised date fields
         return df
 
-    def enforce_data_types(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Standardises the values in each column of the passed dataset
-        :param df: pandas dataset object
-        :return: pandas dataset with standardised values
-        """
+    def enforce_data_types(self, df: pd.DataFrame, schema: dict) -> pd.DataFrame:
+
         # Standardise date values
-        df = self.enforce_dates(df)
+        df = self.enforce_dates(df, schema)
 
         # Standardise integer values
         df = self.enforce_integers(df)
@@ -132,7 +129,7 @@ class ReadCSV2Pandas(ILoadFile2Pandas):
         data = pd.read_csv(**parameters)
 
         # Ensure dataframe datatypes match the schema
-        data = self.enforce_data_types(data)
+        data = self.enforce_data_types(data, schema)
 
         # Return the pandas dataframe object
         return data
@@ -158,7 +155,7 @@ class ReadParquet2Pandas(ILoadFile2Pandas):
             data[column] = data[column].astype(schema[column])
 
         # Ensure dataframe datatypes match the schema
-        data = self.enforce_data_types(data)
+        data = self.enforce_data_types(data, schema)
 
         # Return the pandas dataframe object
         return data
