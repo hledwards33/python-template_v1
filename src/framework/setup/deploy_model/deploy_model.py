@@ -4,6 +4,7 @@ from framework.setup.read_data.read_data import DataContext, DataBuilder, DataDi
 
 
 class Model:
+
     def __init__(self):
         self._model_inputs = dict()
         self._model_outputs = dict()
