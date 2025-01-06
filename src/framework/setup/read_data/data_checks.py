@@ -41,7 +41,7 @@ class PandasDataCheck(IDataCheck):
         # Check the datatypes in the dataframe match those defined in the schema
         for col in data.columns:
             # Log a successful match if the datatypes are the same
-            if str(data[col].dtype).lower() == schema[col].lower():
+            if str(data[col].dtype).lower() == str(schema[col]).lower():
                 logger.info(f"Dataset {dataframe_name} has {col} with correct type: {data[col].dtype}.")
 
             # Save to error dictionary if the datatypes don't match
