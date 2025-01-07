@@ -93,7 +93,6 @@ class DeployModelBuilder:
 
     def write_output_data(self):
         all_errors = {}
-        # TODO: Update the for loop below
         for data_name, data_paths in self._model_metadata.model_outputs.items():
             data = self._model.model_outputs[data_name]
             errors = self.write_output(data, data_paths)
