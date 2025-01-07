@@ -38,7 +38,7 @@ class SavePandas2CSV(ISavePandas2File):
 
 
 class SaveParquet2Pandas(ISavePandas2File):
-    def save_file(self, schema) -> pd.DataFrame:
+    def save_file(self, schema):
         data = self.select_columns(schema)
         data.to_parquet(self.data_path, index=False)
 

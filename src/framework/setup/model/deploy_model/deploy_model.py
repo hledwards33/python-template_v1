@@ -67,7 +67,8 @@ class DeployModelBuilder:
 
     def read_input(self, data_paths):
         data_path, schema_path = data_paths
-        input_data_context = ReadDataContext(schema_path, data_path, self._model_metadata.model_type)
+        input_data_context = ReadDataContext(schema_path, data_path,
+                                             self._model_metadata.model_type)
         input_data_builder = ReadDataBuilder(input_data_context)
         input_data, errors = ReadDataDirector(input_data_builder).read_data()
         return input_data, errors
@@ -85,15 +86,17 @@ class DeployModelBuilder:
 
     def write_output(self, data, data_paths):
         data_path, schema_path = data_paths
-        output_data_context = WriteDataContext(schema_path, data_path, self._model_metadata.model_type)
+        output_data_context = WriteDataContext(data, schema_path, data_path,
+                                               self._model_metadata.model_type)
         output_data_builder = WriteDataBuilder(output_data_context)
-        return WriteDataDirector(output_data_builder).write_data(self._model.model_outputs)
+        return WriteDataDirector(output_data_builder).write_data()
 
     def write_output_data(self):
         all_errors = {}
         # TODO: Update the for loop below
-        for data_name, data_paths in self._model_metadata.model_inputs.items():
-            errors = self.write_output(data_paths)
+        for data_name, data_paths in self._model_metadata.model_outputs.items():
+            data = self._model.model_outputs[data_name]
+            errors = self.write_output(data, data_paths)
             if not errors: all_errors[data_name] = errors
 
         if all_errors:
