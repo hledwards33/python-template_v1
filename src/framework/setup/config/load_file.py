@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 import yaml
 
-from framework.setup.read_config.type_complexities import ConfigExtension
+from framework.setup.config.type_complexities import ConfigExtension
 
 
 class IReadConfig(ABC):

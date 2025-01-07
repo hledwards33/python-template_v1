@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 import pandas as pd
 
-from framework.setup.read_data.type_complexities import FileExtension
+from framework.setup.data.read_data.type_complexities import FileExtension
 
 logger = logging.getLogger()
 

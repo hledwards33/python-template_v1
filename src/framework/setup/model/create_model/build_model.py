@@ -1,7 +1,7 @@
 import os
 
-from framework.setup.create_model.model_wrapper import IModelWrapper
-from framework.setup.read_config.read_config import ModelConfigDirector, WindowsModelConfigBuilder
+from framework.setup.model.create_model.model_wrapper import IModelWrapper
+from framework.setup.config.read_config import ModelConfigDirector, WindowsModelConfigBuilder
 
 
 class ModelMetaData:

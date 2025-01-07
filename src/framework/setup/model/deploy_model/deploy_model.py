@@ -1,6 +1,6 @@
-from framework.setup.create_model.build_model import ModelMetaData, ModelBuilder, ModelDirector
-from framework.setup.create_model.model_wrapper import IModelWrapper
-from framework.setup.read_data.read_data import DataContext, DataBuilder, DataDirector
+from framework.setup.model.create_model.build_model import ModelMetaData, ModelBuilder, ModelDirector
+from framework.setup.model.create_model.model_wrapper import IModelWrapper
+from framework.setup.data.read_data import DataContext, DataBuilder, DataDirector
 
 
 class Model:
@@ -112,7 +112,7 @@ class DeployModel:
 
 
 if __name__ == "__main__":
-    from framework.setup.deploy_model.TEMP_example_model_wrapper import ExampleModelWrapper
+    from framework.setup.model.deploy_model.TEMP_example_model_wrapper import ExampleModelWrapper
 
     DeployModel(model_wrapper=ExampleModelWrapper(),
                 model_config_path='config/model_config/example_model/example_model_config.yml').deploy()

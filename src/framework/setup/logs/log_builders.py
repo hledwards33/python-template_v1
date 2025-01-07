@@ -203,7 +203,7 @@ class LogDirector:
     def __init__(self, builder: ILogBuilder):
         self.builder = builder
 
-    # TODO: This needs to be updated so that the file path is handles elsewhere
+    # TODO: This needs to be updated so that the file path is handled elsewhere
     def initiate_logging(self, *args, **kwargs) -> ILogBuilder:
         if not self.builder.get_build_status():
 

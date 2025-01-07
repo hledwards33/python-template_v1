@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
-from framework.setup.read_data.data_checks import DataCheckFactory, IDataCheck
-from framework.setup.read_data.format_schema import IFormatSchema, SchemaFormatFactory
-from framework.setup.read_data.load_file import FileContext, LoadFileFactory, ILoadFile
-from framework.setup.read_data.read_schema import IReadSchema, SchemaContext, SchemaFactory
+from framework.setup.data.read_data.data_checks import DataCheckFactory, IDataCheck
+from framework.setup.data.schemas.format_schema import IFormatSchema, SchemaFormatFactory
+from framework.setup.data.read_data.load_file import FileContext, LoadFileFactory, ILoadFile
+from framework.setup.data.schemas.read_schema import IReadSchema, SchemaContext, SchemaFactory
 
 
 class DataContext:

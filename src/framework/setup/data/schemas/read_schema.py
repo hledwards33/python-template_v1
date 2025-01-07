@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 import yaml
 
-from framework.setup.read_data.type_complexities import SchemaExtension
+from framework.setup.data.read_data.type_complexities import SchemaExtension
 
 
 class IReadSchema(ABC):
