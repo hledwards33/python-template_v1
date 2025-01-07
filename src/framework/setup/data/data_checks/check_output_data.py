@@ -58,18 +58,20 @@ class SparkDataCheck(IDataCheck):
         # TODO: Implement this method
         pass
 
+
 class DataCheckContext:
     def __init__(self, data, model_type: str):
         self.data = data
         self.model_type = model_type
 
+
 class DataCheckFactory:
     @staticmethod
-    def get_data_checker(model_type: str) -> IDataCheck:
-        match model_type:
+    def get_data_checker(context: DataCheckContext) -> IDataCheck:
+        match context.model_type:
             case ModelType.PANDAS.value:
-                return PandasDataCheck()
+                return PandasDataCheck(context.data)
             case ModelType.SPARK.value:
-                return SparkDataCheck()
+                return SparkDataCheck(context.data)
             case _:
-                raise ValueError("Invalid model type")
+                raise ValueError(f"Invalid model type: {context.model_type}.")

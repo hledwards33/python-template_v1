@@ -14,7 +14,7 @@ class ISaveFile(ABC):
         self.data_path = data_path
 
     def select_columns(self, schema: dict) -> pd.DataFrame:
-        return self.data[schema["columns"]]
+        return self.data[schema.keys()]
 
     @abstractmethod
     def save_file(self, schema: dict):
