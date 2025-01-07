@@ -13,7 +13,7 @@ class ISaveFile(ABC):
         self.data_path = data_path
 
     @abstractmethod
-    def save_file(self, data: pd.DataFrame):
+    def save_file(self, data):
         pass
 
 

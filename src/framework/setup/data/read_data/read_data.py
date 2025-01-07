@@ -56,7 +56,7 @@ class DataBuilder(IDataBuilder):
         return DataCheckFactory.get_data_checker(self.context.model_type)
 
 
-class DataDirector:
+class ReadDataDirector:
     def __init__(self, builder: DataBuilder):
         self.builder = builder
 
