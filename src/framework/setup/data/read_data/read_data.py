@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from framework.setup.data.data_checks.check_data import DataCheckFactory, IDataCheck
+from framework.setup.data.data_checks.check_input_data import DataCheckFactory, IDataCheck
 from framework.setup.data.read_data.load_file import LoadFileContext, LoadFileFactory, ILoadFile
 from framework.setup.data.schemas.format_schema import IFormatSchema, SchemaFormatFactory
 from framework.setup.data.schemas.read_schema import IReadSchema, SchemaContext, SchemaFactory
