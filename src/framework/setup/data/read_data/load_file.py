@@ -161,7 +161,7 @@ class ReadParquet2Pandas(ILoadFile2Pandas):
         return data
 
 
-class FileContext:
+class LoadFileContext:
     def __init__(self, data_path: str):
         self.data_path = data_path
         self.data_extension = data_path.split(".")[-1].lower()
@@ -169,7 +169,7 @@ class FileContext:
 
 class LoadFileFactory:
     @staticmethod
-    def create_file_loader(context: FileContext) -> ILoadFile:
+    def create_file_loader(context: LoadFileContext) -> ILoadFile:
         match context.data_extension:
             case FileExtension.CSV.value | FileExtension.ZIP.value:
                 return ReadCSV2Pandas(context.data_path)

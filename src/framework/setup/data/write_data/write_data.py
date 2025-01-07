@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from framework.setup.data.data_checks.check_data import DataCheckFactory, IDataCheck
 from framework.setup.data.schemas.format_schema import IFormatSchema, SchemaFormatFactory
-from framework.setup.data.read_data.load_file import FileContext, LoadFileFactory, ILoadFile
+from framework.setup.data.read_data.load_file import LoadFileContext, LoadFileFactory, ILoadFile
 from framework.setup.data.schemas.read_schema import IReadSchema, SchemaContext, SchemaFactory
 
 
@@ -49,7 +49,7 @@ class DataBuilder(IDataBuilder):
         return self.context.schema
 
     def set_file_loader(self) -> ILoadFile:
-        file_context = FileContext(self.context.data_path)
+        file_context = LoadFileContext(self.context.data_path)
         return LoadFileFactory.create_file_loader(file_context)
 
     def set_data_checker(self) -> IDataCheck:
