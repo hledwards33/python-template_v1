@@ -6,7 +6,7 @@ from abc import abstractmethod
 from datetime import datetime
 
 from framework.setup.logs.log_handlers import SysHandlerSimple, FileHandlerSimple
-from framework.setup.meta_classes.singleton import ThreadSafeSingletonABCMeta
+from framework.setup.structures.meta_classes import ThreadSafeSingletonABCMeta
 from framework.setup.logs.log_handlers import (IFileHandler, ISysHandler, SysHandlerDetailed,
                           FileHandlerDetailed)
 
