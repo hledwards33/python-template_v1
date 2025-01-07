@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 
 from framework.setup.data.data_checks.check_data import DataCheckFactory, IDataCheck
-from framework.setup.data.schemas.format_schema import IFormatSchema, SchemaFormatFactory
 from framework.setup.data.read_data.load_file import LoadFileContext, LoadFileFactory, ILoadFile
+from framework.setup.data.schemas.format_schema import IFormatSchema, SchemaFormatFactory
 from framework.setup.data.schemas.read_schema import IReadSchema, SchemaContext, SchemaFactory
 
 
-class DataContext:
+class WriteDataContext:
     def __init__(self, schema_path: str, data_path: str, model_type: str):
         self.schema_path = schema_path
         self.data_path = data_path
@@ -14,7 +14,7 @@ class DataContext:
 
 
 class IDataBuilder(ABC):
-    def __init__(self, context: DataContext):
+    def __init__(self, context: WriteDataContext):
         self.context = context
         self.schema_reader = self.set_schema_reader()
         self.schema_formatter = self.set_schema_formatter()
@@ -30,11 +30,11 @@ class IDataBuilder(ABC):
         pass
 
     @abstractmethod
-    def set_file_loader(self):
+    def set_data_checker(self):
         pass
 
     @abstractmethod
-    def set_data_checker(self):
+    def set_file_loader(self):
         pass
 
 

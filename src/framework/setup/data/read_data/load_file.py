@@ -187,7 +187,7 @@ class LoadFileFactoryPandas:
             case FileExtension.PARQUET.value | FileExtension.PQT.value:
                 return ReadParquet2Pandas(context.data_path)
             case _:
-                raise ValueError(f"Unsupported file type: {context.data_extension}.")
+                raise ValueError(f"Unsupported input file type: {context.data_extension}.")
 
 
 class LoadFileFactorySpark:
