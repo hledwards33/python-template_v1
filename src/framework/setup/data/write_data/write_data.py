@@ -41,7 +41,7 @@ class IDataBuilder(ABC):
         pass
 
 
-class DataBuilder(IDataBuilder):
+class WriteDataBuilder(IDataBuilder):
 
     def set_schema_reader(self) -> IReadSchema:
         schema_context = SchemaContext(self.context.schema_path)

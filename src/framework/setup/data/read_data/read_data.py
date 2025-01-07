@@ -13,7 +13,7 @@ class ReadDataContext:
         self.model_type = model_type
 
 
-class IDataBuilder(ABC):
+class IReadDataBuilder(ABC):
     def __init__(self, context: ReadDataContext):
         self.context = context
         self.schema_reader = self.set_schema_reader()
@@ -38,7 +38,7 @@ class IDataBuilder(ABC):
         pass
 
 
-class DataBuilder(IDataBuilder):
+class ReadDataBuilder(IReadDataBuilder):
 
     def set_schema_reader(self) -> IReadSchema:
         schema_context = SchemaContext(self.context.schema_path)
@@ -57,7 +57,7 @@ class DataBuilder(IDataBuilder):
 
 
 class ReadDataDirector:
-    def __init__(self, builder: DataBuilder):
+    def __init__(self, builder: ReadDataBuilder):
         self.builder = builder
 
     def read_data(self):
