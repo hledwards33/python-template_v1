@@ -214,4 +214,4 @@ class LoadFileFactory:
                 # TODO: Implement the Spark Model loaders
                 return LoadFileFactorySpark().create_file_loader(context)
             case _:
-                raise ValueError("Invalid model type: {context.model_type}.")
+                raise ValueError(f"Invalid model type: {context.model_type}.")

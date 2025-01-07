@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 import pandas as pd
 
-from framework.setup.data.type_complexities import FileExtension
+from framework.setup.data.type_complexities import FileExtension, ModelType
 
 logger = logging.getLogger()
 
@@ -51,8 +51,7 @@ class ISaveFileFactoryModelType(ABC):
 
 
 class SaveFileFactoryPandas(ISaveFileFactoryModelType):
-    @staticmethod
-    def create_file_saver(context: SaveFileContext) -> ISaveFile:
+    def create_file_saver(self, context: SaveFileContext) -> ISaveFile:
         match context.data_extension:
             case FileExtension.CSV.value | FileExtension.ZIP.value:
                 return SavePandas2CSV(context.data_path)
@@ -63,8 +62,7 @@ class SaveFileFactoryPandas(ISaveFileFactoryModelType):
 
 
 class SaveFileFactorySpark(ISaveFileFactoryModelType):
-    @staticmethod
-    def create_file_saver(context: SaveFileContext) -> ISaveFile:
+    def create_file_saver(self, context: SaveFileContext) -> ISaveFile:
         match context.data_extension:
             case FileExtension.CSV.value | FileExtension.ZIP.value:
                 # TODO: Implement the Spark Model savers
@@ -79,10 +77,10 @@ class SaveFileFactorySpark(ISaveFileFactoryModelType):
 class SaveFileFactory:
     @staticmethod
     def create_file_saver(context: SaveFileContext) -> ISaveFile:
-        match context.data_extension:
-            case FileExtension.CSV.value | FileExtension.ZIP.value:
-                return SavePandas2CSV(context.data_path)
-            case FileExtension.PARQUET.value | FileExtension.PQT.value:
-                return SaveParquet2Pandas(context.data_path)
+        match context.model_type:
+            case ModelType.PANDAS.value:
+                return SaveFileFactoryPandas().create_file_saver(context)
+            case ModelType.SPARK.value:
+                return SaveFileFactorySpark().create_file_saver(context)
             case _:
-                raise ValueError(f"Unsupported file type: {context.data_extension}.")
+                raise ValueError(f"Unsupported model type: {context.model_type}.")
