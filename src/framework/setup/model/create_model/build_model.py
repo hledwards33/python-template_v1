@@ -1,7 +1,7 @@
 import os
 
-from framework.setup.create_model.model_wrapper import IModelWrapper
-from framework.setup.read_config.read_config import ModelConfigDirector, WindowsModelConfigBuilder
+from framework.setup.config.read_config import ModelConfigDirector, WindowsModelConfigBuilder
+from framework.setup.model.create_model.model_wrapper import IModelWrapper
 
 
 class ModelMetaData:
@@ -110,7 +110,8 @@ class ModelBuilder:
         if set(wrapper_outputs.keys()) != set(config_outputs.keys()):
             raise KeyError("Model outputs do not match config outputs.")
 
-        combined_outputs = {k: (v, wrapper_outputs[k]) for k, v in config_outputs.items()}
+        combined_outputs = {k: (self.combine_config_paths(v), self.combine_wrapper_paths(wrapper_outputs[k])) for k, v
+                            in config_outputs.items()}
         self.model.model_outputs = combined_outputs
 
     def combine_parameters(self):

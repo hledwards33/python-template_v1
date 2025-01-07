@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 import pandas as pd
 
-from framework.setup.read_data.type_complexities import FileExtension
+from framework.setup.data.type_complexities import FileExtension, ModelType
 
 logger = logging.getLogger()
 
@@ -18,8 +18,12 @@ class ILoadFile(ABC):
         pass
 
 
+class ILoadFile2Spark(ILoadFile):
+    def load_file(self, schema: dict):
+        pass
+
+
 class ILoadFile2Pandas(ILoadFile):
-    @abstractmethod
     def load_file(self, schema: dict) -> pd.DataFrame:
         pass
 
@@ -161,19 +165,53 @@ class ReadParquet2Pandas(ILoadFile2Pandas):
         return data
 
 
-class FileContext:
-    def __init__(self, data_path: str):
+class LoadFileContext:
+    def __init__(self, data_path: str, model_type: str):
         self.data_path = data_path
         self.data_extension = data_path.split(".")[-1].lower()
+        self.model_type = model_type
 
 
-class LoadFileFactory:
+class ILoadFileFactoryModelType(ABC):
+    @abstractmethod
+    def create_file_loader(self, context: LoadFileContext) -> ILoadFile:
+        pass
+
+
+class LoadFileFactoryPandas:
     @staticmethod
-    def create_file_loader(context: FileContext) -> ILoadFile:
+    def create_file_loader(context: LoadFileContext) -> ILoadFile:
         match context.data_extension:
             case FileExtension.CSV.value | FileExtension.ZIP.value:
                 return ReadCSV2Pandas(context.data_path)
             case FileExtension.PARQUET.value | FileExtension.PQT.value:
                 return ReadParquet2Pandas(context.data_path)
             case _:
+                raise ValueError(f"Unsupported input file type: {context.data_extension}.")
+
+
+class LoadFileFactorySpark:
+    @staticmethod
+    def create_file_loader(context: LoadFileContext) -> ILoadFile:
+        match context.data_extension:
+            case FileExtension.CSV.value | FileExtension.ZIP.value:
+                # TODO: Implement the Spark Model loaders
+                raise NotImplementedError("Spark CSV loading not yet implemented.")
+            case FileExtension.PARQUET.value | FileExtension.PQT.value:
+                # TODO: Implement the Spark Model loaders
+                raise NotImplementedError("Spark Parquet loading not yet implemented.")
+            case _:
                 raise ValueError(f"Unsupported file type: {context.data_extension}.")
+
+
+class LoadFileFactory:
+    @staticmethod
+    def create_file_loader(context: LoadFileContext) -> ILoadFile:
+        match context.model_type:
+            case ModelType.PANDAS.value:
+                return LoadFileFactoryPandas().create_file_loader(context)
+            case ModelType.SPARK.value:
+                # TODO: Implement the Spark Model loaders
+                return LoadFileFactorySpark().create_file_loader(context)
+            case _:
+                raise ValueError(f"Invalid model type: {context.model_type}.")

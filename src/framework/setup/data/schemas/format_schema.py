@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 import pandas as pd
 
-from framework.setup.read_data.type_complexities import ModelType
+from framework.setup.data.type_complexities import ModelType
 
 
 class IFormatSchema(ABC):

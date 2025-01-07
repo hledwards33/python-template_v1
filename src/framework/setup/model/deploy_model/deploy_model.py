@@ -1,9 +1,11 @@
-from framework.setup.create_model.build_model import ModelMetaData, ModelBuilder, ModelDirector
-from framework.setup.create_model.model_wrapper import IModelWrapper
-from framework.setup.read_data.read_data import DataContext, DataBuilder, DataDirector
+from framework.setup.data.read_data.read_data import ReadDataContext, ReadDataBuilder, ReadDataDirector
+from framework.setup.data.write_data.write_data import WriteDataContext, WriteDataBuilder, WriteDataDirector
+from framework.setup.model.create_model.build_model import ModelMetaData, ModelBuilder, ModelDirector
+from framework.setup.model.create_model.model_wrapper import IModelWrapper
 
 
 class Model:
+
     def __init__(self):
         self._model_inputs = dict()
         self._model_outputs = dict()
@@ -65,9 +67,10 @@ class DeployModelBuilder:
 
     def read_input(self, data_paths):
         data_path, schema_path = data_paths
-        input_data_context = DataContext(schema_path, data_path, self._model_metadata.model_type)
-        input_data_builder = DataBuilder(input_data_context)
-        input_data, errors = DataDirector(input_data_builder).read_data()
+        input_data_context = ReadDataContext(schema_path, data_path,
+                                             self._model_metadata.model_type)
+        input_data_builder = ReadDataBuilder(input_data_context)
+        input_data, errors = ReadDataDirector(input_data_builder).read_data()
         return input_data, errors
 
     def read_input_data(self):
@@ -81,9 +84,23 @@ class DeployModelBuilder:
             # TODO: Add logging of errors
             raise ValueError("Errors occurred when reading input data, see the above logs.")
 
+    def write_output(self, data, data_paths):
+        data_path, schema_path = data_paths
+        output_data_context = WriteDataContext(data, schema_path, data_path,
+                                               self._model_metadata.model_type)
+        output_data_builder = WriteDataBuilder(output_data_context)
+        return WriteDataDirector(output_data_builder).write_data()
+
     def write_output_data(self):
-        pass
-        # TODO: Add in a method to write the output data.
+        all_errors = {}
+        for data_name, data_paths in self._model_metadata.model_outputs.items():
+            data = self._model.model_outputs[data_name]
+            errors = self.write_output(data, data_paths)
+            if not errors: all_errors[data_name] = errors
+
+        if all_errors:
+            # TODO: Add logging of errors
+            raise ValueError("Errors occurred when reading input data, see the above logs.")
 
 
 class DeployModelDirector:
@@ -111,7 +128,7 @@ class DeployModel:
 
 
 if __name__ == "__main__":
-    from framework.setup.deploy_model.TEMP_example_model_wrapper import ExampleModelWrapper
+    from framework.setup.model.deploy_model.TEMP_example_model_wrapper import ExampleModelWrapper
 
     DeployModel(model_wrapper=ExampleModelWrapper(),
                 model_config_path='config/model_config/example_model/example_model_config.yml').deploy()

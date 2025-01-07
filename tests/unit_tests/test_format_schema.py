@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from framework.setup.read_data.format_schema import (
+from framework.setup.data.schemas.format_schema import (
     ModelType, FormatPandasSchema, FormatSparkSchema, SchemaFormatFactory
 )
 

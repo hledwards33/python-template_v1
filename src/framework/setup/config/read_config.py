@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from framework.setup.read_config.load_file import ConfigContext, ConfigFactory, IReadConfig
+from framework.setup.config.load_file import ConfigContext, ConfigFactory, IReadConfig
 
 
 class ModelConfig:

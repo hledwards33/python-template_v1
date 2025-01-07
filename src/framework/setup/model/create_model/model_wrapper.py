@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 
-from framework.setup.create_model.model import IModel
+from framework.setup.model.create_model.model import IModel
 
 
 class ParameterTypes(Enum):

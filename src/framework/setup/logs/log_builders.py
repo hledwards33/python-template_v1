@@ -6,7 +6,7 @@ from abc import abstractmethod
 from datetime import datetime
 
 from framework.setup.logs.log_handlers import SysHandlerSimple, FileHandlerSimple
-from framework.setup.meta_classes.singleton import ThreadSafeSingletonABCMeta
+from framework.setup.structures.meta_classes import ThreadSafeSingletonABCMeta
 from framework.setup.logs.log_handlers import (IFileHandler, ISysHandler, SysHandlerDetailed,
                           FileHandlerDetailed)
 
@@ -203,7 +203,7 @@ class LogDirector:
     def __init__(self, builder: ILogBuilder):
         self.builder = builder
 
-    # TODO: This needs to be updated so that the file path is handles elsewhere
+    # TODO: This needs to be updated so that the file path is handled elsewhere
     def initiate_logging(self, *args, **kwargs) -> ILogBuilder:
         if not self.builder.get_build_status():
 

@@ -1,7 +1,7 @@
-from framework.setup.create_model.model_wrapper import IModelWrapper
+from framework.setup.model.create_model.model_wrapper import IModelWrapper
 from models.model_schemas import example_model as model_schemas
 
-from framework.setup.create_model.TEMP_example_model import ExampleModel as Model
+from framework.setup.model.create_model.TEMP_example_model import ExampleModel as Model
 
 
 class ExampleModelWrapper(IModelWrapper):

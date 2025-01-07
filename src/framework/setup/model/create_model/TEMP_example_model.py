@@ -2,7 +2,7 @@ import logging
 
 import pandas as pd
 
-from framework.setup.create_model.model import IModel
+from framework.setup.model.create_model.model import IModel
 
 logger = logging.getLogger()
 
