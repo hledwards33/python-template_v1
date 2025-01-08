@@ -50,7 +50,7 @@ class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
         return self.__build_status
 
     @abstractmethod
-    def initiate_logging(self, *args, **kwargs):
+    def initiate_logging(self):
         pass
 
     @abstractmethod
@@ -58,13 +58,13 @@ class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
         pass
 
     @abstractmethod
-    def initiate_file_logging(self, path: str, name: str):
+    def initiate_file_logging(self):
         pass
 
     def expected_file_format(self) -> None:
         for handler in logging.getLogger().handlers:
             if isinstance(handler, logging.FileHandler):
-                fl_format = logging.Formatter(self._file_handler.format)
+                fl_format = logging.Formatter(self._handler.file_handler.format)
                 handler.setFormatter(fl_format)
 
     @staticmethod
@@ -116,25 +116,26 @@ class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
 
 class LogBuilder(ILogBuilder):
 
-    def initiate_logging(self, path: str, name: str):
+    def initiate_logging(self):
         self.initiate_sys_logging()
-        self.initiate_file_logging(path, name)
+        self.initiate_file_logging()
 
     def initiate_sys_logging(self) -> None:
         logging.getLogger().setLevel(logging.DEBUG)
-        logging.getLogger().addHandler(self._sys_handler.handler())
+        logging.getLogger().addHandler(self._handler.sys_handler.handler())
 
-    def initiate_file_logging(self, path: str, name: str):
+    def initiate_file_logging(self):
+        name = os.path.split(self._handler.log_file_path)[-1]
         if '{date}' in name: name.format(date=datetime.date.today())
 
         if sum([1 for handler in logging.getLogger().handlers if name in str(handler)]) < 1:
-            file_handler = self._file_handler.handler(os.path.join(path, name) + ".log")
+            file_handler = self._handler.file_handler.handler(self._handler.log_file_path)
             logging.getLogger().addHandler(file_handler)
 
 
 class LogContext:
     def __init__(self, log_file_path: str, log_type: str):
-        self.log_file_path = log_file_path
+        self.log_file_path = os.path.normpath(log_file_path)
         self.log_type = log_type
 
 
