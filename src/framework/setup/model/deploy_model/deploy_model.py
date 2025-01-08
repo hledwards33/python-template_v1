@@ -2,6 +2,7 @@ from framework.setup.data.read_data.read_data import ReadDataContext, ReadDataBu
 from framework.setup.data.write_data.write_data import WriteDataContext, WriteDataBuilder, WriteDataDirector
 from framework.setup.logs.log_builders import LogBuilder
 from framework.setup.logs.log_handlers import LogHandlerContext, LogHandlerFactory
+from framework.setup.logs.log_structures import LogStructures
 from framework.setup.model.create_model.build_model import ModelMetaData, ModelBuilder, ModelDirector
 from framework.setup.model.create_model.model_wrapper import IModelWrapper
 
@@ -12,6 +13,15 @@ class Model:
         self._model_inputs = dict()
         self._model_outputs = dict()
         self._model_parameters = dict()
+        self._logging = None
+
+    @property
+    def logging(self):
+        return self._logging
+
+    @logging.setter
+    def logging(self, value):
+        self._logging = value
 
     @property
     def model_inputs(self):
@@ -55,6 +65,8 @@ class DeployModelBuilder:
         sys_handler, file_handler = LogHandlerFactory(log_context).create_handlers()
         logger = LogBuilder(sys_handler, file_handler)
         logger.initiate_logging()
+        # TODO: consider how to make this global so it can be accessed by all scripts
+        self._model.logging = LogStructures(self._model_metadata.log_format)
 
     @staticmethod
     def create_model_metadata(model_wrapper: IModelWrapper, model_config_path: str) -> ModelMetaData:
