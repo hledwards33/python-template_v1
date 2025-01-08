@@ -31,7 +31,7 @@ class LogBuilder(metaclass=ThreadSafeSingletonABCMeta):
 
     def initiate_file_logging(self):
         name = os.path.split(self._file_handler.log_file_path)[-1]
-        if '{date}' in name: name.format(date=datetime.date.today())
+        if '{date}' in name: name.format(date=datetime.today().strftime('%Y-%m-%d'))
 
         if sum([1 for handler in logging.getLogger().handlers if name in str(handler)]) < 1:
             file_handler = self._file_handler.handler()
