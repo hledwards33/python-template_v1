@@ -3,6 +3,7 @@ parameters:
   model_type: "pandas"
   type: "pandas"
   log: "model_logs/example_model_logs/example_model_log_{date}.log"
+  log_type: "simple"
 
   model_parameters:
     ecl_upper_limit: 500
