@@ -49,9 +49,10 @@ class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
     def get_build_status(self) -> bool:
         return self.__build_status
 
-    @abstractmethod
     def initiate_logging(self):
-        pass
+        self.initiate_sys_logging()
+        if self._handler.file_logging: self.initiate_file_logging()
+        self.update_build_status()
 
     @abstractmethod
     def initiate_sys_logging(self):
@@ -151,115 +152,9 @@ class LogFactory:
                 handler.sys_handler = SysHandlerSimple()
                 handler.file_handler = FileHandlerSimple()
             case 'detailed':
-                sys_handler = SysHandlerDetailed()
-                file_handler = FileHandlerDetailed()
+                handler.sys_handler = SysHandlerDetailed()
+                handler.file_handler = FileHandlerDetailed()
             case _:
                 raise ValueError("Invalid log type. Please select from 'simple' or 'detailed'.")
 
-        return LogBuilder(sys_handler, file_handler)
-
-
-################# OLD CODE #################
-
-
-class ISysAndFileLogBuilder(ILogBuilder):
-    def __init__(self):
-        super().__init__()
-        self._sys_handler = None
-        self._file_handler = None
-
-    def initiate_logging(self, path: str, name: str):
-        self.initiate_sys_logging()
-        self.initiate_file_logging(path, name)
-
-    def initiate_sys_logging(self) -> None:
-        logging.getLogger().setLevel(logging.DEBUG)
-        logging.getLogger().addHandler(self._sys_handler.handler())
-
-    def initiate_file_logging(self, path: str, name: str):
-        if '{date}' in name: name.format(date=datetime.date.today())
-
-        if sum([1 for handler in logging.getLogger().handlers if name in str(handler)]) < 1:
-            file_handler = self._file_handler.handler(os.path.join(path, name) + ".log")
-            logging.getLogger().addHandler(file_handler)
-
-
-class ISysLogBuilder(ILogBuilder):
-    def __init__(self):
-        super().__init__()
-        self._sys_handler = None
-        self._file_handler = None
-
-    def initiate_sys_logging(self):
-        logging.getLogger().setLevel(logging.DEBUG)
-        logging.getLogger().addHandler(self._sys_handler.handler())
-
-
-class SimpleSysAndFileLogBuilder(ISysAndFileLogBuilder):
-    def __init__(self):
-        super().__init__()
-        self._sys_handler = SysHandlerSimple()
-        self._file_handler = FileHandlerSimple()
-
-
-class DetailedSysAndFileLogBuilder(ISysAndFileLogBuilder):
-    def __init__(self):
-        super().__init__()
-        self._sys_handler = SysHandlerDetailed()
-        self._file_handler = FileHandlerDetailed()
-
-
-class SimpleSysLogBuilder(ISysLogBuilder):
-    def __init__(self):
-        super().__init__()
-        self._sys_handler = SysHandlerSimple()
-        self._file_handler = None
-
-
-class DetailedSysLogBuilder(ISysLogBuilder):
-    def __init__(self):
-        super().__init__()
-        self._sys_handler = SysHandlerDetailed()
-        self._file_handler = None
-
-
-class SimpleFileLogBuilder(ISysLogBuilder):
-    def __init__(self):
-        super().__init__()
-        self._sys_handler = None
-        self._file_handler = FileHandlerSimple()
-
-
-class DetailedFileLogBuilder(ISysLogBuilder):
-    def __init__(self):
-        super().__init__()
-        self._sys_handler = None
-        self._file_handler = FileHandlerDetailed()
-
-
-# TODO: Implement a Factory class that can make decisions on which loggers to initialise
-
-
-class LogContext:
-    def __init__(self, log_file_path: str):
-        self.log_file_path = log_file_path
-        self.file_logging = True if log_file_path != "" else False
-
-
-class LogDirector:
-    def __init__(self, builder: ILogBuilder):
-        self.builder = builder
-
-    # TODO: This needs to be updated so that the file path is handled elsewhere
-    def initiate_logging(self, *args, **kwargs) -> ILogBuilder:
-        if not self.builder.get_build_status():
-
-            self.builder.initiate_file_logging(*args, **kwargs)
-            self.builder.initiate_sys_logging()
-
-            self.builder.update_build_status()
-
-        else:
-            logger.error("You are trying to re-initiate logging. Logging has already been initiated.")
-
-        return self.builder
+        return LogBuilder(handler)
