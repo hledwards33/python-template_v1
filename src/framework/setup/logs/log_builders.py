@@ -5,9 +5,7 @@ import re
 from abc import abstractmethod
 from datetime import datetime
 
-from framework.setup.logs.log_handlers import (SysHandlerDetailed,
-                                               FileHandlerDetailed)
-from framework.setup.logs.log_handlers import SysHandlerSimple, FileHandlerSimple
+from framework.setup.logs.log_handlers import LogHandlerFactory
 from framework.setup.structures.meta_classes.singleton import ThreadSafeSingletonABCMeta
 
 logger = logging.getLogger()

@@ -9,12 +9,11 @@ from framework.setup.logs.log_formaters import ColourfulSysFormatter
 
 class ILogHandler(ABC):
 
-    def __init__(self):
-        self.format: str = ""
-        self.formatter = None
+    def __init__(self, log_format: str):
+        self.log_format = log_format
 
     @abstractmethod
-    def handler(self, **kwargs) -> logging.FileHandler:
+    def handler(self) -> logging.FileHandler:
         pass
 
     @staticmethod
@@ -28,60 +27,26 @@ class ILogHandler(ABC):
         return handler_filter
 
 
-class IFileHandler(ILogHandler):
+class FileHandler(ILogHandler):
 
-    def __init__(self, formatter: logging.Formatter = logging.Formatter):
-        super().__init__()
+    def __init__(self, log_format: str, log_file_path: str):
+        super().__init__(log_format)
+        self.formatter = logging.Formatter(self.log_format)
+        self.log_file_path = log_file_path
 
-    def handler(self, path: str) -> logging.FileHandler:
-        pass
-
-
-class FileHandlerSimple(IFileHandler):
-
-    def __init__(self):
-        super().__init__()
-        self.format = "%(message)s"
-        self.formatter = logging.Formatter(self.format)
-
-    def handler(self, path: str) -> logging.FileHandler:
-        fl_handler = logging.FileHandler(path, 'w+')
+    def handler(self) -> logging.FileHandler:
+        fl_handler = logging.FileHandler(self.log_file_path, 'w+')
         fl_handler.setFormatter(self.formatter)
         fl_handler.setLevel(logging.DEBUG)
         fl_handler.addFilter(self.build_handler_filters('file'))
         return fl_handler
 
 
-class FileHandlerDetailed(IFileHandler):
+class SysHandler(ILogHandler):
 
-    def __init__(self):
-        super().__init__()
-        self.format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
-        self.formatter = logging.Formatter(self.format)
-
-    def handler(self, path: str) -> logging.FileHandler:
-        fl_handler = logging.FileHandler(path, 'w+')
-        fl_handler.setFormatter(self.formatter)
-        fl_handler.setLevel(logging.DEBUG)
-        fl_handler.addFilter(self.build_handler_filters('file'))
-        return fl_handler
-
-
-class ISysHandler(ILogHandler):
-
-    def __init__(self):
-        super().__init__()
-
-    def handler(self) -> logging.StreamHandler:
-        pass
-
-
-class SysHandlerSimple(ISysHandler):
-
-    def __init__(self):
-        super().__init__()
-        self.format = "%(message)s"
-        self.formatter = ColourfulSysFormatter(self.format)
+    def __init__(self, log_format: str):
+        super().__init__(log_format)
+        self.formatter = ColourfulSysFormatter(self.log_format)
 
     def handler(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
@@ -91,16 +56,24 @@ class SysHandlerSimple(ISysHandler):
         return sys_handler
 
 
-class SysHandlerDetailed(ISysHandler):
+class LogHandlerContext:
+    def __init__(self, log_file_path: str):
+        self.log_file_path = log_file_path
+        self.log_type = ""
 
-    def __init__(self):
-        super().__init__()
-        self.format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
-        self.formatter = ColourfulSysFormatter(self.format)
 
-    def handler(self) -> logging.StreamHandler:
-        sys_handler = logging.StreamHandler(sys.stdout)
-        sys_handler.setFormatter(self.formatter)
-        sys_handler.setLevel(logging.DEBUG)
-        sys_handler.addFilter(self.build_handler_filters('console'))
-        return sys_handler
+class LogHandlerFactory:
+
+    def __init__(self, context: LogHandlerContext):
+        self.context = context
+
+    def create_handlers(self) -> tuple[ILogHandler, ILogHandler]:
+        match self.context.log_type:
+            case 'simple':
+                log_format = "%(message)s"
+            case 'detailed':
+                log_format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
+            case _:
+                raise ValueError(f"Invalid log type: {self.context.log_type}.")
+
+        return SysHandler(log_format), FileHandler(log_format, self.context.log_file_path)

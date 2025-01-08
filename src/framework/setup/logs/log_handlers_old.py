@@ -7,12 +7,6 @@ from typing import Callable
 from framework.setup.logs.log_formaters import ColourfulSysFormatter
 
 
-class LogHandlerContext:
-    def __init__(self, log_file_path: str):
-        self.log_file_path = log_file_path
-        self.file_logging = True if log_file_path != "" else False
-
-
 class ILogHandler(ABC):
 
     def __init__(self):
@@ -110,29 +104,3 @@ class SysHandlerDetailed(ISysHandler):
         sys_handler.setLevel(logging.DEBUG)
         sys_handler.addFilter(self.build_handler_filters('console'))
         return sys_handler
-
-
-class LogHandlerFactory:
-
-    def __init__(self, context: LogHandlerContext):
-        self.context = context
-
-    @staticmethod
-    def create_sys_handler(log_type: str) -> ILogHandler:
-        match log_type:
-            case 'simple':
-                return SysHandlerSimple()
-            case 'detailed':
-                return SysHandlerDetailed()
-            case _:
-                raise ValueError(f"Invalid log type: {log_type}.")
-
-    @staticmethod
-    def create_file_handler(log_type: str) -> ILogHandler:
-        match log_type:
-            case 'simple':
-                return FileHandlerSimple()
-            case 'detailed':
-                return FileHandlerDetailed()
-            case _:
-                raise ValueError(f"Invalid log type: {log_type}.")
