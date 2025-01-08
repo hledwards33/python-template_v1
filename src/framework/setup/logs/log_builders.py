@@ -5,41 +5,16 @@ import re
 from abc import abstractmethod
 from datetime import datetime
 
-from framework.setup.logs.log_handlers import LogHandlerFactory
+from framework.setup.logs.log_handlers import FileHandler, SysHandler
 from framework.setup.structures.meta_classes.singleton import ThreadSafeSingletonABCMeta
-
-logger = logging.getLogger()
-
-
-class LogHandler:
-    def __init__(self, log_file_path: str):
-        self.sys_handler = None
-        self.file_handler = None
-        self.log_file_path = log_file_path
-        self.file_logging = True if log_file_path != "" else False
-
-    @property
-    def sys_handler(self):
-        return self.sys_handler
-
-    @sys_handler.setter
-    def sys_handler(self, value):
-        self.sys_handler = value
-
-    @property
-    def file_handler(self):
-        return self.file_handler
-
-    @file_handler.setter
-    def file_handler(self, value):
-        self.file_handler = value
 
 
 class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
     __build_status: bool = False  # Initiating a private class variable
 
-    def __init__(self, handler: LogHandler):
-        self._handler = handler
+    def __init__(self, sys_handler: SysHandler, file_handler: FileHandler):
+        self._sys_handler = sys_handler
+        self._file_handler = file_handler
 
     def update_build_status(self):
         self.__build_status = not self.__build_status
@@ -49,7 +24,7 @@ class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
 
     def initiate_logging(self):
         self.initiate_sys_logging()
-        if self._handler.file_logging: self.initiate_file_logging()
+        if self._file_handler.initiate_file_logger: self.initiate_file_logging()
         self.update_build_status()
 
     @abstractmethod

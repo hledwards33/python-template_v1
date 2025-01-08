@@ -33,6 +33,7 @@ class FileHandler(ILogHandler):
         super().__init__(log_format)
         self.formatter = logging.Formatter(self.log_format)
         self.log_file_path = log_file_path
+        self.initiate_file_logger = True if log_file_path != "" else False
 
     def handler(self) -> logging.FileHandler:
         fl_handler = logging.FileHandler(self.log_file_path, 'w+')
