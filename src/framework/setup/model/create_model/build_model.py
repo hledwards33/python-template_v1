@@ -11,7 +11,25 @@ class ModelMetaData:
         self._model_parameters: dict = dict()
         self._model_type: str = ""
         self._model_name: str = ""
+        self._log_file_path: str = ""
+        self._log_format: str = ""
         self._model = None
+
+    @property
+    def log_file_path(self):
+        return self._log_file_path
+
+    @log_file_path.setter
+    def log_file_path(self, value):
+        self._log_file_path = value
+
+    @property
+    def log_format(self):
+        return self._log_format
+
+    @log_format.setter
+    def log_format(self, value):
+        self._log_format = value
 
     @property
     def model(self):
@@ -127,6 +145,8 @@ class ModelBuilder:
     def define_model_attributes(self):
         self.model.model_type = self.model_config.model_parameters['model_type']
         self.model.model_name = self.model_config.model_parameters['model_id']
+        self.model.log_file_path = self.model_config.model_parameters['log']
+        self.model.log_format = self.model_config.model_parameters['log_format']
 
     def define_model(self):
         self.model.model = self.model_wrapper.define_model()

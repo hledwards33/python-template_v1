@@ -1,5 +1,7 @@
 from framework.setup.data.read_data.read_data import ReadDataContext, ReadDataBuilder, ReadDataDirector
 from framework.setup.data.write_data.write_data import WriteDataContext, WriteDataBuilder, WriteDataDirector
+from framework.setup.logs.log_builders import LogBuilder
+from framework.setup.logs.log_handlers import LogHandlerContext, LogHandlerFactory
 from framework.setup.model.create_model.build_model import ModelMetaData, ModelBuilder, ModelDirector
 from framework.setup.model.create_model.model_wrapper import IModelWrapper
 
@@ -42,15 +44,17 @@ class DeployModelBuilder:
 
         self._model = None
 
-    def initiate_logging(self):
-        pass
-        # TODO: Add in a method to initiate the logging
-
     def create_model(self):
         self._model = Model()
 
     def get_model(self):
         return self._model
+
+    def initiate_logging(self):
+        log_context = LogHandlerContext(self._model_metadata.log_file_path, self._model_metadata.log_format)
+        sys_handler, file_handler = LogHandlerFactory(log_context).create_handlers()
+        logger = LogBuilder(sys_handler, file_handler)
+        logger.initiate_logging()
 
     @staticmethod
     def create_model_metadata(model_wrapper: IModelWrapper, model_config_path: str) -> ModelMetaData:

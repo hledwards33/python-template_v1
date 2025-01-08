@@ -58,9 +58,9 @@ class SysHandler(ILogHandler):
 
 
 class LogHandlerContext:
-    def __init__(self, log_file_path: str):
+    def __init__(self, log_file_path: str, log_type: str):
         self.log_file_path = log_file_path
-        self.log_type = ""
+        self.log_type = log_type
 
 
 class LogHandlerFactory:
@@ -68,7 +68,7 @@ class LogHandlerFactory:
     def __init__(self, context: LogHandlerContext):
         self.context = context
 
-    def create_handlers(self) -> tuple[ILogHandler, ILogHandler]:
+    def create_handlers(self) -> tuple[SysHandler, FileHandler]:
         match self.context.log_type:
             case 'simple':
                 log_format = "%(message)s"

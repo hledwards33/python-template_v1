@@ -1,5 +1,4 @@
 import logging
-import math
 import os
 import re
 from datetime import datetime
@@ -37,7 +36,6 @@ class LogBuilder(metaclass=ThreadSafeSingletonABCMeta):
         if sum([1 for handler in logging.getLogger().handlers if name in str(handler)]) < 1:
             file_handler = self._file_handler.handler()
             logging.getLogger().addHandler(file_handler)
-
 
     def terminate_logging(self, name) -> None:
         name = re.sub(r"\{.*?}", "", name)
