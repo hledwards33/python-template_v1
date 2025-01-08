@@ -2,7 +2,6 @@ import logging
 import math
 import os
 import re
-from abc import abstractmethod
 from datetime import datetime
 
 from framework.setup.logs.log_handlers import FileHandler, SysHandler
@@ -27,18 +26,22 @@ class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
         if self._file_handler.initiate_file_logger: self.initiate_file_logging()
         self.update_build_status()
 
-    @abstractmethod
-    def initiate_sys_logging(self):
-        pass
+    def initiate_sys_logging(self) -> None:
+        logging.getLogger().setLevel(logging.DEBUG)
+        logging.getLogger().addHandler(self._sys_handler.handler())
 
-    @abstractmethod
     def initiate_file_logging(self):
-        pass
+        name = os.path.split(self._file_handler.log_file_path)[-1]
+        if '{date}' in name: name.format(date=datetime.date.today())
+
+        if sum([1 for handler in logging.getLogger().handlers if name in str(handler)]) < 1:
+            file_handler = self._file_handler.handler()
+            logging.getLogger().addHandler(file_handler)
 
     def expected_file_format(self) -> None:
         for handler in logging.getLogger().handlers:
             if isinstance(handler, logging.FileHandler):
-                fl_format = logging.Formatter(self._handler.file_handler.format)
+                fl_format = logging.Formatter(self._file_handler.log_format)
                 handler.setFormatter(fl_format)
 
     @staticmethod
@@ -86,48 +89,3 @@ class ILogBuilder(metaclass=ThreadSafeSingletonABCMeta):
                 logging.getLogger().removeHandler(handler)
 
         self.update_build_status()
-
-
-class LogBuilder(ILogBuilder):
-
-    def initiate_logging(self):
-        self.initiate_sys_logging()
-        self.initiate_file_logging()
-
-    def initiate_sys_logging(self) -> None:
-        logging.getLogger().setLevel(logging.DEBUG)
-        logging.getLogger().addHandler(self._handler.sys_handler.handler())
-
-    def initiate_file_logging(self):
-        name = os.path.split(self._handler.log_file_path)[-1]
-        if '{date}' in name: name.format(date=datetime.date.today())
-
-        if sum([1 for handler in logging.getLogger().handlers if name in str(handler)]) < 1:
-            file_handler = self._handler.file_handler.handler(self._handler.log_file_path)
-            logging.getLogger().addHandler(file_handler)
-
-
-class LogContext:
-    def __init__(self, log_file_path: str, log_type: str):
-        self.log_file_path = os.path.normpath(log_file_path)
-        self.log_type = log_type
-
-
-class LogFactory:
-    def __init__(self, context: LogContext):
-        self.context = context
-
-    @staticmethod
-    def create_log_builder(context: LogContext) -> ILogBuilder:
-        handler = LogHandler(context.log_file_path)
-        match context.log_type:
-            case 'simple':
-                handler.sys_handler = SysHandlerSimple()
-                handler.file_handler = FileHandlerSimple()
-            case 'detailed':
-                handler.sys_handler = SysHandlerDetailed()
-                handler.file_handler = FileHandlerDetailed()
-            case _:
-                raise ValueError("Invalid log type. Please select from 'simple' or 'detailed'.")
-
-        return LogBuilder(handler)

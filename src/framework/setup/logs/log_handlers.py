@@ -75,6 +75,7 @@ class LogHandlerFactory:
             case 'detailed':
                 log_format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
             case _:
-                raise ValueError(f"Invalid log type: {self.context.log_type}.")
+                raise ValueError(f"Invalid log type: {self.context.log_type}. "
+                                 f"Please select from 'simple' or 'detailed'.")
 
         return SysHandler(log_format), FileHandler(log_format, self.context.log_file_path)
