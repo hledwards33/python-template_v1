@@ -13,7 +13,7 @@ class Model:
         self._model_inputs = dict()
         self._model_outputs = dict()
         self._model_parameters = dict()
-        self._logging = None
+        self._logging = "HERE"
 
     @property
     def logging(self):
@@ -124,8 +124,8 @@ class DeployModelDirector:
         self.builder = builder
 
     def build_model_deployment(self):
-        self.builder.initiate_logging()
         self.builder.create_model()
+        self.builder.initiate_logging()
         self.builder.read_parameters()
         self.builder.read_input_data()
         self.builder.run_model()
