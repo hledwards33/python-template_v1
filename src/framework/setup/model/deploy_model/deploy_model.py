@@ -84,7 +84,7 @@ class DeployModelBuilder:
         logger = LogBuilder(self._model.sys_handler, self._model.file_handler)
         logger.initiate_logging()
         # TODO: consider how to make this global so it can be accessed by all scripts
-        self._model.logging = LogStructures(self._model_metadata.log_format)
+        self._model.logging = LogStructures(self._model.sys_handler.log_format)
 
     @staticmethod
     def create_model_metadata(model_wrapper: IModelWrapper, model_config_path: str) -> ModelMetaData:
@@ -92,16 +92,18 @@ class DeployModelBuilder:
         return ModelDirector(model_builder).build_model()
 
     def run_model(self):
+        self._model.logging.headers("Running Model")
         self._model.sys_handler.unmute_colours()
         self._model.model_outputs = self._model_metadata.model(self._model.model_inputs,
                                                                self._model.model_parameters).run()
         self._model.sys_handler.mute_colours()
 
     def read_parameters(self):
+        self._model.logging.headers("Reading Parameters")
         # TODO: write a method that unpacks the parameters and model types
-        pass
 
-    def read_input(self, data_paths):
+    def read_input(self, data_paths, data_name: str):
+        self._model.logging.headers(f"Reading '{data_name}' Dataset")
         data_path, schema_path = data_paths
         input_data_context = ReadDataContext(schema_path, data_path,
                                              self._model_metadata.model_type)
@@ -110,9 +112,11 @@ class DeployModelBuilder:
         return input_data, errors
 
     def read_input_data(self):
+        self._model.logging.headers("Reading Input Data")
+
         all_errors = {}
         for data_name, data_paths in self._model_metadata.model_inputs.items():
-            input_data, errors = self.read_input(data_paths)
+            input_data, errors = self.read_input(data_paths, data_name)
             self._model.model_inputs[data_name] = input_data
             if not errors: all_errors[data_name] = errors
 
@@ -120,18 +124,23 @@ class DeployModelBuilder:
             # TODO: Add logging of errors
             raise ValueError("Errors occurred when reading input data, see the above logs.")
 
-    def write_output(self, data, data_paths):
+    def write_output(self, data, data_paths, data_name: str):
+        self._model.logging.headers(f"Writing '{data_name}' Dataset")
+
         data_path, schema_path = data_paths
         output_data_context = WriteDataContext(data, schema_path, data_path,
                                                self._model_metadata.model_type)
         output_data_builder = WriteDataBuilder(output_data_context)
+
         return WriteDataDirector(output_data_builder).write_data()
 
     def write_output_data(self):
+        self._model.logging.headers("Writing Output Data")
+
         all_errors = {}
         for data_name, data_paths in self._model_metadata.model_outputs.items():
             data = self._model.model_outputs[data_name]
-            errors = self.write_output(data, data_paths)
+            errors = self.write_output(data, data_paths, data_name)
             if not errors: all_errors[data_name] = errors
 
         if all_errors:
