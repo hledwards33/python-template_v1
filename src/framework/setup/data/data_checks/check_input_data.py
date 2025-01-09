@@ -31,7 +31,7 @@ class PandasDataCheck(IDataCheck):
         if extra_cols:
             # The below message is executed again in the "write_csv_from_pandas" method
             data.drop(columns=extra_cols, inplace=True)
-            logger.warning(f"The following columns have been dropped from dataset {dataframe_name}: {extra_cols}.")
+            logger.warning(f"The following columns have been dropped from the dataset: {extra_cols}.")
 
         # Check for columns in the schemas which are missing from the dataset
         missing_cols = set(schema.keys()).difference(data.columns)
@@ -42,7 +42,7 @@ class PandasDataCheck(IDataCheck):
         for col in data.columns:
             # Log a successful match if the datatypes are the same
             if str(data[col].dtype).lower() == str(schema[col]).lower():
-                logger.info(f"Dataset {dataframe_name} has {col} with correct type: {data[col].dtype}.")
+                logger.info(f"Dataset has {col} with correct type: {data[col].dtype}.")
 
             # Save to error dictionary if the datatypes don't match
             else:

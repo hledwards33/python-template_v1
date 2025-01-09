@@ -6,17 +6,16 @@ from datetime import datetime
 from logging import LogRecord
 from typing import Callable
 
-from framework.setup.logs.log_formaters import ColourfulSysFormatter
+from framework.setup.logs.log_formaters import ColourfulSysFormatter, MutedSysFormatter
 
 
 class ILogHandler(ABC):
 
-    def __init__(self, formatter: logging.Formatter = logging.Formatter):
-        self.format: str = ""
-        self.formatter: logging.Formatter = formatter
+    def __init__(self, log_format: str):
+        self.log_format = log_format
 
     @abstractmethod
-    def handler(self, **kwargs) -> any:
+    def handler(self) -> logging.FileHandler:
         pass
 
     @staticmethod
@@ -30,95 +29,73 @@ class ILogHandler(ABC):
         return handler_filter
 
 
-class IFileHandler(ILogHandler):
+class FileHandler(ILogHandler):
 
-    def __init__(self, formatter: logging.Formatter = logging.Formatter):
-        super().__init__(formatter)
-
-    def handler(self, path: str) -> logging.FileHandler:
-        pass
+    def __init__(self, log_format: str, log_file_path: str):
+        super().__init__(log_format)
+        self.formatter = logging.Formatter(self.log_format)
+        self.log_file_path = self.configure_file_path(log_file_path)
+        self.initiate_file_logger = True if log_file_path != "" else False
 
     @staticmethod
-    def create_logging_file(file_handler, path: str, name: str, data_name: str = None) -> None:
-        format_dict = {}
+    def configure_file_path(log_file_path: str):
+        name = os.path.split(log_file_path)[-1]
         if '{date}' in name:
-            format_dict['date'] = datetime.date.today()
+            name = name.format(date=datetime.today().strftime('%Y-%m-%d'))
 
-        if '{data}' in name:
-            format_dict['data'] = data_name
+        return os.path.join(os.path.dirname(log_file_path), name)
 
-        if format_dict:
-            name = name.format(**format_dict)
-
-        if sum([1 for handler in logging.getLogger().handlers if name in str(handler)]) < 1:
-            fil_handler = file_handler(os.path.join(path, name) + ".log")
-            logging.getLogger().addHandler(fil_handler)
-
-
-class FileHandlerSimple(IFileHandler):
-
-    def __init__(self, formatter: logging.Formatter = logging.Formatter):
-        super().__init__(formatter)
-        self.format = "%(message)s"
-
-    def handler(self, path: str) -> logging.FileHandler:
-        fl_handler = logging.FileHandler(path, 'w+')
-        fl_format = self.formatter(self.format)
-        fl_handler.setFormatter(fl_format)
+    def handler(self) -> logging.FileHandler:
+        fl_handler = logging.FileHandler(self.log_file_path, 'w+')
+        fl_handler.setFormatter(self.formatter)
         fl_handler.setLevel(logging.DEBUG)
         fl_handler.addFilter(self.build_handler_filters('file'))
         return fl_handler
 
 
-class FileHandlerDetailed(IFileHandler):
+class SysHandler(ILogHandler):
 
-    def __init__(self, formatter: logging.Formatter = logging.Formatter):
-        super().__init__(formatter)
-        self.format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
-
-    def handler(self, path: str) -> logging.FileHandler:
-        fl_handler = logging.FileHandler(path, 'w+')
-        fl_format = logging.Formatter(self.format)
-        fl_handler.setFormatter(fl_format)
-        fl_handler.setLevel(logging.DEBUG)
-        fl_handler.addFilter(self.build_handler_filters('file'))
-        return fl_handler
-
-
-class ISysHandler(ILogHandler):
-
-    def __init__(self, formatter: logging.Formatter = ColourfulSysFormatter):
-        super().__init__(formatter)
-
-    def handler(self) -> logging.StreamHandler:
-        pass
-
-
-class SysHandlerSimple(ISysHandler):
-
-    def __init__(self, formatter: logging.Formatter = ColourfulSysFormatter):
-        super().__init__(formatter)
-        self.format = "%(message)s"
+    def __init__(self, log_format: str):
+        super().__init__(log_format)
+        self.formatter = MutedSysFormatter(self.log_format)
+        self.sys_handler = None
 
     def handler(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
-        cn_format = self.formatter(self.format)
-        sys_handler.setFormatter(cn_format)
+        sys_handler.setFormatter(self.formatter)
         sys_handler.setLevel(logging.DEBUG)
         sys_handler.addFilter(self.build_handler_filters('console'))
+        self.sys_handler = sys_handler
         return sys_handler
 
+    def mute_colours(self):
+        self.formatter = MutedSysFormatter(self.log_format)
+        self.sys_handler.setFormatter(MutedSysFormatter(self.log_format))
 
-class SysHandlerDetailed(ISysHandler):
+    def unmute_colours(self):
+        self.formatter = ColourfulSysFormatter(self.log_format)
+        self.sys_handler.setFormatter(ColourfulSysFormatter(self.log_format))
 
-    def __init__(self, formatter: logging.Formatter = ColourfulSysFormatter):
-        super().__init__(formatter)
-        self.format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
 
-    def handler(self) -> logging.StreamHandler:
-        sys_handler = logging.StreamHandler(sys.stdout)
-        cn_format = self.formatter(self.format)
-        sys_handler.setFormatter(cn_format)
-        sys_handler.setLevel(logging.DEBUG)
-        sys_handler.addFilter(self.build_handler_filters('console'))
-        return sys_handler
+class LogHandlerContext:
+    def __init__(self, log_file_path: str, log_type: str):
+        self.log_file_path = log_file_path
+        self.log_type = log_type
+
+
+class LogHandlerFactory:
+
+    def __init__(self, context: LogHandlerContext):
+        self.context = context
+
+    def create_handlers(self) -> tuple[SysHandler, FileHandler]:
+        match self.context.log_type:
+            case 'simple':
+                log_format = "%(message)s"
+            case 'detailed':
+                log_format = "[%(asctime)s] %(levelname)s [%(name)s.%(module)s.%(funcName)s: %(lineno)d] %(message)s"
+            case _:
+                raise ValueError(f"Invalid log type: {self.context.log_type}. "
+                                 f"Please select from 'simple' or 'detailed'.")
+
+        return SysHandler(log_format), FileHandler(log_format, self.context.log_file_path)

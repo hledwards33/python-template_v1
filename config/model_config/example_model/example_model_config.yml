@@ -2,8 +2,8 @@ parameters:
   model_id: "example-model"
   model_type: "pandas"
   type: "pandas"
-  log_location: "model_logs/example_model_logs"
-  log_name: "example_model_log_{date}"
+  log: "model_logs/example_model_logs/example_model_log_{date}.log"
+  log_format: "detailed"
 
   model_parameters:
     ecl_upper_limit: 500
