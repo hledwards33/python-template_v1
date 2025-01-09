@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from logging import LogRecord
 from typing import Callable
 
-from framework.setup.logs.log_formaters import ColourfulSysFormatter
+from framework.setup.logs.log_formaters import ColourfulSysFormatter, MutedSysFormatter
 
 
 class ILogHandler(ABC):
@@ -47,14 +47,24 @@ class SysHandler(ILogHandler):
 
     def __init__(self, log_format: str):
         super().__init__(log_format)
-        self.formatter = ColourfulSysFormatter(self.log_format)
+        self.formatter = MutedSysFormatter(self.log_format)
+        self.sys_handler = None
 
     def handler(self) -> logging.StreamHandler:
         sys_handler = logging.StreamHandler(sys.stdout)
         sys_handler.setFormatter(self.formatter)
         sys_handler.setLevel(logging.DEBUG)
         sys_handler.addFilter(self.build_handler_filters('console'))
+        self.sys_handler = sys_handler
         return sys_handler
+
+    def mute_colours(self):
+        self.formatter = MutedSysFormatter(self.log_format)
+        self.sys_handler.setFormatter(MutedSysFormatter(self.log_format))
+
+    def unmute_colours(self):
+        self.formatter = ColourfulSysFormatter(self.log_format)
+        self.sys_handler.setFormatter(ColourfulSysFormatter(self.log_format))
 
 
 class LogHandlerContext:

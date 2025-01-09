@@ -13,7 +13,25 @@ class Model:
         self._model_inputs = dict()
         self._model_outputs = dict()
         self._model_parameters = dict()
-        self._logging = "HERE"
+        self._logging = None
+        self._sys_handler = None
+        self._file_handler = None
+
+    @property
+    def file_handler(self):
+        return self._file_handler
+
+    @file_handler.setter
+    def file_handler(self, value):
+        self._file_handler = value
+
+    @property
+    def sys_handler(self):
+        return self._sys_handler
+
+    @sys_handler.setter
+    def sys_handler(self, value):
+        self._sys_handler = value
 
     @property
     def logging(self):
@@ -62,8 +80,8 @@ class DeployModelBuilder:
 
     def initiate_logging(self):
         log_context = LogHandlerContext(self._model_metadata.log_file_path, self._model_metadata.log_format)
-        sys_handler, file_handler = LogHandlerFactory(log_context).create_handlers()
-        logger = LogBuilder(sys_handler, file_handler)
+        self._model.sys_handler, self._model.file_handler = LogHandlerFactory(log_context).create_handlers()
+        logger = LogBuilder(self._model.sys_handler, self._model.file_handler)
         logger.initiate_logging()
         # TODO: consider how to make this global so it can be accessed by all scripts
         self._model.logging = LogStructures(self._model_metadata.log_format)
@@ -74,8 +92,10 @@ class DeployModelBuilder:
         return ModelDirector(model_builder).build_model()
 
     def run_model(self):
+        self._model.sys_handler.unmute_colours()
         self._model.model_outputs = self._model_metadata.model(self._model.model_inputs,
                                                                self._model.model_parameters).run()
+        self._model.sys_handler.mute_colours()
 
     def read_parameters(self):
         # TODO: write a method that unpacks the parameters and model types
