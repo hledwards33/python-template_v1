@@ -128,7 +128,9 @@ class DeployModelDirector:
         self.builder.initiate_logging()
         self.builder.read_parameters()
         self.builder.read_input_data()
+        # TODO: Change the colour of the logging here so the model logs stand out
         self.builder.run_model()
+        # TODO: Change the colour of the logging here to revert to the previous colour
         self.builder.write_output_data()
 
 
