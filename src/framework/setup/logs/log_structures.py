@@ -9,6 +9,7 @@ class LogStructures:
 
     def expected_file_format(self) -> None:
         for handler in logging.getLogger().handlers:
+            # The below option only changes the console format
             # if isinstance(handler, logging.FileHandler):
             fl_format = logging.Formatter(self.log_format)
             handler.setFormatter(fl_format)
@@ -16,6 +17,7 @@ class LogStructures:
     @staticmethod
     def simple_file_format() -> None:
         for handler in logging.getLogger().handlers:
+            # The below option only changes the console format
             # if isinstance(handler, logging.FileHandler):
             handler.setFormatter(logging.Formatter('%(message)s'))
 
