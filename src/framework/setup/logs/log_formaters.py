@@ -25,9 +25,8 @@ class ColourfulSysFormatter(logging.Formatter):
         formatter = logging.Formatter(log_fmt)
         return formatter.format(record)
 
-
 class MutedSysFormatter(logging.Formatter):
-    grey = '\x1b[38;21m'
+    grey = '\x1b[1;20m'
     blue = '\x1b[38;5;39m'
     yellow = '\x1b[38;5;226m'
     red = '\x1b[38;5;196m'
