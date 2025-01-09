@@ -1,6 +1,8 @@
 import logging
+import os
 import sys
 from abc import ABC, abstractmethod
+from datetime import datetime
 from logging import LogRecord
 from typing import Callable
 
@@ -32,8 +34,16 @@ class FileHandler(ILogHandler):
     def __init__(self, log_format: str, log_file_path: str):
         super().__init__(log_format)
         self.formatter = logging.Formatter(self.log_format)
-        self.log_file_path = log_file_path
+        self.log_file_path = self.configure_file_path(log_file_path)
         self.initiate_file_logger = True if log_file_path != "" else False
+
+    @staticmethod
+    def configure_file_path(log_file_path: str):
+        name = os.path.split(log_file_path)[-1]
+        if '{date}' in name:
+            name = name.format(date=datetime.today().strftime('%Y-%m-%d'))
+
+        return os.path.join(os.path.dirname(log_file_path), name)
 
     def handler(self) -> logging.FileHandler:
         fl_handler = logging.FileHandler(self.log_file_path, 'w+')
